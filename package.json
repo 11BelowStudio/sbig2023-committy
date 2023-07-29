@@ -1,0 +1,34 @@
+{
+  "name": "glitch-blank-sqlite",
+  "version": "0.2.0",
+  "description": "A Node app with SQLite database, instantly up and running.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fastify/formbody": "^7.4.0",
+    "@kadoresmi00/general-filter": "^1.0.1",
+    "casual": "^1.6.2",
+    "deep-profanity-filter": "^2.1.2",
+    "express": "^4.18.2",
+    "fastify": "^4.19.2",
+    "leet-decode": "^0.0.3",
+    "leo-profanity": "^1.7.0",
+    "sqlite": "^4.2.1",
+    "sqlite3": "^5.1.6",
+    "verify-image-url": "^1.3.0"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/glitch-blank-sqlite"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "sqlite"
+  ]
+}
