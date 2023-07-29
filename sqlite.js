@@ -15,7 +15,7 @@ const { LinkFilter } = require("@kadoresmi00/general-filter");
 const leofilter = require('leo-profanity');
 
 const fs = require("fs");
-const dbFile = "./.data/chat.db";
+const dbFile = "./.data/cards.db";
 const exists = fs.existsSync(dbFile);
 const sqlite3 = require("sqlite3").verbose();
 const dbWrapper = require("sqlite");
@@ -28,13 +28,6 @@ const {
 
 let db;
 
-function checkURL(url) {
-  return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
-}
-
-const deepWordFilter = preprocessWordLists(
-  leofilter.list()
-)
 
 
 

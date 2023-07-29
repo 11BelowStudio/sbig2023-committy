@@ -33,7 +33,8 @@ module.exports = {
          * deep-profanity-filter preprocessed word list
          */
         deep_word_filter: preprocessWordLists(
-            leofilter.list()
+            leofilter.list(),
+            ["suck","scatman", "title","xx","penistone","scunthorpe"]
         ),
 
         /**

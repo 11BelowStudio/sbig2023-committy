@@ -6,7 +6,7 @@
 
 const fastify = require("fastify")({
   // Set this to true for detailed logging:
-  logger: false
+  logger: true
 });
 
 fastify.register(require("@fastify/formbody"));
@@ -69,6 +69,18 @@ fastify.delete("/message", async (request, reply) => {
   else data.success = await db.deleteMessage(request.query.id);
   const status = data.success ? 201 : auth ? 400 : 401;
   reply.status(status).send(data);
+});
+
+
+fastify.get("/cards", async(request, reply) => {
+  
+  let data = {};
+  data.cards = await db.getCards();
+  console.log(data.cards);
+  if (!data.cards) data.error = errorMessage;
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+  
 });
 
 // Helper function to authenticate the user key
