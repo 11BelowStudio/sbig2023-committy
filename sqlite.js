@@ -45,15 +45,15 @@ dbWrapper
 
         await db.run(
           "CREATE TABLE cards ("
-            + "id INTEGER NOT NULL PRIMARY KEY,"
-            + "name TEXT NOT NULL,"
-            + "desc TEXT NOT NULL,"
-            + "img TEXT NOT NULL,",
-            + "stat1 INTEGER NOT NULL DEFAULT 1,",
-            + "stat2 INTEGER NOT NULL DEFAULT 1,",
-            + "stat3 INTEGER NOT NULL DEFAULT 1,",
-            + "stat4 INTEGER NOT NULL DEFAULT 1,",
-          + "CHECK (length(name) > 0) "
+            + " id INTEGER NOT NULL PRIMARY KEY,"
+            + " name TEXT NOT NULL,"
+            + " desc TEXT NOT NULL,"
+            + " img TEXT NOT NULL,",
+            + " stat1 INTEGER NOT NULL DEFAULT 1,"
+            + " stat2 INTEGER NOT NULL DEFAULT 1,"
+            + " stat3 INTEGER NOT NULL DEFAULT 1,"
+            + " stat4 INTEGER NOT NULL DEFAULT 1,"
+          + " CHECK (length(name) > 0) "
           +")"
         );
 
@@ -61,7 +61,7 @@ dbWrapper
           "CREATE TABLE wins ("
             + "winner_id INTEGER NOT NULL,"
             + "loser_id INTEGER NOT NULL,"
-            + "when INTEGER NOT NULL,"
+            + "time INTEGER NOT NULL,"
             + "FOREIGN KEY (winner_id) REFERENCES cards(id)"
               + " ON DELETE CASCADE"
               + " ON UPDATE CASCADE,"
@@ -76,7 +76,7 @@ dbWrapper
           "CREATE TABLE reports("
           + " id INTEGER NOT NULL PRIMARY KEY,"
           + " card_id INTEGER NOT NULL,"
-          + " when INTEGER NOT NULL,"
+          + " time INTEGER NOT NULL,"
           + " FOREIGN KEY (card_id) REFERENCES cards(id)"
             + " ON DELETE CASCADE"
             + " ON UPDATE CASCADE"
@@ -272,7 +272,7 @@ module.exports = {
       }
 
       const stmt2 = await db.prepare(
-        "INSERT INTO wins (winner_id, loser_id, when) VALUES (@win, @lose, @t)"
+        "INSERT INTO wins (winner_id, loser_id, time) VALUES (@win, @lose, @t)"
       );
       success = await stmt2.run(
         {
@@ -435,12 +435,12 @@ module.exports = {
     let success = false;
     try{
       const stmt = await db.prepare(
-        "INSERT INTO reports(card_id, when) VALUES (@id, @when)"
+        "INSERT INTO reports(card_id, time) VALUES (@id, @time)"
       );
       const result = await stmt.run(
         {
           "@id": cardId,
-          "@when": Date.now()
+          "@time": Date.now()
         }
       );
       console.log(result);
