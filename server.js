@@ -31,6 +31,7 @@ fastify.get("/", (request, reply) => {
   reply.status(200).send(data);
 });
 
+
 /*
 // Return the chat messages from the database helper script - no auth
 fastify.get("/messages", async (request, reply) => {

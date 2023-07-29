@@ -48,7 +48,7 @@ dbWrapper
             + " id INTEGER NOT NULL PRIMARY KEY,"
             + " name TEXT NOT NULL,"
             + " desc TEXT NOT NULL,"
-            + " img TEXT NOT NULL,",
+            + " img TEXT NOT NULL,"
             + " stat1 INTEGER NOT NULL DEFAULT 1,"
             + " stat2 INTEGER NOT NULL DEFAULT 1,"
             + " stat3 INTEGER NOT NULL DEFAULT 1,"
