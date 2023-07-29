@@ -4,15 +4,7 @@
  * The sample data is for a chat log with one table:
  * Messages: id + message text
  */
-const {
-  preprocessWordLists,
-  unEmoji,
-  removeTextAccents,
-  textToLatin,
-  doesContainBadWords
-} = require('deep-profanity-filter');
-const { LinkFilter } = require("@kadoresmi00/general-filter");
-const leofilter = require('leo-profanity');
+
 
 const fs = require("fs");
 const dbFile = "./.data/cards.db";

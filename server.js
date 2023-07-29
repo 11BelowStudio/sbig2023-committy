@@ -4,6 +4,10 @@
  * Uses sqlite.js to connect to db
  */
 
+const {
+  glitchcom_consts
+} = requre("constants.js");
+
 const fastify = require("fastify")({
   // Set this to true for detailed logging:
   logger: true
@@ -80,6 +84,43 @@ fastify.get("/cards", async(request, reply) => {
   data.cards = await db.getCards();
   console.log(data.cards);
   if (!data.cards) data.error = errorMessage;
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+  
+});
+
+fastify.get("/card/:id", async(request, reply) => {
+  const { id } = request.params;
+  let data = {};
+  console.log(request.params);
+  data.card = await db.getCard(request.params.id);
+  console.log(data.card);
+  if (!data.card) data.error = errorMessage;
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+
+});
+
+fastify.get("/card_ids", async(request, reply) => {
+  let data = {};
+  data.cardIDs = await db.getCardIDs();
+  console.log(data.cardIDs);
+  if (!data.cardIDs) data.error = errorMessage;
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+});
+
+fastify.get("/card_links", async(request, reply) => {
+  let data = {};
+  let allIDs = await db.getCardIDs();
+  if (!allIDs){
+    data.error = errorMessage;
+  } else {
+    for(const itm of allIDs){
+      itm["url"] = `${glitchcom_consts.url_base}/card/${itm["id"]}`;
+    }
+    data.cardIDs = allIDs;
+  }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
   

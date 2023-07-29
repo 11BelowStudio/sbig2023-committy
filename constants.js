@@ -25,6 +25,11 @@ module.exports = {
         card_stat_total_max : 21
     },
 
+    glitchcom_consts: {
+        project_name: "sbig2023-committy",
+        url_base: `@{project_name}.glitch.me`
+    },
+
     /**
      * Constants for word filtering purposes
      */
