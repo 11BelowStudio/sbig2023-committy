@@ -34,7 +34,7 @@ module.exports = {
          */
         deep_word_filter: preprocessWordLists(
             leofilter.list(),
-            ["suck","scatman", "title","xx","penistone","scunthorpe"]
+            ["suck","scatman", "tit","xx","penistone","scunthorpe","shit"]
         ),
 
         /**
