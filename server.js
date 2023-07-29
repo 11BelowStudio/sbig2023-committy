@@ -4,9 +4,7 @@
  * Uses sqlite.js to connect to db
  */
 
-const {
-  glitchcom_consts
-} = requre("constants.js");
+
 
 const fastify = require("fastify")({
   // Set this to true for detailed logging:
@@ -90,7 +88,6 @@ fastify.get("/cards", async(request, reply) => {
 });
 
 fastify.get("/card/:id", async(request, reply) => {
-  const { id } = request.params;
   let data = {};
   console.log(request.params);
   data.card = await db.getCard(request.params.id);
@@ -110,6 +107,9 @@ fastify.get("/card_ids", async(request, reply) => {
   reply.status(status).send(data);
 });
 
+/**
+ * obtains the cards via HATEOAS (Hypermedia As The Engine of Application State)
+ */
 fastify.get("/card_links", async(request, reply) => {
   let data = {};
   let allIDs = await db.getCardIDs();
@@ -117,13 +117,26 @@ fastify.get("/card_links", async(request, reply) => {
     data.error = errorMessage;
   } else {
     for(const itm of allIDs){
-      itm["url"] = `${glitchcom_consts.url_base}/card/${itm["id"]}`;
+      itm["url"] = `https://${request.hostname}/card/${itm["id"]}`;
     }
     data.cardIDs = allIDs;
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
   
+});
+
+fastify.post("/report", async (request, reply) => {
+  let data = {};
+
+  if(!request.body || !request.body.id){
+    data.success = false;
+  }
+  else {
+    data.success = await db.reportThisCard(request.body.id);
+  }
+  const status = data.success ? 201 : 400;
+  reply.status(status).send(data);
 });
 
 // Helper function to authenticate the user key
