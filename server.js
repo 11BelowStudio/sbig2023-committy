@@ -6,7 +6,7 @@
 
 const {
   sample
-} = require("underscore.js");
+} = require("underscore");
 
 const fastify = require("fastify")({
   // Set this to true for detailed logging:

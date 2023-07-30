@@ -18,7 +18,7 @@
     "leo-profanity": "^1.7.0",
     "sqlite": "^4.2.1",
     "sqlite3": "^5.1.6",
-    "underscore.js": "^1.0.0",
+    "underscore": "^1.13.6",
     "verify-image-url": "^1.3.0"
   },
   "engines": {
