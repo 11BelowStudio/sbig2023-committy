@@ -156,11 +156,12 @@ fastify.get("/wins/:c1/:c2", async(request, reply) => {
 });
 
 
+
 fastify.post("/declare_winner", async(request, reply) => {
 
   let data = {};
 
-  let body = request.body;
+  let body = (request.body) ? request.body : {};
   if (!body || !body.winner || !body.loser){
     if (request.query){
       if (request.query.winner){
