@@ -237,11 +237,12 @@ module.exports = {
    * Attempts to set the win data when the card 'winner' beats the card 'loser'
    * @param {*} winner ID of winning card
    * @param {*} loser ID of losing card
-   * @returns 
+   * @returns object of {success: bool, existsAlready: bool }
    */
   setWinData: async(winner, loser) => {
+    let result = {success: false, existsAlready: false};
     try {
-      let success = false;
+      
 
       if (winner == null){
         console.log("why is winner null???"); 
@@ -263,7 +264,8 @@ module.exports = {
         );
 
         if (result1.length != 0){
-          return false;
+          result.existsAlready = true;
+          return result;
         }
       } catch (dbError){
         console.error(dbError);
@@ -272,18 +274,19 @@ module.exports = {
       const stmt2 = await db.prepare(
         "INSERT INTO wins (winner_id, loser_id, time) VALUES (@win, @lose, @t)"
       );
-      success = await stmt2.run(
+      const res = await stmt2.run(
         {
           "@win": winner,
           "@lose":loser,
           "@t":Date.now()
         }
       );
-      return success;
+      result.success = res.changes > 0;
+      return result;
 
     } catch (dbError){
       console.error(dbError);
-      return false;
+      return result;
     }
   },
 

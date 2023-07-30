@@ -156,6 +156,50 @@ fastify.get("/wins/:c1/:c2", async(request, reply) => {
 });
 
 
+fastify.post("/declare_winner", async(request, reply) => {
+
+  let data = {};
+
+  let body = request.body;
+  if (!body || !body.winner || !body.loser){
+    if (request.query){
+      if (request.query.winner){
+        body.winner = request.query.winner;
+      }
+      if (request.query.loser){
+        body.loser = request.query.loser;
+      }
+    }
+  }
+
+  if (!body || !body.winner || !body.loser){
+    data.success = false;
+    data.error = "please declare a 'winner' and a 'loser'";
+    reply.status(400).send(data);
+    return;
+  }
+  else if (body.winner == body.loser){
+    data.success = false;
+    data.error = "the 'winner' and the 'loser' can't be the same card!";
+    reply.status(400).send(data);
+    return;
+  }
+  
+  
+  data.result = await db.setWinData(body.winner, body.loser);
+  data.success = data.result.success;
+  if (!data.result.success){
+    data.error = (data.result.existsAlready) ? "A record for these two cards exists already!" :  errorMessage;
+
+    reply.status(400).send(data);
+    return;
+  }
+  reply.status(200).send(data);
+
+});
+
+
+
 fastify.post("/report", async (request, reply) => {
   let data = {};
 
