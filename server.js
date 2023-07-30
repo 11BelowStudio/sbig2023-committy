@@ -4,7 +4,9 @@
  * Uses sqlite.js to connect to db
  */
 
-
+const {
+  sample
+} = require("underscore.js");
 
 const fastify = require("fastify")({
   // Set this to true for detailed logging:
@@ -14,6 +16,7 @@ const fastify = require("fastify")({
 fastify.register(require("@fastify/formbody"));
 
 const db = require("./sqlite.js");
+const { request } = require("express");
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
 
@@ -123,8 +126,35 @@ fastify.get("/card_links", async(request, reply) => {
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
-  
 });
+
+fastify.get("/n_cards/:n", async(request, reply) => {
+  let data = {};
+  let allIDs = await db.getCardIDs();
+  if (!allIDs){
+    data.error = errorMessage;
+  } else {
+
+    let sampledIDs = sample(allIDs, request.params.n);
+    for(const itm of sampledIDs){
+      itm["url"] = `https://${request.hostname}/card/${itm["id"]}`;
+    }
+    data.cardIDs = allIDs;
+  }
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+});
+
+fastify.get("/wins/:c1/:c2", async(request, reply) => {
+  let data = {};
+  data.result = await db.getWinData(request.params.c1, request.params.c2);
+  if (!data.result.success){
+    data.error = errorMessage;
+  }
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+});
+
 
 fastify.post("/report", async (request, reply) => {
   let data = {};
@@ -136,6 +166,30 @@ fastify.post("/report", async (request, reply) => {
     data.success = await db.reportThisCard(request.body.id);
   }
   const status = data.success ? 201 : 400;
+  reply.status(status).send(data);
+});
+
+
+fastify.post("/addCard", async(request, reply) => {
+
+  let data = {};
+  if(!request.body || !request.body.name){
+    data.success = false;
+  }
+  else {
+    data.success = await db.addCard(
+      request.body.name,
+      request.body.desc,
+      request.body.img,
+      request.body.s1,
+      request.body.s2,
+      request.body.s3,
+      request.body.s4
+    );
+    data.url = `https://${request.hostname}/card/${data.success.cardID}`;
+    
+  }
+  const status = data.success.success ? 201 : 400;
   reply.status(status).send(data);
 });
 

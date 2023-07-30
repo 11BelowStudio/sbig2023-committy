@@ -206,9 +206,11 @@ module.exports = {
    * Attempts to find wins data for cards card1 and card2
    * @param {*} card1 ID for first card
    * @param {*} card2 ID for other card
-   * @returns 
+   * @returns object of {success:bool, entries: [{time: int, winner_id: int, loser_id: int}]}
    */
   getWinData: async(card1, card2) => {
+    let result = {success: false, entries: []};
+    
     try {
       const stmt = await db.prepare(
         "SELECT * FROM wins WHERE"
@@ -216,13 +218,17 @@ module.exports = {
         + " OR "
         + " (winner_id = @c2 AND loser_id = @c1) "
       );
-      return await stmt.all(
+      result.entries = await stmt.all(
         {"@c1" : card1, "@c2": card2}
       );
 
+      result.success = true;
+
+      return result;
+
     } catch (dbError){
       console.error(dbError);
-      return [];
+      return result;
     }
   },
 
