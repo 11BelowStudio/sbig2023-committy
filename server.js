@@ -139,7 +139,7 @@ fastify.get("/n_cards/:n", async(request, reply) => {
     for(const itm of sampledIDs){
       itm["url"] = `https://${request.hostname}/card/${itm["id"]}`;
     }
-    data.cardIDs = allIDs;
+    data.cardIDs = sampledIDs;
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
