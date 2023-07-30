@@ -28,9 +28,9 @@ fastify.addHook("onRoute", routeOptions => {
 });
 
 // Just send some info at the home route
-fastify.get("/", (request, reply) => {
+fastify.get("/api", (request, reply) => {
   const data = {
-    title: "Hello SQLite (blank)",
+    title: "Committy API",
     intro: "This is a database-backed API with the following endpoints",
     routes: routes.endpoints
   };
