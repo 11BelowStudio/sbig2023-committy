@@ -5,7 +5,8 @@
  */
 
 const {
-  sample
+  sample,
+  without
 } = require("underscore");
 
 const fastify = require("fastify")({
@@ -79,33 +80,38 @@ fastify.delete("/message", async (request, reply) => {
 });
 */
 
-fastify.get("/cards", async(request, reply) => {
+fastify.get("/api/cards", async(request, reply) => {
   
   let data = {};
-  data.cards = await db.getCards();
-  console.log(data.cards);
-  if (!data.cards) data.error = errorMessage;
+  data.result = await db.getCards();
+  console.log(data.result);
+  if (!data.result || !data.result.success){ data.error = errorMessage;}
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
   
 });
 
-fastify.get("/card/:id", async(request, reply) => {
+fastify.get("/api/card/:id", async(request, reply) => {
   let data = {};
   console.log(request.params);
-  data.card = await db.getCard(request.params.id);
-  console.log(data.card);
-  if (!data.card) data.error = errorMessage;
+
+  data.result = await db.getCard(request.params.id);
+  console.log(data.result);
+  if (!data.result || !data.result.success) {
+    data.error = errorMessage;
+  }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 
 });
 
-fastify.get("/card_ids", async(request, reply) => {
+fastify.get("/api/card_ids", async(request, reply) => {
   let data = {};
-  data.cardIDs = await db.getCardIDs();
-  console.log(data.cardIDs);
-  if (!data.cardIDs) data.error = errorMessage;
+  data.result = await db.getCardIDs();
+  console.log(data.result);
+  if (!data.result || !data.result.success){
+     data.error = errorMessage;
+  }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 });
@@ -113,42 +119,73 @@ fastify.get("/card_ids", async(request, reply) => {
 /**
  * obtains the cards via HATEOAS (Hypermedia As The Engine of Application State)
  */
-fastify.get("/card_links", async(request, reply) => {
+fastify.get("/api/card_links", async(request, reply) => {
   let data = {};
   let allIDs = await db.getCardIDs();
-  if (!allIDs){
+  if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
-    for(const itm of allIDs){
-      itm["url"] = `https://${request.hostname}/card/${itm["id"]}`;
+    for(const itm of allIDs.entries){
+      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
     }
-    data.cardIDs = allIDs;
+    data.result = allIDs;
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 });
 
-fastify.get("/n_cards/:n", async(request, reply) => {
+fastify.get("/api/n_cards/:n", async(request, reply) => {
   let data = {};
   let allIDs = await db.getCardIDs();
-  if (!allIDs){
+  if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
 
-    let sampledIDs = sample(allIDs, request.params.n);
+    let sampledIDs = sample(allIDs.entries, request.params.n);
     for(const itm of sampledIDs){
-      itm["url"] = `https://${request.hostname}/card/${itm["id"]}`;
+      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
     }
-    data.cardIDs = sampledIDs;
+    data.result = {success : allIDs.success};
+    data.result.entries = sampledIDs;
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 });
 
-fastify.get("/wins/:c1/:c2", async(request, reply) => {
+fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
+  let data = {};
+  if (!request.params || !request.params.n){
+    data.error = `please define a value for n and except. ${request.hostname}/api/n_cards_except/NUMBER/ID_TO_OMIT`;
+    reply.status(400).send(data);
+    return;
+  }
+  else if (!request.params.except){
+    data.error = `If you don't want to exclude a card, please use ${request.hostname}/api/n_cards/${request.params.n} instead.`;
+    data.useThis = `https://${request.hostname}/api/n_cards/${request.params.n}`;
+    reply.status(303).send(data);
+    return;
+  }
+  data.exceptCard = `https://${request.hostname}/api/card/${request.params.except}`;
+  let allIDs = await db.getCardIDsExcept(request.params.except);
+  if (!allIDs || !allIDs.success){
+    data.error = errorMessage;
+  } else {
+    
+    let sampledIDs = sample(allIDs.entries, request.params.n);
+    for(const itm of sampledIDs){
+      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+    }
+    data.result = {success : allIDs.success};
+    data.result.entries = sampledIDs;
+  }
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+});
+
+fastify.get("/api/wins/:c1/:c2", async(request, reply) => {
   let data = {};
   data.result = await db.getWinData(request.params.c1, request.params.c2);
-  if (!data.result.success){
+  if (!data.result || !data.result.success){
     data.error = errorMessage;
   }
   const status = data.error ? 400 : 200;
@@ -157,7 +194,7 @@ fastify.get("/wins/:c1/:c2", async(request, reply) => {
 
 
 
-fastify.post("/declare_winner", async(request, reply) => {
+fastify.post("/api/declare_winner", async(request, reply) => {
 
   let data = {};
 
@@ -189,7 +226,7 @@ fastify.post("/declare_winner", async(request, reply) => {
   
   data.result = await db.setWinData(body.winner, body.loser);
   data.success = data.result.success;
-  if (!data.result.success){
+  if (!data.result || !data.result.success){
     data.error = (data.result.existsAlready) ? "A record for these two cards exists already!" :  errorMessage;
 
     reply.status(400).send(data);
@@ -201,7 +238,7 @@ fastify.post("/declare_winner", async(request, reply) => {
 
 
 
-fastify.post("/report", async (request, reply) => {
+fastify.post("/api/report", async (request, reply) => {
   let data = {};
 
   if(!request.body || !request.body.id){
@@ -215,14 +252,14 @@ fastify.post("/report", async (request, reply) => {
 });
 
 
-fastify.post("/addCard", async(request, reply) => {
+fastify.post("/api/add_card", async(request, reply) => {
 
   let data = {};
   if(!request.body || !request.body.name){
     data.success = false;
   }
   else {
-    data.success = await db.addCard(
+    data.result = await db.addCard(
       request.body.name,
       request.body.desc,
       request.body.img,
@@ -231,12 +268,44 @@ fastify.post("/addCard", async(request, reply) => {
       request.body.s3,
       request.body.s4
     );
-    data.url = `https://${request.hostname}/card/${data.success.cardID}`;
-    
+    data.url = `https://${request.hostname}/api/card/${data.result.cardID}`;
+    data.twoOthers = `https://${request.hostname}/api/new_card_two_others/${data.result.cardID}`;
+    data.success = data.result.success;
   }
-  const status = data.success.success ? 201 : 400;
+  const status = data.success ? 201 : 400;
   reply.status(status).send(data);
 });
+
+
+fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
+
+  let data = {};
+  if (!request.params || !request.params.newID){
+    data.error = `please define a value for newID. ${request.hostname}/api/two_other_cards/ID_OF_NEW`;
+    reply.status(400).send(data);
+    return;
+  }
+
+  data.exceptCard = `https://${request.hostname}/api/card/${request.params.newID}`;
+  let allIDs = await db.getCardIDsExcept(request.params.newID);
+  if (!allIDs || !allIDs.success){
+    data.error = errorMessage;
+  } else {
+    
+    let sampledIDs = sample(allIDs.entries, 2);
+    for(const itm of sampledIDs){
+      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+    }
+    data.result = {success : allIDs.success};
+    data.result.entries = sampledIDs;
+  }
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+
+});
+
+
+
 
 // Helper function to authenticate the user key
 const authorized = key => {

@@ -16,7 +16,8 @@ const casual = require("casual");
 const {
   card_consts,
   filtering
-} = require('./constants.js')
+} = require('./constants.js');
+const e = require("express");
 
 let db;
 
@@ -143,63 +144,200 @@ dbWrapper
     }
   });
 
+/**
+ * Used to help produce prepared statements when using varargs and such
+ * @param {str} templateStr - should be like `VERB whatever FROM idk WHERE value = (?)`, where argsList needs to go where the ? is.
+ * @param {array} argsList list of arguments that will be entered into where the ? is.
+ * @returns object of {success: bool, stmtString: str, bindDict: dict{int:any}, message: str}.
+ * Intended to be used like `db.prepare(stmtString).run(bindDict)` (but with some awaits ofc).
+ * 'message' is an error message (only used in case of a fuckup)
+ */
+function varargs_prepared_statement_prepper(templateStr, argsList){
+  let result = {
+    success: false,
+    statementString: templateStr,
+    bindDict: {},
+    message: ""
+  };
+
+  if (!templateStr.includes("?")){
+    message = "You forgot the ? placeholder smh my head";
+    return result;
+  }
+  else if (!argsList || argsList.length < 1){
+    message = "no argsList?";
+    return result;
+  }
+
+  try {
+
+    if (argsList.length > 1){
+      let placeholderList = [];
+      for (let index = 0; index < args.length; index++) {
+        placeholderList.push(`?${index}`);
+        result.bindDict[index] = args[index];
+      }
+      result.statementString = templateStr.replace("?", placeholderList.join(","));
+    } else {
+      result.bindDict = {1:args[0]};
+      result.statementString = templateStr;
+    }
+    success = true;
+  } catch (dbError){
+    console.error(dbError);
+  }
+  return result;
+}
+
 // Server script calls these methods to connect to the db
 module.exports = {
 
 
   /**
    * Obtains all info about all cards from the database
-   * @returns 
+   * @returns object of {
+   *  success: bool,
+   *  entries: [
+   *    {id: int, name: str, desc: str, stat1: int, stat2: int, stat3: int, stat4: int}
+   *  ]}
+   * with data for all cards
    */
   getCards: async() => {
+    let result = {success: false, entries: []};
     try {
-      return await db.all("SELECT id, name, desc, img, stat1, stat2, stat3, stat4 FROM cards");
+      result.entries = await db.all("SELECT id, name, desc, img, stat1, stat2, stat3, stat4 FROM cards");
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return [];
     }
+    return result;
   },
 
 
   /**
    * Obtains all card IDs from the database
-   * @returns 
+   * @returns object of {success: bool, entries: [{id: int}] }
    */
   getCardIDs: async() => {
+    let result = {success: false, entries: []};
     try{
-      return await db.all("SELECT id FROM cards");
+      result.entries = await db.all("SELECT id FROM cards");
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return [];
     }
+    return result;
+  },
+
+  /**
+   * obtains all card IDs from the database except the specified cards
+   * @param {*} args  all card IDs to exclude
+   * @returns object of {success: bool, entries: [{id: int}] } with data for all cards except the ones with specified IDs
+   */
+  getCardIDsExcept: async(...args) => {
+    let result = {success: false, entries: []};
+    if (!args || args.length == 0){
+      return this.getCards();
+    }
+
+    const preppedStatement = varargs_prepared_statement_prepper(
+      "SELECT id FROM cards WHERE id NOT IN (?)",
+      args
+    );
+
+    if (!preppedStatement.success){
+      console.log(`something fucked up! ${preppedStatement.message}`);
+      result.message = preppedStatement.message;
+      return result;
+    }
+
+    try {
+      /*
+      let stmtString = "SELECT id FROM cards WHERE id NOT IN (?)";
+      let bindDict = {};
+
+      if (args.length > 1){
+        let placeholderList = [];
+        for (let index = 0; index < args.length; index++) {
+          placeholderList.push(`?${index}`);
+          bindDict[index] = args[index];
+        }
+        stmtString = stmtString.replace("?", placeholderList.join(","));
+      } else {
+        bindDict = {1:args[0]};
+      }
+      */
+
+      const stmt = await db.prepare(preppedStatement.statementString);
+      result.entries = await stmt.run(preppedStatement.bindDict);
+
+      result.success = true;
+    } catch (dbError){
+      console.error(dbError);
+    }
+    return result;
+
   },
 
   /**
    * Obtains the full details of the card with that ID
    * @param {*} cId int
-   * @returns object of \{ id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int } for that card
+   * @returns object of \{success: bool, card:{ id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int } } for that card
    */
   getCard: async(cId) => {
+
+    let result = {success: false, card: {}};
     try{
       const stmt = await db.prepare(
         "SELECT id, name, desc, img, stat1, stat2, stat3, stat4 FROM cards "
         + " WHERE id = ?"
       );
       await stmt.bind({1: cId});
-      return await stmt.get();
+      result.card = await stmt.get();
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return {
-        id: cId,
-        name: "ERROR",
-        desc: "ERROR",
-        img: "ERROR",
-        stat1: -1,
-        stat2: -1,
-        stat3: -1,
-        stat4: -1
-      }
+      
     };
+    return result;
+  },
+
+/**
+   * Obtains the full details of the cards with the given IDs
+   * @param {*} cId int
+   * @returns object of {success: bool, entries:[{ id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int }] } for those cards
+   */
+  getCards: async(...args) => {
+
+    let result = {success: false, entries: []};
+    if (!args || args.length == 0){
+      result.message = "no args given!";
+      return result;
+    }
+
+    const preppedStatement = varargs_prepared_statement_prepper(
+      "SELECT (id, name, desc, img, stat1, stat2, stat3, stat4) FROM cards "
+      + "WHERE id IN (?)",
+      args
+    );
+
+    if (!preppedStatement.success){
+      console.log(`something fucked up! ${preppedStatement.message}`);
+      result.message = preppedStatement.message;
+      return result;
+    }
+
+    try {
+      
+
+      const stmt = await db.prepare(preppedStatement.statementString);
+      result.entries = await stmt.run(preppedStatement.bindDict);
+
+      result.success = true;
+    } catch (dbError){
+      console.error(dbError);
+    }
+    return result;
   },
 
   /**
@@ -446,12 +584,13 @@ module.exports = {
       );
       console.log(result);
 
-      return result;
+      success = true;
 
     } catch (dbError) {
       console.error(dbError);
-      return false;
+      
     }
+    return success;
   },
 
   /**
@@ -478,12 +617,14 @@ module.exports = {
    */
   getReports: async() => {
     
+    let result = {success: false, entries: []};
     try {
-      return await db.all("SELECT * FROM reports");
+      result.entries = await db.all("SELECT * FROM reports");
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return [];
     }
+    return result;
   
   },
 
@@ -493,12 +634,15 @@ module.exports = {
    * @returns IDs from all reports
    */
   getReportIds: async() => {
+
+    let result = {success: false, entries: []};
     try {
-      return await db.all("SELECT id FROM reports");
+      result.entries = await db.all("SELECT id FROM reports");
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return [];
     }
+    return result;
   },
 
   /**
@@ -508,12 +652,14 @@ module.exports = {
    * @returns full details for the given report
    */
   getReport: async(reportID) => {
+    let result = {success: false, data: {}};
     try {
-      return await db.all("SELECT * FROM reports WHERE id = ?",reportID);
+      result.data = await db.all("SELECT * FROM reports WHERE id = ?",reportID);
+      result.success = true;
     } catch (dbError){
       console.error(dbError);
-      return [];
     }
+    return result;
   },
 
   /**
