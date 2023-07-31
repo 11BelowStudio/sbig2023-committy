@@ -13,6 +13,7 @@ const fastify = require("fastify")({
   // Set this to true for detailed logging:
   logger: true
 });
+const path = require('path')
 
 fastify.register(require("@fastify/formbody"));
 
@@ -26,6 +27,27 @@ const routes = { endpoints: [] };
 fastify.addHook("onRoute", routeOptions => {
   routes.endpoints.push(routeOptions.method + " " + routeOptions.path);
 });
+
+
+// Setup our static files
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname,'public'),
+  prefix: "/", // optional: default '/'
+});
+
+
+fastify.get('/', function (req, reply) {
+  reply.sendFile('index.html')
+})
+
+fastify.get('/index', function (req, reply) {
+  reply.sendFile('index.html')
+})
+
+fastify.get('/submit_card', function (req, reply) {
+  reply.sendFile('submit_card.html')
+})
+
 
 // Just send some info at the home route
 fastify.get("/api", (request, reply) => {
@@ -320,7 +342,11 @@ const authorized = key => {
 };
 
 // Run the server and report out to the logs
-fastify.listen({port:process.env.PORT, host:'0.0.0.0'}, function(err, address) {
+fastify.listen({
+  port:process.env.PORT,
+  //host:'0.0.0.0'
+  host: 'localhost'
+}, function(err, address) {
   if (err) {
     console.error(err);
     process.exit(1);

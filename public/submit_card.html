@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Submit a card
+        </title>
+        
+        <link rel="stylesheet" href="card.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+            body {
+                font-family: 'Comic Neue' Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+            .col-container {
+                display: flex;
+                width: 100%;
+            }
+            .col {
+                flex: 1;
+                padding: 16px;
+            }
+
+            form {
+                margin: 20px;
+            }
+            #sliders {
+                width:75%;
+            }
+            
+            .icon{
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+            
+            td.icon{
+              width: 25%;
+            }
+            
+            .icon.icon_a {
+                background-image: url("./assets/icons/plastic-duck.svg");
+            }
+            
+            .icon.icon_b {
+                background-image: url("./assets/icons/rialto-bridge.svg");
+            }
+            
+            .icon.icon_c {
+                background-image: url("./assets/icons/whistle.svg");
+            }
+            
+            .icon.icon_d {
+                background-image: url("./assets/icons/abstract-084.svg");
+            }
+            
+            .slideParent{
+              width:75%;
+              display:block;
+            }
+            
+            .slideBG {
+                display:block;
+                width: 100%;
+                height: 22px;
+                margin-bottom: 20px;
+                background: #E2E2E2;
+                border: 1px solid #000;
+            }
+            
+            .slideBG2{
+              display:block;
+                width: 75%;
+                height: 22px;
+                margin-bottom: 20px;
+                background: #E2E2E2;
+                border: 1px solid #000;
+            }
+            
+            #sliders div {
+                width:70%;
+                height: 22px;
+                padding: 0;
+                border: none;
+                cursor:pointer;
+                
+            }
+            .slider {
+              width:65%;
+              
+            }
+            .ui-slider-handle { 
+                z-index: 2;
+                background:#fff;
+                border:1px solid #000;
+                position:relative;
+                display:block;    
+                height:22px;
+                width:16px;
+                margin-top:5px;
+                cursor:pointer;
+            }
+            .value {
+                float:left;
+                position: relative;
+                left: 75%;
+                top: -23px;
+                width: 15%;
+                height: 18px;
+                padding: 0;
+                font-weight: bold;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+        
+        <script src="jquery.js"></script>
+        <script src="jquery-ui.js"></script>
+        
+        <script>
+
+        
+
+
+            function cleanup(inputString, maxLength){
+                
+                let clean = inputString.trim();
+                clean = clean.replace(/((\r)?\n)+/g, " ");
+                
+                clean = clean.substring(0, maxLength);
+    
+                return clean;
+            }
+    
+            function onNameChanged(newName){
+                let cleanName = cleanup(newName, 29);
+    
+                
+    
+                document.getElementById("your_title").innerText = cleanName;
+            }
+    
+            function onDescChanged(newDesc){
+                let cleanDesc = cleanup(newDesc, 61);
+    
+                document.getElementById("your_desc").innerText = cleanDesc;
+            }
+    
+            function onImgChanged(newImg){
+                let trimmedUrl = newImg.substring(0, 125);
+                if (trimmedUrl.match(/\.(jpeg|jpg|gif|png|svg)$/) != null){
+                    document.getElementById("your_img").src = trimmedUrl;
+                }
+            }
+    
+            function onS1Changed(newS1){
+                document.getElementById("your_s1").innerText = newS1;
+            }
+    
+            function onS2Changed(newS2){
+                document.getElementById("your_s2").innerText = newS2;
+            }
+    
+            function onS3Changed(newS3){
+                document.getElementById("your_s3").innerText = newS3;
+            }
+    
+            function onS4Changed(newS4){
+                document.getElementById("your_s4").innerText = newS4;
+            }
+    
+    
+        </script>
+        
+        
+        
+        
+        <h1>suggestions go here.</h1>
+
+        <a href="./index">back</a>
+
+        <div class="col-container">
+
+            <!-- the form -->
+            <div class="col" style="width: 75%;">
+
+                <h1>
+                Create your card!
+                </h1>
+                
+                
+                <form>
+                
+                    <table style="width:80%;" id="sliders">
+                    <tr>
+                    <th colspan="2">write stuff about your card!</th>
+                    </tr>
+                    <tr>
+                    <td style="width:25%;">
+                        name your card!
+                    </td>
+                    <td style="width:75%;">
+                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)"/>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td style="width:25%;">
+                        describe your card!
+                    </td>
+                    <td style="width:75%;">
+                        <input
+                            type="text"
+                            name="desc"
+                            value="I'm terribly sorry, but I'm at a complete loss for words about how to describe this card."
+                            style="width:100%;"
+                            onchange="onDescChanged(this.value)"
+                        />
+                    </td>
+                    </tr>
+                    <tr>
+                    <td style="width:25%;">
+                        link an image for it!
+                    </td>
+                    <td style="width:75%;">
+                        <input type="url" name="img" value="" style="width:100%;"onchange="onImgChanged(this.value)"/>
+                    </td>
+                    </tr>
+                    <tr>
+                    <th colspan="2">stats moment!!!!!</th>
+                    </tr>
+                    <tr>
+                    <td class="icon icon_a"></td>
+                    <td>
+                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <input type="number" class="value" name="s1" value="5" min="1" max="10" onchange="onS1Changed(this.value)" /><span>5</span>
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td class="icon icon_b"></td>
+                    <td>
+                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <input type="number" class="value" name="s2" value="5" min="1" max="10" onchange="onS2Changed(this.value)"/><span>5</span>
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td class="icon icon_c"></td>
+                    <td>
+                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <input type="number" class="value" name="s3" value="5" min="1" max="10" onchange="onS3Changed(this.value)" /><span>5</span>
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td class="icon icon_d"></td>
+                    <td>
+                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <input type="number" class="value" name="s4" value="5" min="1" max="10" onchange="onS4Changed(this.value)" /><span>5</span>
+                        </span>
+                    </td>
+                    </tr>
+                    </table>
+                    <br><label for="sliderMax">Total stat Max:</label>
+                    <input type='text' id="sliderMax" name='sliderMax' value='21' disabled/>
+                    <br><br><label for="sliderTotal">Stat Totals:</label>
+                    <input type="text" id="sliderTotal" name="sliderTotal" value="20" disabled/>
+
+                    <br>
+                    <br>
+
+                    <button type="submit">IT AIN'T DONE YET!</button>
+                </form>
+            </div>
+            <div class="col">
+
+                <h1>
+                    take a look at your epic card!!!!
+                </h1>
+
+                <div class="card" style="width:250px;">
+                    <div class="card_title"id="your_title">Your title here!</div>
+                    <div class="card_inner"></div>
+                    <div class="card_icon_holder">
+                      <img src="" id="your_img"/>
+                    </div>
+                    <div class="card_stats_parent">
+                        <div class="card_stats_cell card_stat_1">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number" id="your_s1">5</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_2">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number"id="your_s2">5</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_3">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number"id="your_s3">5</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_4">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number"id="your_s4">5</div>
+                        </div>
+                    </div>
+                    <div class="card_description" id="your_desc">
+                        I'm terribly sorry, but I'm at a complete loss for words about how to describe this card.
+                    </div>
+                    <div class="card_number" id="your_number">#idk yet</div>
+                </div>
+                
+            </div>
+
+        </div>
+
+
+    </body>
+
+    
+
+    <script>
+        // https://stackoverflow.com/a/9372222
+        var sliders = $(".slider.stat_slider");
+
+        sliders.each(function(index) {
+            var max = document.getElementById("sliderMax").value;
+            var value = Number($(this).text(), 10),
+                availableTotal = max;
+
+            
+            $(this).empty().slider({
+                value: 5,
+                min: 1,
+                max: $(this).siblings('.value').attr("max"),
+                range: "max",
+                step: 1,
+                animate: 100,
+                disabled: (function(curMax) {
+                    if (curMax < 1) {
+                        return 1;
+                    }
+                    return 0;
+                })($(this).siblings('.value').attr("max")),
+                slide: function(event, ui) {
+                    // Update text box to current value and call .change()
+                    $(this).siblings('.value').attr("value", ui.value);
+                    $(this).siblings('.value').trigger('change');
+                }
+            });
+            
+        });
+        $(".slider").each(function() {
+            var disabled = Number($(this).slider("option", "disabled"));
+            if(disabled == 1) {
+                $(this).siblings('.value').attr('disabled', 'disabled');    
+            }
+        });
+
+        $(".value").change(function() {
+            var thisAmount = Number($(this).prop("value"));
+            var totalMax = Number(document.getElementById("sliderMax").value);
+            var indMin = Number($(this).attr("min"));
+            var indMax = Number($(this).attr("max"));
+            var total = 0;
+
+            //Get the values of all other text boxes
+            $('.value').not(this).each(function() {
+                total += Number($(this).prop("value"));
+            });
+
+            //Find the remaining from our total sliders max
+            var remaining = totalMax - total;
+
+            if(remaining < 0) {
+            remaining = 0;   
+            }
+            //if we are under our minimums, go for it! Otherwise, reduce the number.
+            if (thisAmount >= indMin && thisAmount < indMax && thisAmount < totalMax && thisAmount < remaining) {
+                $(this).siblings(".slider").slider("option", "value", thisAmount);
+                //total += thisAmount;
+            }
+            else {
+                //var setMax = ((indMax + totalMax) - Math.abs(indMax - totalMax)) / 2;
+                var setMax = Math.min(indMax, totalMax, remaining);
+                $(this).siblings(".slider").slider("option", "value", setMax);
+                $(this).prop("value", setMax);
+                //total += (thisAmount - setMax);
+            }
+
+            //above was getting buggy, so lets just reset total and get it again
+            total = 0;
+            //Get the values of all text boxes
+            $('.value').each(function() {
+                total += Number($(this).prop("value"));
+            });
+            //Find our new remaining number after updating total for this value
+            remaining = totalMax - total;
+            if(remaining < 0) {
+            remaining = 0;
+            }
+            //Set each slider to the current point and update their max values.
+            $('.value').each(function() {
+                var sliderVal = Number($(this).prop("value"));
+                var sliderMin = Number($(this).attr("min"));
+                var sliderMax = Number($(this).attr("max"));
+                var setNewMax = (((sliderMax + totalMax) - Math.abs(sliderMax - totalMax)) / 2);
+                var newMax = sliderVal + remaining;
+
+                if(newMax < setNewMax) {
+                    $(this).siblings('.slider').slider("option", "max", newMax);
+                    $(this).siblings('span').text('/' + (newMax));
+                }
+                else {
+                    $(this).siblings('.slider').slider("option", "max", setNewMax);
+                    $(this).siblings('span').text('/' + (setNewMax));
+                }
+                $(this).prop("max", setNewMax);        
+                $(this).siblings(".slider").slider("option", "value", sliderVal);
+            });
+            $('#sliderTotal').attr("value", total);
+        });
+    </script>
+
+</html>

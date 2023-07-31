@@ -492,7 +492,7 @@ module.exports = {
     }
     cardName = cardName.trim();
 
-    cardName = cardName.replace(/(\r)?\n/g, " ");
+    cardName = cardName.replace(/((\r)?\n)+/g, " ");
 
     cardName = cardName.substring(0, card_consts.card_name_length);
 
@@ -509,7 +509,7 @@ module.exports = {
       cardDesc = "";
     }
 
-    cardDesc= cardDesc.replace(/(\r)?\n/g, " ");
+    cardDesc= cardDesc.replace(/((\r)?\n)+/g, " ");
 
     cardDesc = cardDesc.trim();
 

@@ -5,7 +5,9 @@
 const {
     preprocessWordLists,
     textToLatin,
-    doesContainBadWords
+    doesContainBadWords,
+    findBadWordLocations,
+    replaceBadWords
 } = require('deep-profanity-filter');
 const leofilter = require('leo-profanity');
 const { verifyImageURL } = require("verify-image-url");
@@ -18,7 +20,7 @@ module.exports = {
      */
     card_consts: {
         card_name_length : 29,
-        card_desc_length: 61,
+        card_desc_length: 125,
         card_img_url_length : 125,
         card_stat_max : 10,
         card_stat_min : 1,
@@ -38,8 +40,8 @@ module.exports = {
          * deep-profanity-filter preprocessed word list
          */
         deep_word_filter: preprocessWordLists(
-            leofilter.list(),
-            ["suck","scatman", "tit","xx","penistone","scunthorpe","shit"]
+            leofilter.list().concat(["fag"]),
+            ["suck","scatman", "tit","xx","penistone","scunthorpe","shit","homo"]
         ),
 
         /**
@@ -56,6 +58,22 @@ module.exports = {
                 )
             );
             
+        },
+
+        /**
+         * censors bad words from strings
+         * @param {string} strIn 
+         * @returns string but with naughty words censored
+         */
+        censor_string: function(strIn){
+            const found_locations = findBadWordLocations(
+                textToLatin(strIn),
+                this.deep_word_filter
+            );
+
+            const censored = replaceBadWords(strIn, found_locations);
+
+            return censored;
         },
 
         /**

@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+
+div.card {
+	position: relative;
+    font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    aspect-ratio: 5/7;
+    border-top-left-radius: 8% calc(40%/7);
+    border-top-right-radius: 8% calc(40%/7);
+    border-bottom-left-radius: 8% calc(40%/7);
+    border-bottom-right-radius:8% calc(40%/7);
+
+    z-index: 1;
+    background-color: greenyellow;
+}
+
+.card_title {
+    position: absolute;
+    top: calc(20%/7);
+    left: 8%;
+    right: 8%;
+    bottom: calc(640%/7);
+    text-align: left;
+    width: 84%;
+    z-index: 3;
+}
+
+div.card_inner{
+    position: absolute;
+    border-top-left-radius: calc(300%/23) 10%;
+    border-top-right-radius: calc(300%/23) 10%;
+    border-bottom-left-radius: calc(300%/23) 10%;
+    border-bottom-right-radius:calc(300%/23) 10%;
+
+    top: calc(60%/7);
+    bottom: calc(40%/7);
+    left: 4%;
+    right: 4%;
+    width: 92%;
+    height: calc(600%/7);
+
+    background-color:mintcream;
+    z-index: 2;
+}
+
+div.card_icon_holder{
+    position:absolute;
+
+    top: calc(80%/7);
+    bottom: 60%;
+    left: 10%;
+    right: 10%;
+
+    background-image: url("./assets/icons/committy.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 3;
+    background-color: ghostwhite;
+    outline-style: outset;
+    outline-color:dimgrey ;
+}
+
+div.card_icon_holder img {
+	display:block;
+    z-index: 4;
+    max-width: 100%;
+    max-height: 100%;
+  	height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+div.card_stats_parent {
+
+    position: absolute;
+
+    top: calc(290%/7);
+    bottom: calc(250%/7);
+    left: 12%;
+    right: 12%;
+
+    height: calc(160%/7);
+    width: 76%;
+
+    z-index: 3;
+
+    background-color:whitesmoke;
+    
+    outline-style: double;
+
+}
+
+div.card_stats_cell {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    
+    
+    z-index: 4;
+}
+
+div.card_stats_cell.card_stat_1 {
+    position: absolute;
+    left: 0%;
+    right: 50%;
+    top:0%;
+    bottom: 50%;
+    border-style: none dotted dotted none;
+}
+div.card_stats_cell.card_stat_2 {
+    position: absolute;
+    left: 50%;
+    right: 0%;
+    top:0%;
+    bottom: 50%;
+}
+div.card_stats_cell.card_stat_3 {
+    position: absolute;
+    left: 0%;
+    right: 50%;
+    top:50%;
+    bottom: 0%;
+}
+div.card_stats_cell.card_stat_4 {
+    position: absolute;
+    left: 50%;
+    right: 0%;
+    top:50%;
+    bottom: 0%;
+    border-style: dotted none none dotted
+}
+
+div.card_stats_cell > div.card_stat_number {
+	
+    position: absolute;
+    z-index: 4;
+    left: calc(40%/0.95);
+    right: calc(5%/0.95);
+    top: 10%;
+    bottom: 10%;
+    height: 80%;
+    width: calc(1000%/19);
+    color: black;
+    text-align: center;
+    
+}
+
+div.card_stats_cell > div.card_stat_icon {
+    
+    position: absolute;
+    z-index: 4;
+    left: calc(5%/0.95);
+    right: calc(60%/0.95);
+    top:12.5%;
+    bottom: 12.5%;
+    height: 75%;
+    width: calc(600%/19);
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+div.card_stats_cell.card_stat_1 > div.card_stat_icon {
+    background-image: url("./assets/icons/plastic-duck.svg");
+}
+
+div.card_stats_cell.card_stat_2 > div.card_stat_icon {
+    background-image: url("./assets/icons/rialto-bridge.svg");
+}
+
+div.card_stats_cell.card_stat_3 > div.card_stat_icon {
+    background-image: url("./assets/icons/whistle.svg");
+}
+
+div.card_stats_cell.card_stat_4 > div.card_stat_icon {
+    background-image: url("./assets/icons/abstract-084.svg");
+}
+
+
+div.card_description {
+    position: absolute;
+    bottom: calc(80%/7);
+    top: calc(475%/7);
+    left: 8%;
+    right: 8%;
+
+    width: 84%;
+    height: calc(145%/7);
+
+    background-color: aliceblue;
+    z-index:3;
+    
+    outline-style: groove;
+}
+
+div.card_number{
+    position: absolute;
+    top: calc(660%/7);
+    left: 8%;
+    right: 8%;
+    bottom: 0%;
+    text-align: right;
+    width: 84%;
+    height: calc(40%/7);
+    z-index: 3;
+}
+
+div.card_red {
+    background-color: tomato;
+}
+
+div.card_green {
+    background-color: forestgreen;
+}
+div.card_blue {
+    background-color: cornflowerblue;
+}
+div.card_orange {
+    background-color: chocolate;
+}
+div.card_purple {
+    background-color: violet;
+}
+div.card_yellow {
+    background-color: darkkhaki;
+}
+div.card_gray {
+    background-color: lightsteelblue;
+}
+/*
+
+Example card HTML:
+
+<div class="card card_gray" style="width:250px; height: 350px;">
+	<div class="card_title">card title goes here</div>
+    <div class="card_inner"></div>
+    <div class="card_icon_holder">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Abbaye_de_saint_Hilaire.jpg"/>
+    </div>
+    <div class="card_stats_parent">
+    	<div class="card_stats_cell card_stat_1">
+        	<div class="card_stat_icon"></div>
+            <div class="card_stat_number">3</div>
+        </div>
+    	<div class="card_stats_cell card_stat_2">
+        	<div class="card_stat_icon"></div>
+            <div class="card_stat_number">7</div>
+        </div>
+    	<div class="card_stats_cell card_stat_3">
+        	<div class="card_stat_icon"></div>
+            <div class="card_stat_number">9</div>
+        </div>
+    	<div class="card_stats_cell card_stat_4">
+        	<div class="card_stat_icon"></div>
+            <div class="card_stat_number">2</div>
+        </div>
+    </div>
+    <div class="card_description">
+    	Ecce homo qui est faba blah blah blah
+    </div>
+    <div class="card_number">#341</div>
+</div>
+
+*/
