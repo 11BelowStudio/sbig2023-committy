@@ -5,7 +5,7 @@
             Submit a card
         </title>
         
-        <link rel="stylesheet" href="card.css">
+        <link rel="stylesheet" href="/card.css">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
             body {
@@ -115,8 +115,8 @@
 
     <body>
         
-        <script src="jquery.js"></script>
-        <script src="jquery-ui.js"></script>
+        <script src="/jquery.js"></script>
+        <script src="/jquery-ui.js"></script>
         
         <script>
 
@@ -176,9 +176,9 @@
         
         
         
-        <h1>suggestions go here.</h1>
+        <h1>suggestions for <img src="./assets/icons/committy.svg" alt="Committy!"/> go here.</h1>
 
-        <a href="./index">back</a>
+        <a href="/">back</a>
 
         <div class="col-container">
 
@@ -190,7 +190,7 @@
                 </h1>
                 
                 
-                <form>
+                <form action="./api/submit_card_form" method="post" target="_blank">
                 
                     <table style="width:80%;" id="sliders">
                     <tr>
@@ -201,7 +201,7 @@
                         name your card!
                     </td>
                     <td style="width:75%;">
-                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)"/>
+                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)" required/>
                     </td>
                     </tr>
                     <tr>
@@ -269,6 +269,76 @@
 
                     <br>
                     <br>
+                    <h2>
+                        what card does this beat???
+                    </h2>
+                    <div class="col-container">
+                        <div class="col">
+                            <h3>this one <input type="radio" name="beats_loses_choice" value="{{card1.id}},{{card2.id}}" checked /></h3>
+                            <div class="card {{ card1.colour }}" style="width:250px; height: 350px;">
+                                <div class="card_title">{{card1.name}}</div>
+                                <div class="card_inner"></div>
+                                <div class="card_icon_holder">
+                                  <img src="{{{ card1.img }}}"/>
+                                </div>
+                                <div class="card_stats_parent">
+                                    <div class="card_stats_cell card_stat_1">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card1.stat1}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_2">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card1.stat2}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_3">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card1.stat3}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_4">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card1.stat4}}</div>
+                                    </div>
+                                </div>
+                                <div class="card_description">
+                                    {{card1.desc}}
+                                </div>
+                                <div class="card_number">#{{card1.id}}</div>
+                            </div>
+                            
+                        </div>
+                        <div class="col">
+                            <h3>this other one <input type="radio" name="beats_loses_choice" value="{{card2.id}},{{card1.id}}" checked /></h3>
+                            <div class="card {{ card2.colour }}" style="width:250px; height: 350px;">
+                                <div class="card_title">{{card2.name}}</div>
+                                <div class="card_inner"></div>
+                                <div class="card_icon_holder">
+                                  <img src="{{{ card2.img }}}"/>
+                                </div>
+                                <div class="card_stats_parent">
+                                    <div class="card_stats_cell card_stat_1">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card2.stat1}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_2">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card2.stat2}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_3">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card2.stat3}}</div>
+                                    </div>
+                                    <div class="card_stats_cell card_stat_4">
+                                        <div class="card_stat_icon"></div>
+                                        <div class="card_stat_number">{{card2.stat4}}</div>
+                                    </div>
+                                </div>
+                                <div class="card_description">
+                                    {{card2.desc}}
+                                </div>
+                                <div class="card_number">#{{card2.id}}</div>
+                            </div>
+                        </div>
+                    </div>
 
                     <button type="submit">IT AIN'T DONE YET!</button>
                 </form>

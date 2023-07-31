@@ -20,8 +20,18 @@ fastify.register(require("@fastify/formbody"));
 
 fastify.register(require("fastify-socket.io"));
 
+
+// View is a templating manager for fastify
+fastify.register(require("@fastify/view"), {
+  engine: {
+    handlebars: require("handlebars"),
+  },
+});
+
+
 const db = require("./sqlite.js");
 const { request } = require("express");
+const { card_consts } = require("./constants.js");
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
 
@@ -49,10 +59,6 @@ fastify.get('/index', function (req, reply) {
   reply.sendFile('index.html')
 })
 
-fastify.get('/submit_card', function (req, reply) {
-  reply.header('content-type', 'text/html; charset=utf-8');
-  reply.sendFile('submit_card.html')
-})
 
 
 // Just send some info at the home route
@@ -64,6 +70,101 @@ fastify.get("/api", (request, reply) => {
   };
   reply.status(200).send(data);
 });
+
+fastify.get('/submit_card', async(req, reply) => {
+
+  let otherCards = [];
+
+  
+  let otherResult = await db.getRandomCards(2);
+  if (!otherResult.success){
+    reply.status(500).send(
+      {
+        error: `unable to build the card submission form!`
+      }
+    );
+    return;
+  }
+  otherCards = otherResult.entries;
+
+  let params = {
+    card1: otherCards[0],
+    card2: otherCards[1]
+  };
+
+  params.card1.colour = card_consts.card_id_to_css_class(params.card1.id);
+
+  params.card2.colour = card_consts.card_id_to_css_class(params.card2.id);
+
+
+  reply.header('content-type', 'text/html; charset=utf-8');
+  return reply.view("/public/submit_card.hbs", params);
+})
+
+
+fastify.get('/view_card/:id', async(req, reply) => {
+  let cardID = -1;
+  try{
+    if (req.params.id.trim()==="random"){
+      
+      let randResult = await db.getRandomCardIDs(1);
+      if (randResult.success){
+        cardID = randResult.entries[0].id;
+      }
+      else {
+        reply.status(500).send(
+          {
+            error: `unable to find a random card ID!`
+          }
+        );
+      }
+    }
+    else {
+      cardID = parseInt(req.params.id);
+    }
+    
+  } catch(error){
+    reply.status(400).send(
+      {
+        error: `${cardID} could not be processed as an integer! (and/or wasn't "random")`
+      }
+    );
+  }
+
+  
+
+  let params = {};
+  
+  let cardResult = await db.getCard(cardID);
+
+  if (!cardResult.success){
+
+    reply.status(400).send(
+      {
+        error: `No card with ID ${cardID} could be found!`
+      }
+    );
+  }
+  
+
+  params.card = {
+    id: cardID,
+    colour: card_consts.card_id_to_css_class(cardID),
+    name: cardResult.card.name,
+    desc: cardResult.card.desc,
+    img: cardResult.card.img,
+    stat1: cardResult.card.stat1,
+    stat2: cardResult.card.stat2,
+    stat3: cardResult.card.stat3,
+    stat4: cardResult.card.stat4
+  };
+  reply.header('content-type', 'text/html; charset=utf-8');
+  return reply.view("/public/view_card.hbs", params);
+
+});
+
+
+
 
 
 /*
@@ -111,7 +212,7 @@ fastify.delete("/message", async (request, reply) => {
 fastify.get("/api/cards", async(request, reply) => {
   
   let data = {};
-  data.result = await db.getCards();
+  data.result = await db.getAllCards();
   console.log(data.result);
   if (!data.result || !data.result.success){ data.error = errorMessage;}
   const status = data.error ? 400 : 200;
@@ -149,33 +250,50 @@ fastify.get("/api/card_ids", async(request, reply) => {
  */
 fastify.get("/api/card_links", async(request, reply) => {
   let data = {};
-  let allIDs = await db.getCardIDs();
-  if (!allIDs || !allIDs.success){
+  data.result = await db.getCardIDs();
+  if (!data.result || !data.result.success){
     data.error = errorMessage;
   } else {
-    for(const itm of allIDs.entries){
-      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+    for(const itm of data.result.entries){
+      itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
-    data.result = allIDs;
+    
   }
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 });
 
-fastify.get("/api/n_cards/:n", async(request, reply) => {
+
+fastify.get("/api/n_card_ids/:n", async(request, reply) => {
   let data = {};
-  let allIDs = await db.getCardIDs();
-  if (!allIDs || !allIDs.success){
+
+  data.result = await db.getRandomCardIDs(request.params.n);
+
+  console.log(data.result);
+
+  if (!data.result || !data.result.success){
     data.error = errorMessage;
   } else {
 
-    let sampledIDs = sample(allIDs.entries, request.params.n);
-    for(const itm of sampledIDs){
-      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+    
+    for(const itm of data.result.entries){
+      itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
-    data.result = {success : allIDs.success};
-    data.result.entries = sampledIDs;
+    
   }
+  const status = data.error ? 400 : 200;
+  reply.status(status).send(data);
+
+})
+
+fastify.get("/api/n_cards/:n", async(request, reply) => {
+  let data = {};
+
+  data.result = await db.getRandomCards(request.params.n);
+  if (!data.result || !data.result.success){
+    data.error = errorMessage;
+  }
+
   const status = data.error ? 400 : 200;
   reply.status(status).send(data);
 });
@@ -189,11 +307,11 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
   }
   else if (!request.params.except){
     data.error = `If you don't want to exclude a card, please use ${request.hostname}/api/n_cards/${request.params.n} instead.`;
-    data.useThis = `https://${request.hostname}/api/n_cards/${request.params.n}`;
+    data.useThis = `http://${request.hostname}/api/n_cards/${request.params.n}`;
     reply.status(303).send(data);
     return;
   }
-  data.exceptCard = `https://${request.hostname}/api/card/${request.params.except}`;
+  data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
   let allIDs = await db.getCardIDsExcept(request.params.except);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
@@ -201,7 +319,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
     
     let sampledIDs = sample(allIDs.entries, request.params.n);
     for(const itm of sampledIDs){
-      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+      itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
     data.result = {success : allIDs.success};
     data.result.entries = sampledIDs;
@@ -273,12 +391,89 @@ fastify.post("/api/report", async (request, reply) => {
     data.success = false;
   }
   else {
-    data.success = await db.reportThisCard(request.body.id);
+    data.success = db.reportThisCard(request.body.id);
   }
   const status = data.success ? 201 : 400;
   reply.status(status).send(data);
 });
 
+
+fastify.post("/api/submit_card_form", async(request, reply) => {
+
+  let data = {success: false};
+  let response = 0;
+  if (!request.body){
+    data.success = false;
+    data.error = "you forgor to submit the form :skull:";
+    response = 400;
+  }
+  else{
+
+    const body = request.body;
+
+    console.log(body);
+    if (
+      !request.body.name || request.body.name.trim() == false
+    ){
+      data.success = false;
+      data.error = "please give your card a `name`.";
+      response = 400;
+    }
+    else if (
+      !request.body.beats_loses_choice || request.body.beats_loses_choice.trim() == false
+    ){
+      data.success = false;
+      data.error = "you need to pick a card which your card beats/loses to! (`beats_loses_choice`)";
+      response = 400;
+    }
+    else {
+      try{
+        let beats_loses = request.body.beats_loses_choice.split(",");
+        body.beats = parseInt(beats_loses[0]);
+        body.loses = parseInt(beats_loses[1]);
+      } catch(error){
+        data.success = false;
+        data.error = "expected `beats_loses_choice` to be in the form `beats_id,loses_to_id`, and it wasn't!";
+        response = 400;
+      }
+    }
+
+    if (response == 0){
+      let result = await db.addCardForm(
+        body.name,
+        (body.desc) ? body.desc : "",
+        (body.img)? body.img : "",
+        (body.s1) ? parseInt(body.s1) : 1,
+        (body.s2) ? parseInt(body.s2) : 1,
+        (body.s3) ? parseInt(body.s3) : 1,
+        (body.s4) ? parseInt(body.s4) : 1,
+        body.beats,
+        body.loses
+      );
+
+      data.success = result.success;
+
+      if (data.success){
+        result.view_url = `http://${request.hostname}/view_card/${result.cardID}`;
+        data.result = result;
+        response = 201;
+      }
+      else {
+        data.error = result.message;
+      }
+
+    }
+
+    if (response == 0){
+      response = (data.success ? 201 : 400);
+    }
+    reply.status(response).send(data);
+
+
+
+  }
+
+});
 
 fastify.post("/api/add_card", async(request, reply) => {
 
@@ -291,13 +486,13 @@ fastify.post("/api/add_card", async(request, reply) => {
       request.body.name,
       request.body.desc,
       request.body.img,
-      request.body.s1,
-      request.body.s2,
-      request.body.s3,
-      request.body.s4
+      parseInt(request.body.s1),
+      parseInt(request.body.s2),
+      parseInt(request.body.s3),
+      parseInt(request.body.s4)
     );
-    data.url = `https://${request.hostname}/api/card/${data.result.cardID}`;
-    data.twoOthers = `https://${request.hostname}/api/new_card_two_others/${data.result.cardID}`;
+    data.url = `http://${request.hostname}/api/card/${data.result.cardID}`;
+    data.twoOthers = `http://${request.hostname}/api/new_card_two_others/${data.result.cardID}`;
     data.success = data.result.success;
   }
   const status = data.success ? 201 : 400;
@@ -314,7 +509,7 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
     return;
   }
 
-  data.exceptCard = `https://${request.hostname}/api/card/${request.params.newID}`;
+  data.exceptCard = `http://${request.hostname}/api/card/${request.params.newID}`;
   let allIDs = await db.getCardIDsExcept(request.params.newID);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
@@ -322,7 +517,7 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
     
     let sampledIDs = sample(allIDs.entries, 2);
     for(const itm of sampledIDs){
-      itm["url"] = `https://${request.hostname}/api/card/${itm["id"]}`;
+      itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
     data.result = {success : allIDs.success};
     data.result.entries = sampledIDs;

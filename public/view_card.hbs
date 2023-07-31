@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Viewing a card!
+        </title>
+        
+        <link rel="stylesheet" href="/card.css">
+    </head>
+    <body>
+        <h1>
+            Viewing <img src="/assets/icons/committy.svg" alt="Committy!"/> card #{{card.id}}
+        </h1>
+        <a href="/">back</a>
+        <br>
+        <div class="card {{ card.colour }}" style="width:250px; height: 350px;">
+            <div class="card_title">{{card.name}}</div>
+            <div class="card_inner"></div>
+            <div class="card_icon_holder">
+                <img src="{{{ card.img }}}"/>
+            </div>
+            <div class="card_stats_parent">
+                <div class="card_stats_cell card_stat_1">
+                    <div class="card_stat_icon"></div>
+                    <div class="card_stat_number">{{card.stat1}}</div>
+                </div>
+                <div class="card_stats_cell card_stat_2">
+                    <div class="card_stat_icon"></div>
+                    <div class="card_stat_number">{{card.stat2}}</div>
+                </div>
+                <div class="card_stats_cell card_stat_3">
+                    <div class="card_stat_icon"></div>
+                    <div class="card_stat_number">{{card.stat3}}</div>
+                </div>
+                <div class="card_stats_cell card_stat_4">
+                    <div class="card_stat_icon"></div>
+                    <div class="card_stat_number">{{card.stat4}}</div>
+                </div>
+            </div>
+            <div class="card_description">
+                {{card.desc}}
+            </div>
+            <div class="card_number">#{{card.id}}</div>
+        </div>
+
+        <form action="./api/report" method="post" target="_self">
+        <input type="radio" name="id" value="{{card.id}}" checked style="visibility: hidden;" />
+        <button type="submit">REPORT CARD</button>
+        </form> 
+    </body>
+</html>
