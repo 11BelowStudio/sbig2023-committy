@@ -300,6 +300,7 @@ fastify.get("/api/n_cards/:n", async(request, reply) => {
 
 fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
   let data = {};
+  let except = -1;
   if (!request.params || !request.params.n){
     data.error = `please define a value for n and except. ${request.hostname}/api/n_cards_except/NUMBER/ID_TO_OMIT`;
     reply.status(400).send(data);
@@ -311,13 +312,24 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
     reply.status(303).send(data);
     return;
   }
+  else {
+    try {
+      except = parseInt(request.params.except);
+      //console.log(except);
+    } catch (error){
+      console.log(error);
+      data.error = `hey it looks like ${request.params.except} wasn't a number smh my head`;
+    }
+  }
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
-  let allIDs = await db.getCardIDsExcept(request.params.except);
+  let allIDs = await db.getCardIDsExcept(except);
+  console.log(allIDs);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
     
     let sampledIDs = sample(allIDs.entries, request.params.n);
+    console.log(sampledIDs);
     for(const itm of sampledIDs){
       itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }

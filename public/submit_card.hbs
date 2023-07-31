@@ -135,10 +135,12 @@
     
             function onNameChanged(newName){
                 let cleanName = cleanup(newName, 29);
-    
-                
-    
                 document.getElementById("your_title").innerText = cleanName;
+
+                const titleHolders = document.getElementsByClassName("your_title_holder_class");
+                for (const element of titleHolders){
+                  element.innerText = (cleanName)? cleanName : "your card";
+                }
             }
     
             function onDescChanged(newDesc){
@@ -201,7 +203,7 @@
                         name your card!
                     </td>
                     <td style="width:75%;">
-                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)" required/>
+                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)" maxlength="61" required/>
                     </td>
                     </tr>
                     <tr>
@@ -215,6 +217,7 @@
                             value="I'm terribly sorry, but I'm at a complete loss for words about how to describe this card."
                             style="width:100%;"
                             onchange="onDescChanged(this.value)"
+                            maxlength="125"
                         />
                     </td>
                     </tr>
@@ -223,7 +226,7 @@
                         link an image for it!
                     </td>
                     <td style="width:75%;">
-                        <input type="url" name="img" value="" style="width:100%;"onchange="onImgChanged(this.value)"/>
+                        <input type="url" name="img" value="" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
                     </td>
                     </tr>
                     <tr>
@@ -232,7 +235,7 @@
                     <tr>
                     <td class="icon icon_a"></td>
                     <td>
-                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <span class="slideBG"><div class="slider stat_slider"></div>
                         <input type="number" class="value" name="s1" value="5" min="1" max="10" onchange="onS1Changed(this.value)" /><span>5</span>
                         </span>
                     </td>
@@ -240,7 +243,7 @@
                     <tr>
                     <td class="icon icon_b"></td>
                     <td>
-                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <span class="slideBG"><div class="slider stat_slider"></div>
                         <input type="number" class="value" name="s2" value="5" min="1" max="10" onchange="onS2Changed(this.value)"/><span>5</span>
                         </span>
                     </td>
@@ -248,7 +251,7 @@
                     <tr>
                     <td class="icon icon_c"></td>
                     <td>
-                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <span class="slideBG"><div class="slider stat_slider"></div>
                         <input type="number" class="value" name="s3" value="5" min="1" max="10" onchange="onS3Changed(this.value)" /><span>5</span>
                         </span>
                     </td>
@@ -256,21 +259,21 @@
                     <tr>
                     <td class="icon icon_d"></td>
                     <td>
-                        <span class='slideBG'><div class="slider stat_slider"></div>
+                        <span class="slideBG"><div class="slider stat_slider"></div>
                         <input type="number" class="value" name="s4" value="5" min="1" max="10" onchange="onS4Changed(this.value)" /><span>5</span>
                         </span>
                     </td>
                     </tr>
                     </table>
                     <br><label for="sliderMax">Total stat Max:</label>
-                    <input type='text' id="sliderMax" name='sliderMax' value='21' disabled/>
+                    <input type="text" id="sliderMax" name="sliderMax" value="21" disabled/>
                     <br><br><label for="sliderTotal">Stat Totals:</label>
                     <input type="text" id="sliderTotal" name="sliderTotal" value="20" disabled/>
 
                     <br>
                     <br>
                     <h2>
-                        what card does this beat???
+                        which card does <span class="your_title_holder_class">your card</span> beat???
                     </h2>
                     <div class="col-container">
                         <div class="col">
@@ -307,7 +310,7 @@
                             
                         </div>
                         <div class="col">
-                            <h3>this other one <input type="radio" name="beats_loses_choice" value="{{card2.id}},{{card1.id}}" checked /></h3>
+                            <h3>this other one <input type="radio" name="beats_loses_choice" value="{{card2.id}},{{card1.id}}" /></h3>
                             <div class="card {{ card2.colour }}" style="width:250px; height: 350px;">
                                 <div class="card_title">{{card2.name}}</div>
                                 <div class="card_inner"></div>
@@ -340,7 +343,7 @@
                         </div>
                     </div>
 
-                    <button type="submit">IT AIN'T DONE YET!</button>
+                    <button type="submit">ok sure seems alright to me time to submit this binch</button>
                 </form>
             </div>
             <div class="col">

@@ -315,6 +315,42 @@ function varargs_prepared_statement_prepper(templateStr, argsList){
 }
 
 /**
+ * like the other one but less shit
+ * @param {*} templateStr 
+ * @param {*} argsList 
+ * @returns object of { success: bool, statementString: str, bindList: [any], message: str }
+ */
+function varied_length_prepared_statement_prepper_v2(templateStr, argsList){
+  let result = {
+    success: false,
+    statementString: templateStr,
+    bindList: argsList,
+    message: ""
+  };
+  if (!templateStr.includes("?")){
+    result.message = "You forgot the ? placeholder smh my head";
+    return result;
+  }
+  else if (!argsList || argsList.length < 1){
+    result.message = "no argsList?";
+    return result;
+  }
+  else if (argsList.length == 1){
+    result.success = true;
+    result.message = "1 arg, untouched";
+    return result;
+  }
+
+  let placeholderList = [];
+  for (let index = 0; index < argsList.length; index++) {
+    placeholderList.push(`?`);
+  }
+  result.statementString = templateStr.replace("?", placeholderList.join(","));
+  result.success = true;
+  return result;
+}
+
+/**
  * Obtains the full details of the cards with the given IDs
  * @param {*} cId int
  * @returns object of {
@@ -334,7 +370,7 @@ async function _getCards(...args) {
     return result;
   }
 
-  const preppedStatement = varargs_prepared_statement_prepper(
+  const preppedStatement = varied_length_prepared_statement_prepper_v2(
     "SELECT id, name, desc, img, stat1, stat2, stat3, stat4 FROM cards "
     + "WHERE id IN (?)",
     args
@@ -363,7 +399,7 @@ async function _getCards(...args) {
     
 
     const stmt = db.prepare(preppedStatement.statementString);
-    result.entries = stmt.all(...argList);
+    result.entries = stmt.all(preppedStatement.bindList);
 
     result.success = (result.entries != false);
   } catch (dbError){
@@ -416,6 +452,56 @@ async function _getRandomCardIDs(cardsToGet) {
   }
 
   result.entries = sample(result.entries, cardsToGet);
+
+  return result;
+
+}
+
+function _checkIfCardsExist(...ids){
+
+  let result = {success: false, exists: [], all_exist: false};
+
+  if (ids.length == 0){
+    // technically the truth.
+    result.success = true;
+    result.all_exist = true;
+    return result;
+  }
+
+  try {
+
+    let notFoundSet = new Set();
+
+    for (let index = 0; index < ids.length; index++) {
+      let intId = parseInt(ids[index]);
+      notFoundSet.add(intId);
+      ids[index] = intId;
+    }
+
+    const prepped = varied_length_prepared_statement_prepper_v2(
+      `SELECT id FROM cards WHERE id IN (?)`,
+      ids
+    );
+
+    const stmt = db.prepare(prepped.statementString);
+
+    const outcome = stmt.all(prepped.bindList);
+
+    let exList = [];
+    for(const itm of outcome){
+      exList.push(itm.id);
+      notFoundSet.delete(itm.id);
+    }
+
+    result.exists = exList;
+    result.all_exist = notFoundSet.size == 0;
+    result.success = true;
+
+  } catch (error){
+    console.log(error);
+    result.success = false;
+    result.all_exist = false;
+  }
 
   return result;
 
@@ -501,7 +587,7 @@ module.exports = {
       //result.entries = await stmt.run(preppedStatement.bindDict);
 
       const stmt = db.prepare(preppedStatement.statementString);
-      result.entries = stmt.run(...preppedStatement.bindList);
+      result.entries = stmt.all(...preppedStatement.bindList);
 
       result.success = (result.entries != false);
     } catch (dbError){
@@ -561,6 +647,10 @@ module.exports = {
     let result = {success: false, entries: []};
     
     try {
+
+      
+
+
       const stmt = db.prepare(
         "SELECT * FROM wins WHERE"
         + " (winner_id = @c1 AND loser_id = @c2) "
@@ -589,15 +679,42 @@ module.exports = {
    * @returns object of {success: bool, existsAlready: bool }
    */
   setWinData: async(winner, loser) => {
-    let result = {success: false, existsAlready: false};
+    let result = {success: false, existsAlready: false, message: ""};
     try {
       
 
       if (winner == null){
-        console.log("why is winner null???"); 
+        result.message = "why is winner null???"; 
+        return result;
       }
-      if (loser == null){
-        console.log("why is loser null???");
+      else if (loser == null){
+        result.message = "why is loser null???";
+        return result;
+      }
+      try{
+        winner = parseInt(winner);
+        loser = parseInt(loser);
+      } catch (parseError){
+        result.message = `one or both of winner (${winner}) and loser (${loser}) aren't numbers >:(`;
+        return result;
+      }
+
+      if (winner == loser){
+        result.message = `You are not allowed to record card ${winner} beating itself up smh my head`;
+      }
+
+      {
+        const existCheck = _checkIfCardsExist(winner, loser);
+        
+        if (!existCheck.success){
+          result.message = `Unable to check if cards ${winner} and ${loser} exist!`;
+          return result;
+        }
+        else if (!existCheck.all_exist){
+          result.message = `Out of the given cards [${winner},${loser}], only cards [${existCheck.exists.join(",")}] actually exist.`;
+          return result;
+        }
+
       }
 
       try {
@@ -811,9 +928,22 @@ module.exports = {
 
     let result = {success: false, cardID: -1, message: ""};
 
-    if (cardItBeats == null || cardItLosesTo == null || cardItBeats == cardItLosesTo) {
+    if (cardItBeats == null || cardItLosesTo == null) {
       result.message = "you forgot to declare the IDs of the two cards which this new card beats/loses to";
       return result;
+    } else if (cardItBeats == cardItLosesTo){
+      result.message = `cardItBeats and cardItLoses to need to be different values. They can't both have the value of ${cardItBeats}`;
+    } else {
+      const othersExistResult = _checkIfCardsExist(cardItBeats, cardItLosesTo);
+
+      if (!othersExistResult.success){
+        result.message = `unable to check if cards ${cardItBeats} and ${cardItLosesTo} exist.`;
+        return result;
+      } else if (!othersExistResult.all_exist) {
+
+        result.message = `given cards: [${cardItBeats}, ${cardItLosesTo}]. However, only cards [${othersExistResult.exists.join(",")}] actually exist`;
+        return result;
+      }
     }
 
     let statsArray = [s1, s2, s3, s4];
