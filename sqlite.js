@@ -944,6 +944,8 @@ module.exports = {
           throw error("command to add the new card failed!");
         } else {
           tempResult.newCardID = innerTransRes.lastInsertRowid;
+          tempResult.success = true;
+          result.cardID = tempResult.newCardID;
         }
 
         let _newCardID = innerTransRes.lastInsertRowid;
@@ -976,18 +978,10 @@ module.exports = {
         }
 
         result.success = true;
-
+        result.cardID = tempResult.newCardID;
+        result.message = `Added card ${cardName} to the cards database (ID ${result.cardID})!`;
         
-
-        if (tempResult.success){
-          result.cardID = tempResult.newCardID;
-          result.success = tempResult.success;
-          result.message = `Added card ${cardName} to the cards database (ID ${result.cardID})!`;
-        }
-        else {
-          result.success = false;
-          result.message = `You should not be seeing this addCardForm error message, as it shouldn't be possible for this error to happen in the first place.`;
-        }
+        
         
 
       } catch (err){
