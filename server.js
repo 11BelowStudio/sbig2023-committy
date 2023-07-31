@@ -125,38 +125,48 @@ fastify.get('/view_card/:id', async(req, reply) => {
   } catch(error){
     reply.status(400).send(
       {
-        error: `${cardID} could not be processed as an integer! (and/or wasn't "random")`
+        error: `${cardID} needs to be an integer or "random"`
       }
     );
   }
 
   
 
-  let params = {};
-  
-  let cardResult = await db.getCard(cardID);
-
-  if (!cardResult.success){
-
-    reply.status(400).send(
-      {
-        error: `No card with ID ${cardID} could be found!`
-      }
-    );
-  }
-  
-
-  params.card = {
-    id: cardID,
-    colour: card_consts.card_id_to_css_class(cardID),
-    name: cardResult.card.name,
-    desc: cardResult.card.desc,
-    img: cardResult.card.img,
-    stat1: cardResult.card.stat1,
-    stat2: cardResult.card.stat2,
-    stat3: cardResult.card.stat3,
-    stat4: cardResult.card.stat4
+  let params = {
+    card: {
+      id: `${cardID}???`,
+      name : "A card that doesn't exist yet",
+      colour: "card_error",
+      desc: `hmm, the card with ID ${cardID} doesn't exist yet. Perhaps you can fix this problem by creating it.`,
+      img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Icon-round-Question_mark.svg",
+      stat1: 0,
+      stat2: 0,
+      stat3: 0,
+      stat4: 99
+    }
   };
+
+  try{
+    let cardResult = await db.getCard(cardID);
+
+    if (cardResult.success){
+      params.card = {
+        id: cardID,
+        colour: card_consts.card_id_to_css_class(cardID),
+        name: cardResult.card.name,
+        desc: cardResult.card.desc,
+        img: cardResult.card.img,
+        stat1: cardResult.card.stat1,
+        stat2: cardResult.card.stat2,
+        stat3: cardResult.card.stat3,
+        stat4: cardResult.card.stat4
+      };
+    }
+  } catch(error){
+    // ignore it.
+  }
+
+  
   reply.header('content-type', 'text/html; charset=utf-8');
   return reply.view("/public/view_card.hbs", params);
 
@@ -396,13 +406,17 @@ fastify.post("/api/declare_winner", async(request, reply) => {
 
 
 fastify.post("/api/report", async (request, reply) => {
-  let data = {};
+  let data = {
+    success: false,
+    message: ""
+  };
 
   if(!request.body || !request.body.id){
     data.success = false;
+    data.message = "please ensure you include the ID of the card in your request body.";
   }
   else {
-    data.success = db.reportThisCard(request.body.id);
+    data = db.reportThisCard(request.body.id);
   }
   const status = data.success ? 201 : 400;
   reply.status(status).send(data);

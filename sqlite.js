@@ -338,23 +338,24 @@ async function _getRandomCardIDs(cardsToGet) {
 
 function _checkIfCardsExist(...ids){
 
-  let result = {success: false, exists: [], all_exist: false};
+  let result = {success: false, exists: [], all_exist: false, message: ""};
 
   if (ids.length == 0){
     // technically the truth.
+    result.message = "all 0 of these IDs exist, but why would you want to check that?";
     result.success = true;
-    result.all_exist = true;
+    result.all_exist = false;
     return result;
   }
+
+  
 
   try {
 
     let notFoundSet = new Set();
 
     for (let index = 0; index < ids.length; index++) {
-      let intId = parseInt(ids[index]);
-      notFoundSet.add(intId);
-      ids[index] = intId;
+      notFoundSet.add(ids[index]);
     }
 
     const prepped = varied_length_prepared_statement_prepper_v2(
@@ -365,6 +366,8 @@ function _checkIfCardsExist(...ids){
     const stmt = db.prepare(prepped.statementString);
 
     const outcome = stmt.all(prepped.bindList);
+
+    console.log(outcome);
 
     let exList = [];
     for(const itm of outcome){
@@ -378,6 +381,7 @@ function _checkIfCardsExist(...ids){
 
   } catch (error){
     console.log(error);
+    result.message = "error when querying database when checking if they exist";
     result.success = false;
     result.all_exist = false;
   }
@@ -1003,27 +1007,46 @@ module.exports = {
    * allows a card to be reported
    * @param {*} cardId ID of the card being reported
    */
-  reportThisCard: async(cardId) => {
-    let success = false;
+  reportThisCard: function(cardId){
+    
+
+    let result = {success: false, message: ""};
+
+    {
+      let existCheck = _checkIfCardsExist(cardId);
+      if (!existCheck.success){
+        result.message = existCheck.message;
+        return result;
+      }
+      else if (!existCheck.all_exist){
+        result.message = `The card with ID ${cardId} doesn't exist.`;
+        return result;
+      }
+    }
+
     try{
       const stmt = db.prepare(
         "INSERT INTO reports(card_id, time) VALUES (@id, @time)"
       );
-      const result = stmt.run(
+      const dbResult = stmt.run(
         {
-          "@id": cardId,
-          "@time": Date.now()
+          id: cardId,
+          time: Date.now()
         }
       );
-      console.log(result);
+      console.log(dbResult);
 
-      success = (result.changes > 0);
+      result.success = (dbResult.changes > 0);
+      result.message = (result.success) ? 
+        `Reported card ${cardId}, report ID ${dbResult.lastInsertRowid}`:
+        `Unable to successfully add report for ${cardId} to database!`;
 
     } catch (dbError) {
       console.error(dbError);
-      
+      result.success = false;
+      result.message = `error inserting report for card ${cardId} into database!`;
     }
-    return success;
+    return result;
   },
 
   /**

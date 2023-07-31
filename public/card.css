@@ -23,6 +23,8 @@ div.card {
     text-align: left;
     width: 84%;
     z-index: 3;
+
+    font-weight: bold;
 }
 
 div.card_inner{
@@ -147,6 +149,7 @@ div.card_stats_cell > div.card_stat_number {
     width: calc(1000%/19);
     color: black;
     text-align: center;
+    font-weight: bold;
     
 }
 
@@ -209,6 +212,7 @@ div.card_number{
     width: 84%;
     height: calc(40%/7);
     z-index: 3;
+    font-weight: bold;
 }
 
 div.card_red {
@@ -232,6 +236,21 @@ div.card_yellow {
 }
 div.card_gray {
     background-color: lightsteelblue;
+}
+
+div.card_error {
+    background-image: url("./assets/icons/error.svg");
+    background-repeat: repeat;
+    background-size: auto;
+
+}
+
+div.card_error > .card_title {
+    color:azure;
+}
+
+div.card_error > .card_number {
+    color: seashell;
 }
 /*
 
