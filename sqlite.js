@@ -9,9 +9,6 @@
 const fs = require("fs");
 const dbFile = "./.data/cards.db";
 const exists = fs.existsSync(dbFile);
-const sqlite3 = require("sqlite3").verbose();
-const dbWrapper = require("sqlite");
-const casual = require("casual");
 
 const {
   card_consts,
@@ -22,7 +19,6 @@ const e = require("express");
 const {
   sample
 } = require("underscore");
-const { time } = require("console");
 
 
 //https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md
@@ -150,123 +146,6 @@ if (!exists){
 
 }
 
-
-
-
-/*
-
-//SQLite wrapper for async / await connections https://www.npmjs.com/package/sqlite
-dbWrapper
-  .open({
-    filename: dbFile,
-    driver: sqlite3.Database
-  })
-  .then(async dBase => {
-    db = dBase;
-
-    try {
-      if (!exists) {
-
-        await db.run(
-          "CREATE TABLE cards ("
-            + " id INTEGER NOT NULL PRIMARY KEY,"
-            + " name TEXT NOT NULL,"
-            + " desc TEXT NOT NULL,"
-            + " img TEXT NOT NULL,"
-            + " stat1 INTEGER NOT NULL DEFAULT 1,"
-            + " stat2 INTEGER NOT NULL DEFAULT 1,"
-            + " stat3 INTEGER NOT NULL DEFAULT 1,"
-            + " stat4 INTEGER NOT NULL DEFAULT 1,"
-          + " CHECK (length(name) > 0) "
-          +")"
-        );
-
-        await db.run(
-          "CREATE TABLE wins ("
-            + "winner_id INTEGER NOT NULL,"
-            + "loser_id INTEGER NOT NULL,"
-            + "time INTEGER NOT NULL,"
-            + "FOREIGN KEY (winner_id) REFERENCES cards(id)"
-              + " ON DELETE CASCADE"
-              + " ON UPDATE CASCADE,"
-            + "FOREIGN KEY (loser_id) REFERENCES cards(id)"
-              + " ON DELETE CASCADE"
-              + " ON UPDATE CASCADE,"
-            + "PRIMARY KEY (winner_id, loser_id)"
-          + ")"
-        );
-
-        await db.run(
-          "CREATE TABLE reports("
-          + " id INTEGER NOT NULL PRIMARY KEY,"
-          + " card_id INTEGER NOT NULL,"
-          + " time INTEGER NOT NULL,"
-          + " FOREIGN KEY (card_id) REFERENCES cards(id)"
-            + " ON DELETE CASCADE"
-            + " ON UPDATE CASCADE"
-          +")"
-        );
-
-
-        const defaultCards = [
-          {
-            name:"Kevin",
-            desc:"Holy shit it's Kevin!!!",
-            img: "https://i.imgur.com/rf0hpyh.png",
-            s1: 10,
-            s2: 3,
-            s3: 4,
-            s4: 2
-          },
-          {
-            name:"Ke'in",
-            desc:"Kevin's evil bri'ish counterpart. He's rather rude.",
-            img: "https://i.imgur.com/hIHI4M5.png",
-            s1: 2,
-            s2: 5,
-            s3: 4,
-            s4: 10
-          },
-          {
-            name:"An open Nokia E72",
-            desc:"as photographed by highwycombe on wikipedia.",
-            img: "https://upload.wikimedia.org/wikipedia/commons/6/65/NokiaE72Open.JPG",
-            s1: 7,
-            s2: 2,
-            s3: 7,
-            s4: 2
-          }
-        ]
-
-        const defaultCardStmt = await db.prepare(
-          "INSERT INTO cards(name, desc, img, stat1, stat2, stat3, stat4) "
-          +" VALUES (@n, @d, @i, @s1, @s2, @s3, @s4)"
-        );
-
-        for (const c of defaultCards){
-          let res = await defaultCardStmt.run(
-            {
-              "@n": c.name,
-              '@d': c.desc,
-              '@i': c.img,
-              '@s1': c.s1,
-              '@s2': c.s2,
-              "@s3": c.s3,
-              "@s4": c.s4
-            }
-          );
-          console.log(res);
-        }
-
-        
-      }
-      console.log(await db.all("SELECT * from cards"));
-    } catch (dbError) {
-      console.error(dbError);
-    }
-  });
-
-  */
 
 /**
  * Used to help produce prepared statements when using varargs and such
@@ -1079,7 +958,7 @@ module.exports = {
         innerTransRes = winsInStmt.run({
           win: _newCardID,
           lose: cardItBeats,
-          t: time.now()
+          t: Date.now()
         });
 
         if (innerTransRes.changes < 0){
@@ -1089,7 +968,7 @@ module.exports = {
         innerTransRes = winsInStmt.run({
           win: cardItLosesTo,
           lose: _newCardID,
-          t: time.now()
+          t: Date.now()
         });
         
         if (innerTransRes.changes < 0){
@@ -1098,22 +977,7 @@ module.exports = {
 
         result.success = true;
 
-        /*
-        insertAllTransaction(
-          {
-            na: cardName,
-            de: cardDesc,
-            im: cardImg,
-            st1: s1,
-            st2: s2,
-            st3: s3,
-            st4: s4
-          },
-          cardItBeats,
-          cardItLosesTo,
-          time.now()
-        );
-        */
+        
 
         if (tempResult.success){
           result.cardID = tempResult.newCardID;
@@ -1360,53 +1224,5 @@ module.exports = {
   }
 
 
-  /*
-  // Get the messages in the database
-  getMessages: async () => {
-    try {
-      return await db.all("SELECT * from Messages");
-    } catch (dbError) {
-      console.error(dbError);
-    }
-  },
-
-  // Add new message
-  addMessage: async message => {
-    let success = false;
-    try {
-      success = await db.run("INSERT INTO Messages (message) VALUES (?)", [
-        message
-      ]);
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-  },
-
-  // Update message text
-  updateMessage: async (id, message) => {
-    let success = false;
-    try {
-      success = await db.run(
-        "Update Messages SET message = ? WHERE id = ?",
-        message,
-        id
-      );
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-  },
-
-  // Remove message
-  deleteMessage: async id => {
-    let success = false;
-    try {
-      success = await db.run("Delete from Messages WHERE id = ?", id);
-    } catch (dbError) {
-      console.error(dbError);
-    }
-    return success.changes > 0 ? true : false;
-  }
-  */
+  
 };

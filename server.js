@@ -5,8 +5,7 @@
  */
 
 const {
-  sample,
-  without
+  sample
 } = require("underscore");
 
 const fastify = require("fastify")({
