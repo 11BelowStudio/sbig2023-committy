@@ -15,7 +15,10 @@ const fastify = require("fastify")({
 });
 const path = require('path')
 
+
 fastify.register(require("@fastify/formbody"));
+
+fastify.register(require("fastify-socket.io"));
 
 const db = require("./sqlite.js");
 const { request } = require("express");
@@ -37,14 +40,17 @@ fastify.register(require("@fastify/static"), {
 
 
 fastify.get('/', function (req, reply) {
+  reply.header('content-type', 'text/html; charset=utf-8');
   reply.sendFile('index.html')
 })
 
 fastify.get('/index', function (req, reply) {
+  reply.header('content-type', 'text/html; charset=utf-8');
   reply.sendFile('index.html')
 })
 
 fastify.get('/submit_card', function (req, reply) {
+  reply.header('content-type', 'text/html; charset=utf-8');
   reply.sendFile('submit_card.html')
 })
 
@@ -327,7 +333,11 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
 });
 
 
+fastify.ready(err => {
+  if (err) throw err
 
+  fastify.io.on('connect', (socket) => console.info('Socket connected!', socket.id))
+})
 
 // Helper function to authenticate the user key
 const authorized = key => {

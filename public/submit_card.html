@@ -358,6 +358,7 @@
 
         $(".value").change(function() {
             var thisAmount = Number($(this).prop("value"));
+            
             var totalMax = Number(document.getElementById("sliderMax").value);
             var indMin = Number($(this).attr("min"));
             var indMax = Number($(this).attr("max"));
@@ -384,6 +385,7 @@
                 var setMax = Math.min(indMax, totalMax, remaining);
                 $(this).siblings(".slider").slider("option", "value", setMax);
                 $(this).prop("value", setMax);
+                this.onchange();
                 //total += (thisAmount - setMax);
             }
 
