@@ -292,12 +292,12 @@ async function _getCards(...args) {
  * Obtains all card IDs from the database
  * @returns object of {success: bool, entries: [{id: int}] }
  */
-async function _getCardIDs() {
+function _getCardIDs() {
   let result = {success: false, entries: []};
   try{
     const stmt = db.prepare("SELECT id FROM cards");
     result.entries = stmt.all();
-    console.log(`${result.entries}, ${result.entries != false}`);
+    //console.log(`${result.entries}, ${result.entries != false}`);
     //result.entries = await db.all("SELECT id FROM cards");
     result.success = (result.entries != false);
   } catch (dbError){
@@ -311,7 +311,7 @@ async function _getCardIDs() {
  * @param {int} cardsToGet how many cards we want
  * @returns object of { success: bool, entries: [{id: int}]}
  */
-async function _getRandomCardIDs(cardsToGet) {
+function _getRandomCardIDs(cardsToGet) {
 
   let result = {success: false, entries: []};
 
@@ -322,9 +322,9 @@ async function _getRandomCardIDs(cardsToGet) {
     return result;
   }
 
-  result = await _getCardIDs();
+  result = _getCardIDs();
 
-  console.log(result);
+  //console.log(result);
 
   if (result.success == false){
     return result;
@@ -390,6 +390,23 @@ function _checkIfCardsExist(...ids){
 
 }
 
+/**
+ * get number of cards in the cards table
+ * @returns object of { success: bool, cards: int }
+ */
+function _cardCount(){
+
+  let result = {success: false, cards: NaN };
+
+  try {
+    result.cards = db.prepare("SELECT count(id) FROM cards").pluck().get();
+    result.success = (result.cards != NaN);
+  } catch (dbError){
+    console.error(dbError);
+  }
+  return result;
+}
+
 
 // Server script calls these methods to connect to the db
 module.exports = {
@@ -425,6 +442,14 @@ module.exports = {
    */
   getCardIDs: async() => {
     return _getCardIDs();
+  },
+
+  /**
+   * get number of cards in the cards table
+   * @returns object of { success: bool, cards: int }
+   */
+  getCardCount: function() {
+    return _cardCount();
   },
 
   /**
@@ -955,7 +980,7 @@ module.exports = {
         let _newCardID = innerTransRes.lastInsertRowid;
 
         result.cardID = _newCardID;
-        console.log(_newCardID);
+        //console.log(_newCardID);
 
         const winsInStmt = db.prepare(
           `INSERT INTO wins (winner_id, loser_id, time) VALUES (@win, @lose, @t)`
@@ -1034,7 +1059,7 @@ module.exports = {
           time: Date.now()
         }
       );
-      console.log(dbResult);
+      //console.log(dbResult);
 
       result.success = (dbResult.changes > 0);
       result.message = (result.success) ? 
@@ -1062,7 +1087,7 @@ module.exports = {
       //success = await db.run("DELETE FROM cards WHERE id = ?", id);
       const result = stmt.run(id);
       success = (result.changes > 0);
-      console.log(result);
+      //console.log(result);
     } catch (dbError) {
       console.error(dbError);
     }
@@ -1126,7 +1151,7 @@ module.exports = {
       //success = await db.run("SELECT * FROM reports WHERE id = ?"", reportID);
       result.entries = stmt.all(reportID);
       success = (result.entries != false || result.entries.length > 0);
-      console.log(result);
+      //console.log(result);
 
       //result.data = await db.all("SELECT * FROM reports WHERE id = ?",reportID);
       //result.success = true;
@@ -1151,7 +1176,7 @@ module.exports = {
 
       const result = stmt.run(reportId);
       success = (result.changes > 0);
-      console.log(result);
+      //console.log(result);
       //success = await db.run("DELETE FROM reports WHERE id = ?", reportId);
       
     } catch (dbError) {
@@ -1176,7 +1201,7 @@ module.exports = {
 
       const result = stmt.run(cardId);
       success = (result.changes > 0);
-      console.log(result);
+      //console.log(result);
     } catch (dbError) {
       console.error(dbError);
       return false;
@@ -1190,9 +1215,9 @@ module.exports = {
    * @param {int} cardsToGet how many cards we want
    * @returns object of { success: bool, entries: [{id: int}]}
    */
-  getRandomCardIDs: async(cardsToGet) => {
+  getRandomCardIDs: (cardsToGet) => {
 
-    return await _getRandomCardIDs(cardsToGet);
+    return _getRandomCardIDs(cardsToGet);
 
   },
 
@@ -1216,9 +1241,9 @@ module.exports = {
       return result;
     }
 
-    const idResult = await _getRandomCardIDs(cardsToGet);
+    const idResult = _getRandomCardIDs(cardsToGet);
 
-    console.log(idResult);
+    //console.log(idResult);
 
     if (idResult.success == false){
       return result;
@@ -1226,15 +1251,15 @@ module.exports = {
 
     let idsList = [];
     for (const entry of idResult.entries){
-      console.log(`${entry} ${entry.id}`);
+      //console.log(`${entry} ${entry.id}`);
       idsList.push(entry.id);
     }
 
-    console.log(`${idsList}`);
+    //console.log(`${idsList}`);
 
     result = await _getCards(...idsList);
 
-    console.log(result);
+    //console.log(result);
 
     return result;
 

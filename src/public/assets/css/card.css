@@ -53,7 +53,7 @@ div.card_icon_holder{
     left: 10%;
     right: 10%;
 
-    background-image: url("./assets/icons/committy.svg");
+    background-image: url("../icons/committy.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -170,19 +170,19 @@ div.card_stats_cell > div.card_stat_icon {
 }
 
 div.card_stats_cell.card_stat_1 > div.card_stat_icon {
-    background-image: url("./assets/icons/plastic-duck.svg");
+    background-image: url("../icons/plastic-duck.svg");
 }
 
 div.card_stats_cell.card_stat_2 > div.card_stat_icon {
-    background-image: url("./assets/icons/rialto-bridge.svg");
+    background-image: url("../icons/rialto-bridge.svg");
 }
 
 div.card_stats_cell.card_stat_3 > div.card_stat_icon {
-    background-image: url("./assets/icons/whistle.svg");
+    background-image: url("../icons/whistle.svg");
 }
 
 div.card_stats_cell.card_stat_4 > div.card_stat_icon {
-    background-image: url("./assets/icons/abstract-084.svg");
+    background-image: url("../icons/abstract-084.svg");
 }
 
 
@@ -239,7 +239,7 @@ div.card_gray {
 }
 
 div.card_error {
-    background-image: url("./assets/icons/error.svg");
+    background-image: url("../icons/error.svg");
     background-repeat: repeat;
     background-size: auto;
 

@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Committy!</title>
+        <link rel="stylesheet" href="/assets/css/cols.css">
     </head>
 
     <body>
@@ -28,7 +29,13 @@
                     <a href="./view_card/random">View a random card!</a>
                 </li>
                 <li>
+                    Play the game (TODO)
+                </li>
+                <li>
                     <a href="./api">The undocumented API!!!</a>
+                </li>
+                <li>
+                    In terms of cards we currently have {{ cardCount }} cards.
                 </li>
             </ul>
 
@@ -42,6 +49,10 @@
                     <li>
                         <input type="radio" name="host" value="true" label="host game" checked/> Create room<br/>
                         <input type="radio" name="host" value="false" label="join game" /> Join room
+                    </li>
+                    <li>
+                        room to join<br/>
+                        <input type="text" name="room_name" value="" label="room to join" size="64" />
                     </li>
                 </ul>
             </form>

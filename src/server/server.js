@@ -12,12 +12,25 @@ const fastify = require("fastify")({
   // Set this to true for detailed logging:
   logger: true
 });
-const path = require('path')
+const path = require('path');
+
+
+const crypto = require('crypto');
+const randomId = () => crypto.randomBytes(8).toString("hex");
 
 
 fastify.register(require("@fastify/formbody"));
 
-fastify.register(require("fastify-socket.io"));
+const io = require("fastify-socket.io");
+
+fastify.register(io);
+
+
+
+
+const { InMemorySessionStore } = require("./game/SessionStore");
+const sessionStore = new InMemorySessionStore();
+
 
 
 // View is a templating manager for fastify
@@ -48,14 +61,48 @@ fastify.register(require("@fastify/static"), {
 });
 
 
-fastify.get('/', function (req, reply) {
+function _index(req, reply){
+
+  let params = {
+    username: ""
+  };
+
+  {
+    const cardCountRes = db.getCardCount();
+    params.cardCount = (cardCountRes.success) ? cardCountRes.cards : "database had a whoopsie";
+  }
+
+  {
+    fastify.io.use((socket, next) => {
+      const sessionID = socket.handshake.auth.sessionID;
+      if (sessionID) {
+        const session = sessionStore.findSession(sessionID);
+        if (session) {
+          params.username = session.username;
+          return next();
+        }
+      }
+      const username = socket.handshake.auth.username;
+      if (!username) {
+        params.username = ""
+        return next();
+      }
+      params.username = username;
+      next();
+    })
+  }
+
   reply.header('content-type', 'text/html; charset=utf-8');
-  reply.sendFile('index.html')
+
+  return reply.view("/src/client/index.hbs", params);
+}
+
+fastify.get('/', function (req, reply) {
+  _index(req, reply)
 })
 
 fastify.get('/index', function (req, reply) {
-  reply.header('content-type', 'text/html; charset=utf-8');
-  reply.sendFile('index.html')
+  _index(req, reply)
 })
 
 
@@ -106,7 +153,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
   try{
     if (req.params.id.trim()==="random"){
       
-      let randResult = await db.getRandomCardIDs(1);
+      let randResult = db.getRandomCardIDs(1);
       if (randResult.success){
         cardID = randResult.entries[0].id;
       }
@@ -276,7 +323,7 @@ fastify.get("/api/card_links", async(request, reply) => {
 fastify.get("/api/n_card_ids/:n", async(request, reply) => {
   let data = {};
 
-  data.result = await db.getRandomCardIDs(request.params.n);
+  data.result = db.getRandomCardIDs(request.params.n);
 
   console.log(data.result);
 
@@ -553,10 +600,51 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
 });
 
 
+
+
+fastify.get("/play/:roomID", function(req, reply) {
+  //fastify.io.
+});
+
+
+
+
+
+
+
+
+
+
+
+
 fastify.ready(err => {
   if (err) throw err
 
-  fastify.io.on('connect', (socket) => console.info('Socket connected!', socket.id))
+  
+  fastify.io.use((socket, next) => {
+  
+    const sessionID = socket.handshake.auth.sessionID;
+    if (sessionID) {
+      const session = sessionStore.findSession(sessionID);
+      if (session) {
+        socket.sessionID = sessionID;
+        socket.userID = session.userID;
+        socket.username = session.username;
+        return next();
+      }
+    }
+    const username = socket.handshake.auth.username;
+    if (!username) {
+      console.info('Socket rejected!', socket.id)
+      return next(new Error("invalid username"));
+    }
+    socket.sessionID = randomId();
+    socket.userID = randomId();
+    socket.username = username;
+    next();
+  });
+
+  fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id))
 })
 
 // Helper function to authenticate the user key

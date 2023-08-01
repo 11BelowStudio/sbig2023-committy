@@ -43,7 +43,7 @@ var _ShortURL = new function() {
 };
 
 
-var ShortURL = new function() {
+const ShortURL = new function() {
 
 	const _alphabet = [
         "Tiny",
@@ -334,4 +334,16 @@ var ShortURL = new function() {
 		return numRaw;
 	};
 
+};
+
+
+module.exports = {
+
+    encode: function(num){
+        return ShortURL.encode(num);
+    },
+
+    decode: function(str){
+        return ShortURL.decode(str);
+    }
 };
