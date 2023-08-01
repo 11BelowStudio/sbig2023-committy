@@ -28,7 +28,7 @@ fastify.register(require("@fastify/view"), {
 });
 
 
-const db = require("./sqlite.js");
+const db = require("./db/sqlite.js");
 const { request } = require("express");
 const { card_consts } = require("./constants.js");
 const errorMessage =
@@ -43,7 +43,7 @@ fastify.addHook("onRoute", routeOptions => {
 
 // Setup our static files
 fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname,'public'),
+  root: path.join(__dirname,'../','public'),
   prefix: "/", // optional: default '/'
 });
 
@@ -97,7 +97,7 @@ fastify.get('/submit_card', async(req, reply) => {
 
 
   reply.header('content-type', 'text/html; charset=utf-8');
-  return reply.view("/public/submit_card.hbs", params);
+  return reply.view("/src/client/submit_card.hbs", params);
 })
 
 
@@ -168,7 +168,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
 
   
   reply.header('content-type', 'text/html; charset=utf-8');
-  return reply.view("/public/view_card.hbs", params);
+  return reply.view("/src/client/view_card.hbs", params);
 
 });
 

@@ -13,7 +13,7 @@ const exists = fs.existsSync(dbFile);
 const {
   card_consts,
   filtering
-} = require('./constants.js');
+} = require('../constants.js');
 const e = require("express");
 
 const {
