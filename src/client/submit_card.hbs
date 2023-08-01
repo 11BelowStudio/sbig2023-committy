@@ -153,6 +153,8 @@
                 let trimmedUrl = newImg.substring(0, 125);
                 if (trimmedUrl.match(/\.(jpeg|jpg|gif|png|svg)$/) != null){
                     document.getElementById("your_img").src = trimmedUrl;
+                } else {
+                    document.getElementById("your_img").src = "https://i.imgur.com/HM824r1.png";
                 }
             }
     
@@ -223,10 +225,10 @@
                     </tr>
                     <tr>
                     <td style="width:25%;">
-                        link an image for it!
+                        URL of an image for it (upload it to imgur or something)
                     </td>
                     <td style="width:75%;">
-                        <input type="url" name="img" value="" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
+                        <input type="url" name="img" value="https://i.imgur.com/HM824r1.png" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
                     </td>
                     </tr>
                     <tr>
@@ -356,7 +358,7 @@
                     <div class="card_title"id="your_title">Your title here!</div>
                     <div class="card_inner"></div>
                     <div class="card_icon_holder">
-                      <img src="" id="your_img"/>
+                      <img src="https://i.imgur.com/HM824r1.png" id="your_img"/>
                     </div>
                     <div class="card_stats_parent">
                         <div class="card_stats_cell card_stat_1">
