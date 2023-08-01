@@ -1,8 +1,10 @@
+const { error } = require("jquery");
 const {
-    fastify
-} = require("../server.js");
+    fastify,
+    ShortURL
+} = require("./imports");
+const { response, request } = require("express");
 
-const ShortURL = require("../utils/ShortURL.js");
 
 class RoomsManager{
 
@@ -10,6 +12,11 @@ class RoomsManager{
 
     
     static #_instance = null;
+
+    /**
+     * there's a method in this madness, trust me.
+     */
+    static #_id_offset = 42662800000;
     
     /**
      * obtains the RoomsManager.
@@ -33,10 +40,48 @@ class RoomsManager{
 
         // TODO
     }
+
+
+    newRoom(){
+
+        const id_base = Math.floor(Date.now() - RoomsManager.#_id_offset);
+
+        const encoded_id = ShortURL.encode(id_base);
+
+        if (id_base != ShortURL.decode(encoded_id)){
+            const message =`MASSIVE ENCODE/DECODE WHOOPSIE - input ${id_base} lead to output ${ShortURL.decode(encoded_id)} instead`;
+            console.error(message);
+            throw message;
+        }
+    }
     
+
+    roomExists(roomString){
+
+        try{
+            const decode = ShortURL.decode(roomString);
+            return this.roomsMap.has(decode);
+        } catch(error){
+            return false;
+        }
+    }
     
 }
 
+
+fastify.get("/create", function(request, response) {
+
+
+
+
+
+});
+
+
+fastify.get("/play/:roomID", function(request, response){
+
+
+});
 
 module.exports = {
     RoomsManager: RoomsManager

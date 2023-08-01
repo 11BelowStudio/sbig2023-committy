@@ -319,11 +319,18 @@ const ShortURL = new function() {
 
         const decList = str.split(_separator);
 		for (var i = 0; i < decList.length; i++) {
-            
-			num = num * _base + _alphabet.findIndex(
+
+            const thisMult = _alphabet.findIndex(
                 item => decList[i].toLowerCase() === item.toLowerCase()
                 
             );
+
+            if (thisMult == -1){
+                num = NaN;
+                throw `invalid input - ${decList[i]} is not present in encoder list!`;
+            }
+            
+			num = num * _base + thisMult;
             
 		}
 

@@ -124,7 +124,7 @@ function _index(req, reply){
 }
 
 fastify.get('/', function (req, reply) {
-  _index(req, reply)
+  reply.redirect("/index");
 })
 
 fastify.get('/index', function (req, reply) {
@@ -182,6 +182,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
       let randResult = db.getRandomCardIDs(1);
       if (randResult.success){
         cardID = randResult.entries[0].id;
+        
       }
       else {
         reply.status(500).send(
@@ -189,6 +190,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
             error: `unable to find a random card ID!`
           }
         );
+        return;
       }
     }
     else {
@@ -555,6 +557,9 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
         result.view_url = `http://${request.hostname}/view_card/${result.cardID}`;
         data.result = result;
         response = 201;
+
+        reply.redirect(result.view_url);
+        return;
       }
       else {
         data.error = result.message;
@@ -624,15 +629,6 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
   reply.status(status).send(data);
 
 });
-
-
-
-
-fastify.get("/play/:roomID", function(req, reply) {
-  //fastify.io.
-});
-
-
 
 
 
