@@ -226,6 +226,7 @@ var ShortURL = new function() {
         "Already",
         "Been",
         "Here",
+        "Number",
         "Deja",
         "Vu",
         "Chaos",
@@ -286,6 +287,17 @@ var ShortURL = new function() {
 
 	this.encode = function(num) {
 
+        let sum = num
+        let arr = []
+        let reducer = (a,b) => parseInt(a) + parseInt(b)
+
+        while (sum > 9) {
+            arr = sum.toString().split("")
+            sum = arr.reduce(reducer)
+        }
+
+        num = (num * 10) + sum;
+
         var result = [];
         while (num > 0){
             result.unshift(
@@ -314,7 +326,12 @@ var ShortURL = new function() {
             );
             
 		}
-		return num;
+
+        var numRoot = num % 10;
+
+        var numRaw = (num - numRoot)/10;
+
+		return numRaw;
 	};
 
 };
