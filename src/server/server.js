@@ -44,6 +44,39 @@ fastify.register(require("@fastify/view"), {
 const db = require("./db/sqlite.js");
 const { request } = require("express");
 const { card_consts } = require("./constants.js");
+
+// Setup our static files
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname,'../','public'),
+  prefix: "/", // optional: default '/'
+});
+
+
+// Helper function to authenticate the user key
+const authorized = key => {
+  if (
+    !key ||
+    key < 1 ||
+    !process.env.ADMIN_KEY ||
+    key !== process.env.ADMIN_KEY
+  )
+    return false;
+  else return true;
+};
+
+
+
+module.exports = {
+  fastify: fastify,
+  authorized: function(key) { return authorized(key); },
+  db: db,
+  sessionStore: sessionStore,
+  randomId: function(){ return randomId(); }
+};
+
+
+const {RoomsManager} = require("./game/RoomsManager");
+
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
 
@@ -51,13 +84,6 @@ const errorMessage =
 const routes = { endpoints: [] };
 fastify.addHook("onRoute", routeOptions => {
   routes.endpoints.push(routeOptions.method + " " + routeOptions.path);
-});
-
-
-// Setup our static files
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname,'../','public'),
-  prefix: "/", // optional: default '/'
 });
 
 
@@ -647,17 +673,6 @@ fastify.ready(err => {
   fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id))
 })
 
-// Helper function to authenticate the user key
-const authorized = key => {
-  if (
-    !key ||
-    key < 1 ||
-    !process.env.ADMIN_KEY ||
-    key !== process.env.ADMIN_KEY
-  )
-    return false;
-  else return true;
-};
 
 // Run the server and report out to the logs
 fastify.listen({
