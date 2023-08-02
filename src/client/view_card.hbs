@@ -15,6 +15,12 @@
                 <div>
                     <h1>the <br><img src="/assets/icons/committy.svg" alt="Committy!"/><br>card viewer</h1>
                 </div>
+                <div>
+                    <p>
+                        Currently viewing<br>
+                        <a href="/view_card/{{card.id}}"><code>/view_card/{{card.id}}</code></a>
+                    </p>
+                </div>
 
                 <div>
                     <h2><a href="/">back</a></h2>
@@ -34,6 +40,8 @@
                 <h3>
                     <i>{{card.name}}</i>
                 </h3>
+
+                
         
                 <div class="card {{ card.colour }}" style="width:250px; height: 350px;">
                     <div class="card_title">{{card.name}}</div>

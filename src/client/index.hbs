@@ -12,15 +12,27 @@
 
             <div class="sidebar">
                 <div class="sidebarItem">
-                    <h1><img src="/assets/icons/committy.svg" alt="Committy!"/></h1>
+                    <h1><img src="/assets/icons/committy.svg" alt="Committy!"/>!</h1>
                 </div>
                 <div class="sidebarItem">
                     <p>the <b class="green">collaborative</b> card game that you will <s style="red">not</s> regret unwillingly contributing to</p>
                 </div>
                 <div class="sidebarItem">
+                    <h2>Credits!</h2>
                     <p>
-                        bodged together by <a href="https://11belowstudio.itch.io">11BelowStudio</a>
+                        Bodged together by <a href="https://11belowstudio.itch.io"><b class="pink">11BelowStudio</b></a>
                     </p>
+                    <p>
+                        Committy logo was donated by <a href="https://itch.io/profile/delta100"><b class="green">DELTA100</b></a>
+                    </p>
+                    <p>
+                        Produced for the <a href="https://itch.io/jam/sbigjam2023">2023 <i class="yellow">So Bad It's Good</i> Jam</a>!
+                    </p>
+                </div>
+                <div>
+                    <p>In terms of cards we currently have:<br>
+                    <b class="red" style="font-size:200%;">{{ cardCount }}</b><br/>
+                    cards.</p>
                 </div>
             </div>
         
@@ -29,22 +41,23 @@
                 
                 <ul>
                     <li>
-                        <a href="./submit_card">Card creator!</a>
+                        <h2><a href="./submit_card">Card creator!</a></h2>
                     </li>
                     <li>
-                        <a href="./view_card/random">View a random card!</a>
+                        <h2><a href="./view_card/random">View a random card!</a></h2>
                     </li>
                     <li>
-                        <a href="./draw_hands/3">Play game clientside (WIP)</a>
+                        <h2><a href="./draw_hands/3">Play game clientside (WIP)</a></h2>
                     </li>
                     <li>
-                        <a href="./api">The undocumented API!!!</a>
+                        <h2><a href="./api">The undocumented API!!!</a></h2>
                     </li>
                     <li>
                         In terms of cards we currently have {{ cardCount }} cards.
                     </li>
                 </ul>
 
+                <!--
                 <h2><s>Play the game!</s> placeholder for if/when I do manage to make the game</h2>
                 <form>
                     <ul>
@@ -62,6 +75,7 @@
                         </li>
                     </ul>
                 </form>
+                -->
             </div>
         </div>
     </body>
