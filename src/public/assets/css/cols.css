@@ -1,8 +1,47 @@
-.col-container {
+.col_container {
     display: flex;
     width: 100%;
+    flex-direction: row;
 }
 .col {
     flex: 1;
     padding: 16px;
+    order: 2;
+}
+
+.c_show_under_750{
+    visibility: hidden;
+}
+
+.c_show_under_500{
+    visibility: hidden;
+}
+
+
+@media screen and (max-width: 1210px) {
+    .col_vert_750 {
+        flex-direction: column !important;
+    }
+    .c_show_under_750{
+        visibility: visible;
+    }
+
+    .col {
+        flex: 1;
+        padding: 0px;
+    }
+
+    
+}
+
+@media screen and (max-width: 960px) {
+    .col_vert_500 {
+        flex-direction: column !important;
+    }
+    .c_show_under_500{
+        visibility: visible;
+    }
+    .col_top_500{
+        order:1;
+    }
 }
