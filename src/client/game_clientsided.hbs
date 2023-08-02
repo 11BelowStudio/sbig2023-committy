@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>committy (the actual game itself)</title>
+        <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
         <link rel="stylesheet" type="text/css" href="/assets/css/card.css"/>
         <link rel="stylesheet" type="text/css" href="/assets/css/cols.css"/>
         
@@ -10,304 +11,195 @@
     </head>
     <body>
         
-        <div class="cols">
 
-
-            <div class="col">
-
-                <table id="play_table">
-
-                    <tr id="upper_cards" class="hand_row">
-                        <td id="upper_0" colspan="2">
-                            <div class="card hand_card"  onclick="on_upper_0_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
+        <template id="card_template">
+            <div class="card_holder">
+                <div class="card hand_card" onclick="">
+                    <div class="card_inner"></div>
+                    <div class="card_details hand_card_details">
+                        <div class="card_title">???</div>
+                        <div class="card_icon_holder">
+                            <img class="card_icon" src=""/>
+                        </div>
+                        <div class="card_stats_parent">
+                            <div class="card_stats_cell card_stat_1">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">???</div>
                             </div>
-                        </td>
-                        <td id="upper_1" colspan="2">
-                            <div class="card hand_card" onclick="on_upper_1_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
+                            <div class="card_stats_cell card_stat_2">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">???</div>
                             </div>
-                        </td>
-                        <td id="upper_2" colspan="2">
-                            <div class="card hand_card" onclick="on_upper_2_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
+                            <div class="card_stats_cell card_stat_3">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">???</div>
                             </div>
-                        </td>
-                    </tr>
-                    <tr id="played_cards">
-                        <td id="upper_play" colspan="3">
-                            <div class="card play_card" onclick="on_upper_played_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details play_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
+                            <div class="card_stats_cell card_stat_4">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">???</div>
                             </div>
-                        </td>
-                        <td id="lower_play" colspan="3">
-                            <div class="card play_card" onclick="on_lower_played_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details play_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr id="lower_cards" class="hand_row">
-                        <td id="lower_0" colspan="2">
-                            <div class="card hand_card" onclick="on_lower_0_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td id="lower_1" colspan="2">
-                            <div class="card hand_card" onclick="on_lower_1_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td id="lower_2" colspan="2">
-                            <div class="card hand_card" onclick="on_lower_2_pressed()">
-                                <div class="card_inner"></div>
-                                <div class="card_details hand_card_details">
-                                    <div class="card_title">behold the man!</div>
-                                    <div class="card_icon_holder">
-                                        <img src="https://i.imgur.com/O3i102U.jpg"/>
-                                    </div>
-                                    <div class="card_stats_parent">
-                                        <div class="card_stats_cell card_stat_1">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">3</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_2">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">7</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_3">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">9</div>
-                                        </div>
-                                        <div class="card_stats_cell card_stat_4">
-                                            <div class="card_stat_icon"></div>
-                                            <div class="card_stat_number">2</div>
-                                        </div>
-                                    </div>
-                                    <div class="card_description">
-                                        Ecce homo qui est faba blah blah blah
-                                    </div>
-                                    <div class="card_number">#341</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-
-
+                        </div>
+                        <div class="card_description">
+                            ???
+                        </div>
+                        <div class="card_number">#???</div>
+                    </div>
+                </div>
             </div>
-            <div class="col">
+        </template>
 
-                <h4>players</h4>
-                <table id="players_table">
-                    <tr>
-                        <th>name</th>
-                        <th></th>
-                    </tr>
-                    <tr id="">
-                        
-                    </tr>
-                </table>
+        <header>
+            <h1>The clientside version of Committy</h1>
+            <p>Both players need to pick a card from their hand!</p>
+            <p>this game's URL suffix: <code>{{ url }}</code></p>
+        </header>
+        <div id="player_1_div">
+            <h2>Player 1</h2>
+
+            <div class="hand_menu" id="player_1_hand">
+                <!-- this gets filled automatically with your cards -->
             </div>
         </div>
 
+        <div id="middle">
+            <p>selections</p>
+            <ul>
+                <li>
+                    Player 1 has <span id="p1_selection">not chosen a card</span>!
+                </li>
+                <li>
+                    Player A  has <span id="p2_selection">not chosen a card</span>!
+                </li>
+            </ul>
+
+            <button onclick="next_pressed()">Press this when both players have chosen a card.</button>
+        </div>
+
+        <div id="player_2_div">
+            <h2>Player A</h2>
+            <div class="hand_menu" id="player_2_hand">
+                <!-- this also gets filled automatically with cards -->
+            </div>
+        </div>
+        
+       
+
+        <script type="text/javascript" src="/imports/card_consts.js"></script>
+
         <script>
+            
+
+            let p1_chosen = NaN;
+            let p2_chosen = NaN;
+
+            function next_pressed(){
+
+                if (p1_chosen == null || p1_chosen == NaN){
+                    window.alert("Player 1 needs to choose a card!");
+                    return;
+                }
+                else if (p2_chosen == null || p2_chosen == NaN){
+                    window.alert("Player A needs to choose a card!");
+                    return;
+                }
+
+                window.open(`/game/chosen/${p1_chosen}/${p2_chosen}`);
+                //window.location.replace(`/game/chosen/${p1_chosen}/${p2_chosen}`);
+            }
+
+
+            function p1_selected_card(id){
+                p1_chosen = id;
+                console.log(`Player 1 chose card ${id}!`);
+                document.getElementById("p1_selection").innerHTML = `chosen card #${id}`;
+            }
+
+            function p2_selected_card(id){
+                p2_chosen = id;
+                console.log(`Player 2 chose card ${id}!`);
+                document.getElementById("p2_selection").innerHTML = `chosen card #${id}`;
+            }
+
+
+
+            function generate_card(card_data, is_p1){
+
+                console.log(card_data);
+
+
+                // obtains template
+                const cardTemplate = document.getElementById("card_template");
+                //console.log(cardTemplate);
+                //console.log(cardTemplate.content);
+                //console.log(cardTemplate.content.firstElementChild);
+
+                //deep copy of the first element within template contents
+                let new_card_holder = cardTemplate.content.firstElementChild.cloneNode(true);
+                //cardTemplate.firstElementChild.cloneNode(true);
+
+
+                let theCardElement = new_card_holder.querySelector(".card"); 
+
+
+                theCardElement.classList.add(
+                    card_consts.card_id_to_css_class(
+                        card_data.id
+                    )
+                );
+
+                theCardElement.addEventListener(
+                    "click",
+                    (is_p1) ? function() {p1_selected_card(card_data.id)} : function(){p2_selected_card(card_data.id)}
+                );
+
+                new_card_holder.querySelector(".card_title").innerText = card_data.title;
+
+                new_card_holder.querySelector(".card_icon").src = card_data.img;
+
+                new_card_holder.querySelector(".card_description").innerText = card_data.desc;
+
+                new_card_holder.querySelector(".card_number").innerText = `#${card_data.id}`;
+
+                new_card_holder.querySelector(".card_stat_1 .card_stat_number").innerText = card_data.stat1;
+
+                new_card_holder.querySelector(".card_stat_2 .card_stat_number").innerText = card_data.stat2;
+
+                new_card_holder.querySelector(".card_stat_3 .card_stat_number").innerText = card_data.stat3;
+
+                new_card_holder.querySelector(".card_stat_4 .card_stat_number").innerText = card_data.stat4;
+
+                console.log(new_card_holder);
+
+                document.getElementById(
+                    (is_p1) ? "player_1_hand" : "player_2_hand"
+                ).appendChild(
+                    new_card_holder
+                );
+
+
+            }
+
+
+            window.onload = function(){
+
+                
+
+                const p1_hand = [{{{ hand_1 }}}];
+                const p2_hand = [{{{ hand_2 }}}];
+
+                for(const entry of p1_hand){
+
+                    console.log(entry);
+                    generate_card(entry, true);
+                }
+
+                for(const entry of p2_hand){
+                    console.log(entry);
+                    generate_card(entry, false);
+                }
+
+            }
+
 
             function upper_0_pressed(){
 

@@ -1,6 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
-
+@import "./fonts.css";
 
 div.card {
 	position: relative;
@@ -13,6 +12,7 @@ div.card {
 
     z-index: 1;
     background-color: greenyellow;
+    color: black;
 }
 
 .card_title {
@@ -206,6 +206,10 @@ div.card_description {
     z-index:3;
     
     outline-style: groove;
+
+    white-space: normal;
+    font-weight: normal;
+    font-style: normal;
 }
 
 div.card_number{
@@ -266,7 +270,7 @@ Example card HTML:
 	<div class="card_title">behold the man!</div>
     <div class="card_inner"></div>
     <div class="card_icon_holder">
-      <img src="https://i.imgur.com/O3i102U.jpg"/>
+      <img class="card_icon" src="https://i.imgur.com/O3i102U.jpg"/>
     </div>
     <div class="card_stats_parent">
     	<div class="card_stats_cell card_stat_1">

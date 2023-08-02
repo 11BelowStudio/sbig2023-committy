@@ -1,3 +1,27 @@
+
+
+div.hand_menu {
+    background-color: #ccc;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+div.hand_menu > div {
+    display: inline-block;
+    justify-content: center;
+    padding: 14px;
+    text-decoration: none;
+}
+div.hand_menu > div:nth-child(even) {
+    background-color: #aaa;
+}
+
+.hand_card {
+    height: 350px;
+}
+  
+
+/*
 #play_table > td{
     justify-content: center;
 }
@@ -12,3 +36,4 @@
 .card_details{
     visibility: visible;
 }
+*/

@@ -4,7 +4,7 @@
  * Uses sqlite.js to connect to db
  */
 
-import sample from "underscore";
+import sample, { random } from "underscore";
 
 /*
 const {
@@ -27,12 +27,11 @@ const fastify = _fastify({
 import path from "node:path";
 //const path = require('path');
 
-import crypto from "node:crypto";
+import crypto, {webcrypto} from "node:crypto";
 
 //const crypto = require('crypto');
 const randomId = () => crypto.randomBytes(8).toString("hex");
-
-const randomSeedSource = () => crypto.randomBytes(4).readUInt32LE() + 1;
+const rngSeedSource = () => webcrypto.getRandomValues(new Uint32Array(1))[0];
 
 
 import _fs_formbody from "@fastify/formbody";
@@ -695,13 +694,40 @@ fastify.get("/i",function(req, reply) {
 })
 
 
-fastify.get("/drawHands/:handSize", function(req, reply){
+fastify.get("/draw_hands/:handSize", function(req, reply){
 
 
-  let rawSeed = randomSeedSource();
+  if (!req.params || !req.params.handSize){
+    reply.status(400).send(
+      {
+        error: "Please declare a hand size parameter!"
+      }
+    );
+  }
+  
+  const handSize = parseInt(req.params.handSize);
+  if (handSize === NaN){
+    reply.status(400).send(
+      {
+        error: `given hand size ${req.params.handSize} isn't a number smh my head`
+      }
+    )
+  }
+  else if (handSize < 1){
+    reply.status(400).send(
+      {
+        error: "Please declare a hand size of at least 1"
+      }
+    );
+  }
+
+
+  const rawSeed = rngSeedSource();
+
+  console.log(`${rawSeed}, ${ShortURL.encode(rawSeed)}`)
 
   reply.redirect(
-    `/game/${req.params.handSize}/${ShortURL.encode(rawSeed)}`
+    `/game/${handSize}/${ShortURL.encode(rawSeed)}`
   );
 
 
@@ -710,12 +736,46 @@ fastify.get("/drawHands/:handSize", function(req, reply){
 
 fastify.get("/game/:handSize/:seed", function(req, reply){
 
+
+  if (!req.params || !req.params.handSize){
+    reply.status(400).send(
+      {
+        error: `Please declare a hand size and go to http://${req.hostname}/drawHands/HAND_SIZE`
+      }
+    );
+    return;
+  }
+
+  const handSize = parseInt(req.params.handSize);
+
+  
+  if (handSize === NaN){
+    reply.status(400).send(
+      {
+        error: `given hand size ${req.params.handSize} isn't a number smh my head`
+      }
+    )
+  }
+  else if (handSize < 1){
+    reply.status(400).send(
+      {
+        error: "Please declare a hand size of at least 1"
+      }
+    );
+  }
+  else if (!req.params.seed){
+    reply.redirect(`/draw_hands/${handSize}`)
+    return;
+  }
+
   let data = {
-    handSize : req.params.handSize,
+    handSize : handSize,
     seed: req.params.seed
   };
 
-  let rawSeed = "";
+  let rawSeed = 0;
+
+  const seed = req.params.seed;
 
   try{
     rawSeed = ShortURL.decode(seed);
@@ -723,13 +783,94 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     reply.status(400).send(
       {
         error: "that's not a valid seed 🗞️",
-        go_to: `http://${req.hostname}/${req.params.handSize}`
+        go_to: `http://${req.hostname}/draw_hands/${handSize}`
       }
     );
     return;
   }
 
-  let seeded_rng = seedrandom(rawSeed);
+  console.log(rawSeed);
+
+  data.rawSeed = rawSeed;
+
+  const totalNeeded = Math.floor(handSize) * 2;
+
+  const cardCountResult = db.getCardCount();
+
+  if (cardCountResult.success == false){
+    reply.status(500).send(
+      {
+        error: "Unable to check how many cards the database actually has!"
+      }
+    );
+    return;
+  }
+  else if (cardCountResult.cards < totalNeeded){
+    reply.status(400).send(
+      {
+        error: `Cannot support a game with a hand size of ${handSize} - ${totalNeeded} total cards required (two hands), database only has ${cardCountResult.cards}! Consider contributing some more cards yourself.`,
+        go_to: `http://${req.hostname}/submit_card`
+      }
+    );
+    return;
+  }
+
+  console.log()
+  const randomCards = db.getRandomCards(totalNeeded, rawSeed);
+
+  
+  if (!randomCards.success){
+    reply.status(500).send(
+      {
+        error: `Unable to successfully obtain ${totalNeeded} cards from database (seed ${rawSeed})!`
+      }
+    );
+    return;
+  }
+
+  const hand1 = randomCards.entries.slice(0, handSize);
+  const hand2 = randomCards.entries.slice(handSize);
+
+  const params = {
+    hand_1: [],
+    hand_2: [],
+    url: `http://${req.hostname}/game/${handSize}/${seed}`
+  };
+
+
+  for(const entry of hand1){
+
+    params.hand_1.push(
+      `{
+        id: ${entry.id},
+        title: "${entry.name}",
+        desc: "${entry.desc}",
+        img: "${entry.img}",
+        stat1: ${entry.stat1},
+        stat2: ${entry.stat2},
+        stat3: ${entry.stat3},
+        stat4: ${entry.stat4}
+      }`
+    )
+  }
+
+  for(const entry of hand2){
+
+    params.hand_2.push(
+      `{
+        id: ${entry.id},
+        title: "${entry.name}",
+        desc: "${entry.desc}",
+        img: "${entry.img}",
+        stat1: ${entry.stat1},
+        stat2: ${entry.stat2},
+        stat3: ${entry.stat3},
+        stat4: ${entry.stat4}
+      }`
+    )
+  }
+
+
 
   // TODO: is cardCount >= (handSize * 2)
   // TODO: obtain all IDs
@@ -737,9 +878,55 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   // TODO: and divide into two sets of handSize
 
 
-  
-  reply.status(501).send(data);
+  reply.header('content-type', 'text/html; charset=utf-8');
+  return reply.view("/src/client/game_clientsided.hbs", params);
+  //reply.status(501).send(data);
 });
+
+
+fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
+
+
+  if (parseInt(req.params.c1) == parseInt(req.params.c2)){
+    reply.status(400).send(
+      {
+        error: `how/why are you trying to put card ${parseInt(reqreq.params.c1)} against itself??`
+      }
+    )
+    return;
+  }
+
+  const _id1 = parseInt(req.params.c1);
+  const _id2 = parseInt(req.params.c2);
+
+
+  const c1 = db.getCard(_id1);
+
+  const c2 = db.getCard(_id2);
+
+  let data = {};
+
+  data.c1 = c1;
+  data.c2 = c2;
+
+
+  reply.status(501).send(data);
+
+});
+
+
+fastify.post("/game/verdict", (req, reply) => {
+
+  const c1 = request.body.c1;
+
+  const c2 = request.body.c2;
+
+
+
+  const precedent = db.getWinData(c1, c2);
+});
+
+
 
 
 

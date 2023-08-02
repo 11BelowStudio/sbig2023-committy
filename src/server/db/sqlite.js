@@ -20,6 +20,10 @@ import {
   sample
 } from "underscore";
 
+import random from "random";
+
+import seedrandom from "seedrandom";
+
 
 //https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md
 /**
@@ -239,7 +243,7 @@ function varied_length_prepared_statement_prepper_v2(templateStr, argsList){
  *     ]
  *   } for those cards
  */
-async function getCards(...args) {
+function getCards(...args) {
 
   console.log(args);
 
@@ -309,11 +313,12 @@ function getCardIDs() {
 /**
  * gets the IDs of n random cards, chosen randomly
  * @param {int} cardsToGet how many cards we want
- * @returns object of { success: bool, entries: [{id: int}]}
+ * @param {*} seed we're using for the RNG
+ * @returns object of { success: bool, entries: [{id: int}], ids: []}
  */
-function getRandomCardIDs(cardsToGet) {
+function getRandomCardIDs(cardsToGet, seedToUse) {
 
-  let result = {success: false, entries: []};
+  let result = {success: false, entries: []};//, ids: []};
 
   if (cardsToGet < 0){
     return result;
@@ -321,6 +326,10 @@ function getRandomCardIDs(cardsToGet) {
     result.success = true;
     return result;
   }
+
+  const givenSeed = (seedToUse !== undefined && seedToUse != null && seedToUse != NaN);
+
+  console.log(`${givenSeed}, ${seedToUse}`);
 
   result = getCardIDs();
 
@@ -330,12 +339,59 @@ function getRandomCardIDs(cardsToGet) {
     return result;
   }
 
-  result.entries = sample(result.entries, cardsToGet);
+  let allEntries = result.entries;
+
+  
+
+  for(let ient = 0; ient < allEntries.length; ient++){
+    console.log(allEntries[ient]);
+  }
+
+
+  if (givenSeed){
+    let rng = random.clone(new seedrandom(seedToUse));
+    
+    cardsToGet = Math.max(Math.min(cardsToGet, allEntries.length), 0);
+
+    var last = allEntries.length - 1;
+    for (var index = 0; index < cardsToGet; index++){
+      var rand = rng.integer(index, last);
+      var temp = allEntries[index];
+      allEntries[index] = allEntries[rand];
+      allEntries[rand] = temp;
+    }
+    allEntries = allEntries.slice(0, cardsToGet);
+  }
+  else {
+
+    allEntries = sample(allEntries, cardsToGet);
+  }
+
+  //console.log(`${allEntries}`);
+
+  result.entries = allEntries;
+
+
+  //let allEntries = result.entries;
+
+  //result.entries = sample(result.entries, cardsToGet);
+
+  
 
   return result;
 
 }
 
+/**
+ * checks if the given cards actually exist
+ * @param  {...any} ids IDs of cards we want to verify the existence of
+ * @returns object of {
+ *  success: bool,
+ *  exists: [int - IDs of all given IDs that exist],
+ *  all_exist: bool, 
+ *  message: "" 
+ *  }
+ */
 function checkIfCardsExist(...ids){
 
   let result = {success: false, exists: [], all_exist: false, message: ""};
@@ -1178,13 +1234,14 @@ function deleteReportsForCard(cardId) {
 /**
    * gets full details about n random cards.
    * @param {int} cardsToGet how many cards we want 
+   * @param {*} seedToUse seed we're using for the RNG
    * @returns object of 
    *   {
    *     success: bool,
    *     entries:[{id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int}]
    *   }
    */
-function getRandomCards(cardsToGet) {
+function getRandomCards(cardsToGet, seedToUse) {
 
   let result = {success: false, entries: []};
 
@@ -1195,25 +1252,48 @@ function getRandomCards(cardsToGet) {
     return result;
   }
 
-  const idResult = getRandomCardIDs(cardsToGet);
+  if (seedToUse === undefined){
+    seedToUse = null
+  }
+
+  const idResult = getRandomCardIDs(cardsToGet, seedToUse);
 
   //console.log(idResult);
 
-  if (idResult.success == false){
+  if (!idResult.success){
     return result;
   }
-
-  let idsList = [];
-  for (const entry of idResult.entries){
+  
+  const idLength = idResult.entries.length;
+  let idList = [];
+  for (let index = 0; index < idLength; index ++){
+    const entry = idResult.entries[index];
     //console.log(`${entry} ${entry.id}`);
-    idsList.push(entry.id);
+    idList.push(entry.id);
   }
 
   //console.log(`${idsList}`);
 
-  result = getCards(...idsList);
+  const getResult = getCards(...idList);
 
-  //console.log(result);
+  if (!getResult.success){
+    return result;
+  }
+
+  for(const entry of getResult.entries){
+    console.log(`${entry}, ${entry.id}`);
+  }
+  
+  const ordered = idList.map(
+    (currentID) => {
+      return getResult.entries.find(
+        (entry) => entry.id == currentID
+      )
+    }
+  );
+
+  result.success = true;
+  result.entries = ordered;
 
   return result;
 
@@ -1243,6 +1323,7 @@ export {
   deleteReportsForCard,
 
   getRandomCardIDs,
+
   getRandomCards
 }
 

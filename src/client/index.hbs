@@ -2,7 +2,8 @@
 <html>
     <head>
         <title>Committy!</title>
-        <link rel="stylesheet" href="/assets/css/cols.css">
+        <link rel="stylesheet" href="/assets/css/style.css"></link>
+        <link rel="stylesheet" href="/assets/css/cols.css"></link>
     </head>
 
     <body>
@@ -10,12 +11,7 @@
             <h1><img src="./assets/icons/committy.svg" alt="Committy!"/></h1>
             
         </header>
-        <script type="module" src="/socket.io/socket.io.js"></script>
-        <script type="module">
-            var socket = io();
-
-            
-        </script>
+        
         <div>
             <p>the collaborative card game that you will <s>not</s> regret unwillingly contributing to</p>
             <p>
@@ -29,7 +25,7 @@
                     <a href="./view_card/random">View a random card!</a>
                 </li>
                 <li>
-                    Play the game (TODO)
+                    <a href="./draw_hands/3">Play game clientside (WIP)</a>
                 </li>
                 <li>
                     <a href="./api">The undocumented API!!!</a>

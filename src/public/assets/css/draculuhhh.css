@@ -1,0 +1,133 @@
+/*
+ * my very epic variant of the dracula theme
+*/
+
+:root{
+    --background: #101010;
+    --currentLine: #181818;
+    --foreground: #fafaf2;
+    --comment: #6090C0;
+    --blue: #80a0ff;
+    --cyan: #80ffff;
+    --green:#80ff80;
+    --orange: #ffa040;
+    --pink: #ff80c0;
+    --purple: #d080ff;
+    --red: #ff4040;
+    --yellow: #ffff80;
+  }
+  
+  .black{
+    color: var(--background, #101010);
+  }
+  
+  .lessBlack{
+    color: var(--currentLine, #181818);
+  }
+  
+  .white{
+    color: var(--foreground, #fafaf2);
+  }
+  
+  .bloo{
+    color: var(--comment, #6090c0);
+  }
+  
+  .blue{
+    color: var(--blue, #80a0ff);
+  }
+  
+  .cyan{
+    color: var(--cyan, #80ffff);
+  }
+  
+  .green{
+    color: var(--green, #80ff80);
+  }
+  
+  .orange{
+    color: var(--orange, #ffa040);
+  }
+  
+  .pink{
+    color: var(--pink, #ff80c0);
+  }
+  
+  .purple{
+    color: var(--purple, #d080ff);
+  }
+  
+  .red{
+    color: var(--red, #ff4040);
+  }
+  
+  .yellow{
+    color: var(--yellow, #ffff80);
+  }
+  
+  .comment{
+    color: var(--comment, #6090c0);
+    font-size: calc(1em - 1px);
+  }
+  
+  
+  body{
+    background-color: var(--background, #101010);
+    color: var(--foreground, #fafaf2);
+  }
+  
+  h1{
+   color: var(--pink, #ff80c0); 
+  }
+  
+  h2{
+   color: var(--purple, #d080ff); 
+  }
+  
+  h3{
+    color: var(--cyan, #80ffff);
+  }
+  
+  h4{
+    color: var(--orange, #ffa040);
+  }
+  
+  h5 {
+    color: var(--red, #ff4040);
+  }
+  
+  h6{
+   color: var(--yellow, #ffff80); 
+  }
+  
+  
+  
+  em{
+    color: var(--orange, #ffa040);
+  }
+  
+  strong{
+    color: var(--cyan, #80ffff);
+  }
+  
+   /* unvisited link */
+  a:link {
+    color: var(--pink, #ff80c0);
+  }
+  
+  /* visited link */
+  a:visited {
+    color: var(--purple, #d080ff);
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: var(--green, #80ff80);
+  }
+  
+  /* selected link */
+  a:active {
+    color: var(--cyan, #80ffff);
+  } 
+  
+  

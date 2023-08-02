@@ -1,0 +1,208 @@
+@import "./draculuhhh.css";
+@import "./fonts.css";
+
+body{
+    background-color: var(--background, #101010);
+    color: var(--foreground, #fafaf2);
+    font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+  
+h1{
+    font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+    font-weight: 900;
+   color: var(--pink, #ff80c0); 
+  }
+  
+  h2{
+      font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+    font-weight: 800;
+   color: var(--purple, #d080ff); 
+  }
+  
+  h3{
+    font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    color: var(--cyan, #80ffff);
+  }
+  
+  h4{
+    font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    color: var(--orange, #ffa040);
+  }
+  
+  h5 {
+    font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+    color: var(--red, #ff4040);
+  }
+  
+  h6{
+    font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+   color: var(--yellow, #ffff80); 
+  }
+  
+  
+  
+  em{
+    color: var(--orange, #ffa040);
+  }
+  
+  strong{
+    color: var(--cyan, #80ffff);
+  }
+  
+   /* unvisited link */
+  a:link {
+    color: var(--pink, #ff80c0);
+  }
+  
+  /* visited link */
+  a:visited {
+    color: var(--purple, #d080ff);
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: var(--green, #80ff80);
+  }
+  
+  /* selected link */
+  a:active {
+    color: var(--cyan, #80ffff);
+  } 
+  
+  body{
+   /*margin-left: 0; */
+  }
+  
+  .button {
+    width: 88px;
+    height: 31px;
+    box-shadow: 0 0 5px 5px #404040;
+    margin: 2.5px 2.5px;
+  }
+  div.button{
+    display: inline-block;
+    width: 88px;
+    height: 31px;
+  }
+  
+  .button img{
+    display: inline-block;
+    width: 88px;
+    height: 31px;
+  }
+  
+  img.button{
+    display: inline-block;
+    width: 88px;
+    height: 31px;
+  }
+  
+  s {
+    text-decoration: line-through var(--red, #ff4040) solid 0.125em;
+  }
+  
+  ins{
+    text-decoration: underline var(--green, #80ff80) solid auto;
+    font-style: italic;
+  }
+  
+  div.wrap {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  div.sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column; 
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    background-color: var(--currentLine, #181818);
+    margin: 4px;
+    padding: 0px;
+    width: 280px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  div.sidebarItem{
+    
+    background-color: #202020;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    margin: 4px;
+    padding: 0px;
+    width: 95%;
+  }
+  
+  div.content {
+    margin-left: 290px;
+    padding: 1px 8px;
+    height: auto;
+  }
+  
+  
+  
+  @media screen and (max-width: 700px) {
+    
+    body{
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+    
+    div.wrap{
+     flex-direction: column; 
+    }
+    
+    div.sidebar {
+      
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      width: auto;
+      height: auto;
+      position: relative;
+      order: 2;
+    }
+    div.content {
+      margin-left: 0;
+      padding: 4px 4px;
+      order: 1;
+      width: 95%;
+    }
+    
+    .mobilefillh{
+      /*
+      Class that gets this thing to fill its horizontal space on mobile.
+      */
+      
+      width: 100%;
+      height: auto;
+      align-items: center;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      flex-direction: column; 
+      
+    }
+  }
+  
+  .mid{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .hflip{
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+  }
