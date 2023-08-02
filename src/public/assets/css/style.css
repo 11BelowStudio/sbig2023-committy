@@ -168,12 +168,12 @@ h1{
       width: auto;
       height: auto;
       position: relative;
-      order: 2;
+      /*order: 2;*/
     }
     div.content {
       margin-left: 0;
       padding: 4px 4px;
-      order: 1;
+      /*order: 1;*/
       width: 95%;
     }
     
