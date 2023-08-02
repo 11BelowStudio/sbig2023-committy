@@ -924,9 +924,19 @@ fastify.post("/game/verdict", (req, reply) => {
 
 
   const precedent = db.getWinData(c1, c2);
+
+
+  reply.status(501).send(precedent);
 });
 
-
+// for emergency use only.
+fastify.get("/api/admin/delete/:id", async(request, reply) => {
+  
+  reply.status(400).send({message:"no."});
+  return false;
+  //reply.status(200).send(db.deleteCard(request.params.id));
+  
+});
 
 
 
