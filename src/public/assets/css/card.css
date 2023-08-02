@@ -3,37 +3,37 @@
 
 div.card {
 	position: relative;
-    font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    aspect-ratio: 5/7;
-    border-top-left-radius: 8% calc(40%/7);
-    border-top-right-radius: 8% calc(40%/7);
-    border-bottom-left-radius: 8% calc(40%/7);
-    border-bottom-right-radius:8% calc(40%/7);
+    font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif !important;
+    aspect-ratio: 5/7 !important;
+    border-top-left-radius: 8% calc(40%/7) !important;
+    border-top-right-radius: 8% calc(40%/7) !important;
+    border-bottom-left-radius: 8% calc(40%/7) !important;
+    border-bottom-right-radius:8% calc(40%/7) !important;
 
     z-index: 1;
     background-color: greenyellow;
-    color: black;
+    color: black !important;
 }
 
 .card_title {
-    position: absolute;
-    top: calc(20%/7);
-    left: 8%;
-    right: 8%;
-    bottom: calc(640%/7);
-    text-align: left;
-    width: 84%;
-    z-index: 3;
+    position: absolute !important;
+    top: calc(20%/70) !important;
+    left: 8% !important;
+    right: 8% !important;
+    bottom: calc(640%/7) !important;
+    text-align: left !important;
+    width: 84% !important;
+    z-index: 3 !important;
 
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 div.card_inner{
-    position: absolute;
-    border-top-left-radius: calc(300%/23) 10%;
-    border-top-right-radius: calc(300%/23) 10%;
-    border-bottom-left-radius: calc(300%/23) 10%;
-    border-bottom-right-radius:calc(300%/23) 10%;
+    position: absolute !important;
+    border-top-left-radius: calc(300%/23) 10% !important;
+    border-top-right-radius: calc(300%/23) 10% !important;
+    border-bottom-left-radius: calc(300%/23) 10% !important;
+    border-bottom-right-radius:calc(300%/23) 10% !important;
 
     top: calc(60%/7);
     bottom: calc(40%/7);
@@ -42,13 +42,13 @@ div.card_inner{
     width: 92%;
     height: calc(600%/7);
 
-    background-color:mintcream;
+    background-color:mintcream !important;
     z-index: 2;
 
-    background-image: url("../icons/committy-90deg.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+    background-image: url("../icons/committy-90deg.svg") !important;
+    background-repeat: no-repeat !important;
+    background-size: contain !important;
+    background-position: center !important;
 }
 
 div.card_icon_holder{
@@ -67,9 +67,9 @@ div.card_icon_holder{
     justify-content: center;
 
     z-index: 3;
-    background-color: ghostwhite;
+    background-color: ghostwhite !important;
     outline-style: outset;
-    outline-color:dimgrey ;
+    outline-color:dimgrey  !important;
 }
 
 div.card_icon_holder img {
@@ -97,7 +97,7 @@ div.card_stats_parent {
 
     z-index: 3;
 
-    background-color:whitesmoke;
+    background-color:whitesmoke !important;
     
     outline-style: double;
 
@@ -202,7 +202,7 @@ div.card_description {
     width: 84%;
     height: calc(145%/7);
 
-    background-color: aliceblue;
+    background-color: aliceblue !important;
     z-index:3;
     
     outline-style: groove;
@@ -214,53 +214,53 @@ div.card_description {
 
 div.card_number{
     position: absolute;
-    top: calc(660%/7);
-    left: 8%;
-    right: 8%;
-    bottom: 0%;
+    top: calc(660%/7) !important;
+    left: 8% !important;
+    right: 8% !important;
+    bottom: 0% !important;
     text-align: right;
-    width: 84%;
+    width: 84% !important;
     height: calc(40%/7);
     z-index: 3;
     font-weight: bold;
 }
 
 div.card_red {
-    background-color: tomato;
+    background-color: tomato !important;
 }
 
 div.card_green {
-    background-color: MediumAquaMarine ;
+    background-color: MediumAquaMarine  !important;
 }
 div.card_blue {
-    background-color: cornflowerblue;
+    background-color: cornflowerblue !important;
 }
 div.card_orange {
-    background-color: chocolate;
+    background-color: chocolate !important;
 }
 div.card_purple {
-    background-color: violet;
+    background-color: violet !important;
 }
 div.card_yellow {
-    background-color: darkkhaki;
+    background-color: darkkhaki !important;
 }
 div.card_gray {
-    background-color: lightsteelblue;
+    background-color: lightsteelblue !important;
 }
 
 div.card_error {
-    background-image: url("../icons/error.svg");
-    background-repeat: repeat;
+    background-image: url("../icons/error.svg") !important;
+    background-repeat: repeat !important;
     background-size: auto;
 
 }
 
 div.card_error > .card_title {
-    color:azure;
+    color:azure !important;
 }
 
 div.card_error > .card_number {
-    color: seashell;
+    color: seashell !important;
 }
 /*
 

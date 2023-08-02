@@ -7,51 +7,62 @@
     </head>
 
     <body>
-        <header>
-            <h1><img src="./assets/icons/committy.svg" alt="Committy!"/></h1>
-            
-        </header>
-        
-        <div>
-            <p>the collaborative card game that you will <s>not</s> regret unwillingly contributing to</p>
-            <p>
-                bodged together by <a href="https://11belowstudio.itch.io">11BelowStudio</a>
-              </p>
-            <ul>
-                <li>
-                    <a href="./submit_card">Card creator!</a>
-                </li>
-                <li>
-                    <a href="./view_card/random">View a random card!</a>
-                </li>
-                <li>
-                    <a href="./draw_hands/3">Play game clientside (WIP)</a>
-                </li>
-                <li>
-                    <a href="./api">The undocumented API!!!</a>
-                </li>
-                <li>
-                    In terms of cards we currently have {{ cardCount }} cards.
-                </li>
-            </ul>
 
-            <h2><s>Play the game!</s> placeholder for if/when I do manage to make the game</h2>
-            <form>
+        <div class="wrap">
+
+            <div class="sidebar">
+                <div class="sidebarItem">
+                    <h1><img src="/assets/icons/committy.svg" alt="Committy!"/></h1>
+                </div>
+                <div class="sidebarItem">
+                    <p>the <b class="green">collaborative</b> card game that you will <s style="red">not</s> regret unwillingly contributing to</p>
+                </div>
+                <div class="sidebarItem">
+                    <p>
+                        bodged together by <a href="https://11belowstudio.itch.io">11BelowStudio</a>
+                    </p>
+                </div>
+            </div>
+        
+        
+            <div class="content">
+                
                 <ul>
                     <li>
-                        Your username<br/>
-                        <input type="text" maxlength="29" name="username" value="{{ username }}" label="username" required/>
+                        <a href="./submit_card">Card creator!</a>
                     </li>
                     <li>
-                        <input type="radio" name="host" value="true" label="host game" checked/> Create room<br/>
-                        <input type="radio" name="host" value="false" label="join game" /> Join room
+                        <a href="./view_card/random">View a random card!</a>
                     </li>
                     <li>
-                        room to join<br/>
-                        <input type="text" name="room_name" value="" label="room to join" size="64" />
+                        <a href="./draw_hands/3">Play game clientside (WIP)</a>
+                    </li>
+                    <li>
+                        <a href="./api">The undocumented API!!!</a>
+                    </li>
+                    <li>
+                        In terms of cards we currently have {{ cardCount }} cards.
                     </li>
                 </ul>
-            </form>
+
+                <h2><s>Play the game!</s> placeholder for if/when I do manage to make the game</h2>
+                <form>
+                    <ul>
+                        <li>
+                            Your username<br/>
+                            <input type="text" maxlength="29" name="username" value="{{ username }}" label="username" required/>
+                        </li>
+                        <li>
+                            <input type="radio" name="host" value="true" label="host game" checked/> Create room<br/>
+                            <input type="radio" name="host" value="false" label="join game" /> Join room
+                        </li>
+                        <li>
+                            room to join<br/>
+                            <input type="text" name="room_name" value="" label="room to join" size="64" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
         </div>
     </body>
 </html>

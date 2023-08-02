@@ -72,8 +72,9 @@ h1{
   } 
   
   body{
-   /*margin-left: 0; */
+   margin-left: 0;
   }
+
   
   .button {
     width: 88px;
@@ -129,7 +130,7 @@ h1{
     overflow: auto;
   }
   
-  div.sidebarItem{
+  div.sidebar div{
     
     background-color: #202020;
     justify-content: flex-start;

@@ -1,20 +1,35 @@
-
+@import "../draculuhhh.css";
 
 div.hand_menu {
-    background-color: #ccc;
+    background-color: #202020;
     overflow-x: auto;
     white-space: nowrap;
 }
 
-div.hand_menu > div {
+div.hand_menu > div.card_holder {
     display: inline-block;
     justify-content: center;
-    padding: 14px;
     text-decoration: none;
+    height: 100%;
 }
+
+.hand_card {
+    margin: 14px;
+}
+
 div.hand_menu > div:nth-child(even) {
-    background-color: #aaa;
+    background-color: #181818;
 }
+
+
+
+
+div.selected_card {
+    border-style: dotted;
+    border-color: var(--orange);
+}
+
+
 
 .hand_card {
     height: 350px;

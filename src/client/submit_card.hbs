@@ -172,215 +172,227 @@
     
         </script>
         
-        
-        
-        
-        <h1>suggestions for <img src="./assets/icons/committy.svg" alt="Committy!"/> go here.</h1>
+        <div class="wrap">
 
-        <a href="/">back</a>
-
-        <div class="col-container">
-
-            <!-- the form -->
-            <div class="col" style="width: 75%;">
-
-                <h1>
-                Create your card!
-                </h1>
-                
-                
-                <form action="./api/submit_card_form" method="post" target="_blank">
-                
-                    <table style="width:80%;" id="sliders">
-                    <tr>
-                    <th colspan="2">write stuff about your card!</th>
-                    </tr>
-                    <tr>
-                    <td style="width:25%;">
-                        name your card!
-                    </td>
-                    <td style="width:75%;">
-                        <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)" maxlength="61" required/>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="width:25%;">
-                        describe your card!
-                    </td>
-                    <td style="width:75%;">
-                        <input
-                            type="text"
-                            name="desc"
-                            value="I'm terribly sorry, but I'm at a complete loss for words about how to describe this card."
-                            style="width:100%;"
-                            onchange="onDescChanged(this.value)"
-                            maxlength="125"
-                        />
-                    </td>
-                    </tr>
-                    <tr>
-                    <td style="width:25%;">
-                        URL of an image for it (upload it to imgur or something)
-                    </td>
-                    <td style="width:75%;">
-                        <input type="url" name="img" value="https://i.imgur.com/HM824r1.png" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
-                    </td>
-                    </tr>
-                    <tr>
-                    <th colspan="2">stats moment!!!!!</th>
-                    </tr>
-                    <tr>
-                    <td class="icon icon_a"></td>
-                    <td>
-                        <span class="slideBG"><div class="slider stat_slider"></div>
-                        <input type="number" class="value" name="s1" value="5" min="1" max="10" onchange="onS1Changed(this.value)" /><span>5</span>
-                        </span>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td class="icon icon_b"></td>
-                    <td>
-                        <span class="slideBG"><div class="slider stat_slider"></div>
-                        <input type="number" class="value" name="s2" value="5" min="1" max="10" onchange="onS2Changed(this.value)"/><span>5</span>
-                        </span>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td class="icon icon_c"></td>
-                    <td>
-                        <span class="slideBG"><div class="slider stat_slider"></div>
-                        <input type="number" class="value" name="s3" value="5" min="1" max="10" onchange="onS3Changed(this.value)" /><span>5</span>
-                        </span>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td class="icon icon_d"></td>
-                    <td>
-                        <span class="slideBG"><div class="slider stat_slider"></div>
-                        <input type="number" class="value" name="s4" value="5" min="1" max="10" onchange="onS4Changed(this.value)" /><span>5</span>
-                        </span>
-                    </td>
-                    </tr>
-                    </table>
-                    <br><label for="sliderMax">Total stat Max:</label>
-                    <input type="text" id="sliderMax" name="sliderMax" value="21" disabled/>
-                    <br><br><label for="sliderTotal">Stat Totals:</label>
-                    <input type="text" id="sliderTotal" name="sliderTotal" value="20" disabled/>
-
-                    <br>
-                    <br>
-                    <h2>
-                        which card does <span class="your_title_holder_class">your card</span> beat???
-                    </h2>
-                    <div class="col-container">
-                        <div class="col">
-                            <h3>this one <input type="radio" name="beats_loses_choice" value="{{card1.id}},{{card2.id}}" checked /></h3>
-                            <div class="card {{ card1.colour }}" style="width:250px; height: 350px;">
-                                <div class="card_title">{{card1.name}}</div>
-                                <div class="card_inner"></div>
-                                <div class="card_icon_holder">
-                                  <img class="card_icon" src="{{{ card1.img }}}"/>
-                                </div>
-                                <div class="card_stats_parent">
-                                    <div class="card_stats_cell card_stat_1">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card1.stat1}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_2">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card1.stat2}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_3">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card1.stat3}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_4">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card1.stat4}}</div>
-                                    </div>
-                                </div>
-                                <div class="card_description">
-                                    {{card1.desc}}
-                                </div>
-                                <div class="card_number">#{{card1.id}}</div>
-                            </div>
-                            
-                        </div>
-                        <div class="col">
-                            <h3>this other one <input type="radio" name="beats_loses_choice" value="{{card2.id}},{{card1.id}}" /></h3>
-                            <div class="card {{ card2.colour }}" style="width:250px; height: 350px;">
-                                <div class="card_title">{{card2.name}}</div>
-                                <div class="card_inner"></div>
-                                <div class="card_icon_holder">
-                                  <img class="card_icon" src="{{{ card2.img }}}"/>
-                                </div>
-                                <div class="card_stats_parent">
-                                    <div class="card_stats_cell card_stat_1">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card2.stat1}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_2">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card2.stat2}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_3">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card2.stat3}}</div>
-                                    </div>
-                                    <div class="card_stats_cell card_stat_4">
-                                        <div class="card_stat_icon"></div>
-                                        <div class="card_stat_number">{{card2.stat4}}</div>
-                                    </div>
-                                </div>
-                                <div class="card_description">
-                                    {{card2.desc}}
-                                </div>
-                                <div class="card_number">#{{card2.id}}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit">ok sure seems alright to me time to submit this binch</button>
-                </form>
-            </div>
-            <div class="col">
-
-                <h1>
-                    take a look at your epic card!!!!
-                </h1>
-
-                <div class="card" style="width:250px;">
-                    <div class="card_title"id="your_title">Your title here!</div>
-                    <div class="card_inner"></div>
-                    <div class="card_icon_holder">
-                      <img src="https://i.imgur.com/HM824r1.png" id="your_img"/>
-                    </div>
-                    <div class="card_stats_parent">
-                        <div class="card_stats_cell card_stat_1">
-                            <div class="card_stat_icon"></div>
-                            <div class="card_stat_number" id="your_s1">5</div>
-                        </div>
-                        <div class="card_stats_cell card_stat_2">
-                            <div class="card_stat_icon"></div>
-                            <div class="card_stat_number"id="your_s2">5</div>
-                        </div>
-                        <div class="card_stats_cell card_stat_3">
-                            <div class="card_stat_icon"></div>
-                            <div class="card_stat_number"id="your_s3">5</div>
-                        </div>
-                        <div class="card_stats_cell card_stat_4">
-                            <div class="card_stat_icon"></div>
-                            <div class="card_stat_number"id="your_s4">5</div>
-                        </div>
-                    </div>
-                    <div class="card_description" id="your_desc">
-                        I'm terribly sorry, but I'm at a complete loss for words about how to describe this card.
-                    </div>
-                    <div class="card_number" id="your_number">#idk yet</div>
+            <div class="sidebar">
+                <div>
+                    <h1>suggestions for <br><img src="/assets/icons/committy.svg" alt="Committy!"/><br> go here.</h1>
                 </div>
-                
+
+                <div>
+                    <h2><a href="/">back</a></h2>
+                </div>
             </div>
 
+            <div class="content">
+
+
+        
+
+                <div class="col-container">
+
+                    <!-- the form -->
+                    <div class="col" style="width: 75%;">
+
+                        <h1>
+                        Create your card!
+                        </h1>
+                        
+                        
+                        <form action="./api/submit_card_form" method="post" target="_blank">
+                        
+                            <table style="width:80%;" id="sliders">
+                            <tr>
+                            <th colspan="2">write stuff about your card!</th>
+                            </tr>
+                            <tr>
+                            <td style="width:25%;">
+                                name your card!
+                            </td>
+                            <td style="width:75%;">
+                                <input type="text" name="name" value="" style="width:100%;" onchange="onNameChanged(this.value)" maxlength="61" required/>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td style="width:25%;">
+                                describe your card!
+                            </td>
+                            <td style="width:75%;">
+                                <input
+                                    type="text"
+                                    name="desc"
+                                    value="I'm terribly sorry, but I'm at a complete loss for words about how to describe this card."
+                                    style="width:100%;"
+                                    onchange="onDescChanged(this.value)"
+                                    maxlength="125"
+                                />
+                            </td>
+                            </tr>
+                            <tr>
+                            <td style="width:25%;">
+                                URL of an image for it (upload it to imgur or something)
+                            </td>
+                            <td style="width:75%;">
+                                <input type="url" name="img" value="https://i.imgur.com/HM824r1.png" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
+                            </td>
+                            </tr>
+                            <tr>
+                            <th colspan="2">stats moment!!!!!</th>
+                            </tr>
+                            <tr>
+                            <td class="icon icon_a"></td>
+                            <td>
+                                <span class="slideBG"><div class="slider stat_slider"></div>
+                                <input type="number" class="value" name="s1" value="5" min="1" max="10" onchange="onS1Changed(this.value)" /><span>5</span>
+                                </span>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td class="icon icon_b"></td>
+                            <td>
+                                <span class="slideBG"><div class="slider stat_slider"></div>
+                                <input type="number" class="value" name="s2" value="5" min="1" max="10" onchange="onS2Changed(this.value)"/><span>5</span>
+                                </span>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td class="icon icon_c"></td>
+                            <td>
+                                <span class="slideBG"><div class="slider stat_slider"></div>
+                                <input type="number" class="value" name="s3" value="5" min="1" max="10" onchange="onS3Changed(this.value)" /><span>5</span>
+                                </span>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td class="icon icon_d"></td>
+                            <td>
+                                <span class="slideBG"><div class="slider stat_slider"></div>
+                                <input type="number" class="value" name="s4" value="5" min="1" max="10" onchange="onS4Changed(this.value)" /><span>5</span>
+                                </span>
+                            </td>
+                            </tr>
+                            </table>
+                            <br><label for="sliderMax">Total stat Max:</label>
+                            <input type="text" id="sliderMax" name="sliderMax" value="21" disabled/>
+                            <br><br><label for="sliderTotal">Stat Totals:</label>
+                            <input type="text" id="sliderTotal" name="sliderTotal" value="20" disabled/>
+
+                            <br>
+                            <br>
+                            <h2>
+                                which card does <span class="your_title_holder_class">your card</span> beat???
+                            </h2>
+                            <div class="col-container">
+                                <div class="col">
+                                    <h3>this one <input type="radio" name="beats_loses_choice" value="{{card1.id}},{{card2.id}}" checked /></h3>
+                                    <div class="card {{ card1.colour }}" style="width:250px; height: 350px;">
+                                        <div class="card_title">{{card1.name}}</div>
+                                        <div class="card_inner"></div>
+                                        <div class="card_icon_holder">
+                                        <img class="card_icon" src="{{{ card1.img }}}"/>
+                                        </div>
+                                        <div class="card_stats_parent">
+                                            <div class="card_stats_cell card_stat_1">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card1.stat1}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_2">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card1.stat2}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_3">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card1.stat3}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_4">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card1.stat4}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="card_description">
+                                            {{card1.desc}}
+                                        </div>
+                                        <div class="card_number">#{{card1.id}}</div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col">
+                                    <h3>this other one <input type="radio" name="beats_loses_choice" value="{{card2.id}},{{card1.id}}" /></h3>
+                                    <div class="card {{ card2.colour }}" style="width:250px; height: 350px;">
+                                        <div class="card_title">{{card2.name}}</div>
+                                        <div class="card_inner"></div>
+                                        <div class="card_icon_holder">
+                                        <img class="card_icon" src="{{{ card2.img }}}"/>
+                                        </div>
+                                        <div class="card_stats_parent">
+                                            <div class="card_stats_cell card_stat_1">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card2.stat1}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_2">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card2.stat2}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_3">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card2.stat3}}</div>
+                                            </div>
+                                            <div class="card_stats_cell card_stat_4">
+                                                <div class="card_stat_icon"></div>
+                                                <div class="card_stat_number">{{card2.stat4}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="card_description">
+                                            {{card2.desc}}
+                                        </div>
+                                        <div class="card_number">#{{card2.id}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit">ok sure seems alright to me time to submit this binch</button>
+                        </form>
+                    </div>
+                    <div class="col">
+
+                        <h1>
+                            take a look at your epic card!!!!
+                        </h1>
+
+                        <div class="card" style="width:250px;">
+                            <div class="card_title"id="your_title">Your title here!</div>
+                            <div class="card_inner"></div>
+                            <div class="card_icon_holder">
+                            <img src="https://i.imgur.com/HM824r1.png" id="your_img"/>
+                            </div>
+                            <div class="card_stats_parent">
+                                <div class="card_stats_cell card_stat_1">
+                                    <div class="card_stat_icon"></div>
+                                    <div class="card_stat_number" id="your_s1">5</div>
+                                </div>
+                                <div class="card_stats_cell card_stat_2">
+                                    <div class="card_stat_icon"></div>
+                                    <div class="card_stat_number"id="your_s2">5</div>
+                                </div>
+                                <div class="card_stats_cell card_stat_3">
+                                    <div class="card_stat_icon"></div>
+                                    <div class="card_stat_number"id="your_s3">5</div>
+                                </div>
+                                <div class="card_stats_cell card_stat_4">
+                                    <div class="card_stat_icon"></div>
+                                    <div class="card_stat_number"id="your_s4">5</div>
+                                </div>
+                            </div>
+                            <div class="card_description" id="your_desc">
+                                I'm terribly sorry, but I'm at a complete loss for words about how to describe this card.
+                            </div>
+                            <div class="card_number" id="your_number">#idk yet</div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+            </div>
         </div>
 
 

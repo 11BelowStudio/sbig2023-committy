@@ -48,39 +48,73 @@
             </div>
         </template>
 
-        <header>
-            <h1>The clientside version of Committy</h1>
-            <p>Both players need to pick a card from their hand!</p>
-            <p>this game's URL suffix: <code>{{ url }}</code></p>
-        </header>
-        <div id="player_1_div">
-            <h2>Player 1</h2>
+        <div class="wrap">
 
-            <div class="hand_menu" id="player_1_hand">
-                <!-- this gets filled automatically with your cards -->
+            <div class="sidebar">
+                <div>
+                    <h1>The clientside version of<br>
+                    <img src="/assets/icons/committy.svg" alt="Committy!"/></h1>
+                </div>
+                <div>
+                    <p>Both players need to pick a card from their hand!</p>
+                    <p>this game's URL suffix: <code>{{ url }}</code></p>
+                    <p>
+                        Click a card once to select it. Click it again to hide your selection.
+                    </p>
+                </div>
+
+                <div>
+                    <h2>
+                        Instructions
+                    </h2>
+                    <ol>
+                        <li>
+                            Pick the card that you think will beat whatever card your opponent will play.
+                        </li>
+                        <li>
+                            When both players have chosen a card, press the button below to proceed to the next step
+                        </li>
+                    </ol>
+                </div>
+                
+
+                <div>
+                    <h3>selections</h3>
+                    <ul>
+                        <li>
+                            Player 1 has <span id="p1_selection">not chosen a card</span>!
+                        </li>
+                        <li>
+                            Player A  has <span id="p2_selection">not chosen a card</span>!
+                        </li>
+                    </ul>
+
+                    <button onclick="next_pressed()">Press this when both players have chosen a card.</button>
+                </div>
             </div>
-        </div>
 
-        <div id="middle">
-            <p>selections</p>
-            <ul>
-                <li>
-                    Player 1 has <span id="p1_selection">not chosen a card</span>!
-                </li>
-                <li>
-                    Player A  has <span id="p2_selection">not chosen a card</span>!
-                </li>
-            </ul>
+            <div class="content">
 
-            <button onclick="next_pressed()">Press this when both players have chosen a card.</button>
-        </div>
+                <div id="player_1_div">
+                    <h2>Player 1</h2>
 
-        <div id="player_2_div">
-            <h2>Player A</h2>
-            <div class="hand_menu" id="player_2_hand">
-                <!-- this also gets filled automatically with cards -->
+                    <div class="hand_menu" id="player_1_hand">
+                        <!-- this gets filled automatically with your cards -->
+                    </div>
+                </div>
+
+                <div id="player_2_div">
+                    <h2>Player A</h2>
+                    <div class="hand_menu" id="player_2_hand">
+                        <!-- this also gets filled automatically with cards -->
+                    </div>
+                </div>
             </div>
+
         </div>
+
+        
+        
         
        
 
@@ -90,7 +124,9 @@
             
 
             let p1_chosen = NaN;
+            let p1_chosen_element = null;
             let p2_chosen = NaN;
+            let p2_chosen_element = null;
 
             function next_pressed(){
 
@@ -108,16 +144,37 @@
             }
 
 
-            function p1_selected_card(id){
+            function p1_selected_card(id, card_element){
                 p1_chosen = id;
-                console.log(`Player 1 chose card ${id}!`);
-                document.getElementById("p1_selection").innerHTML = `chosen card #${id}`;
+                document.getElementById("p1_selection").innerHTML = `chosen card ${id}`;
+
+                if (p1_chosen_element != null){
+                    p1_chosen_element.classList.remove("selected_card");
+                    if (p1_chosen_element == card_element){
+                        document.getElementById("p1_selection").innerHTML = `chosen a card!`;
+                    }
+                }
+                else {
+                    card_element.classList.add("selected_card");
+                    p1_chosen_element = card_element;
+                }
+
+                
             }
 
-            function p2_selected_card(id){
+            function p2_selected_card(id, card_element){
                 p2_chosen = id;
-                console.log(`Player 2 chose card ${id}!`);
-                document.getElementById("p2_selection").innerHTML = `chosen card #${id}`;
+                document.getElementById("p2_selection").innerHTML = `chosen card ${id}`;
+                if (p2_chosen_element != null){
+                    p2_chosen_element.classList.remove("selected_card");
+                    if (p2_chosen_element == card_element){
+                        document.getElementById("p2_selection").innerHTML = `chosen a card!`;
+                    }
+
+                } else {
+                    card_element.classList.add("selected_card");
+                    p2_chosen_element = card_element;
+                }
             }
 
 
@@ -149,7 +206,11 @@
 
                 theCardElement.addEventListener(
                     "click",
-                    (is_p1) ? function() {p1_selected_card(card_data.id)} : function(){p2_selected_card(card_data.id)}
+                    (is_p1) ? function() {
+                        p1_selected_card(card_data.id, new_card_holder)
+                    } : function(){
+                        p2_selected_card(card_data.id, new_card_holder)
+                    }
                 );
 
                 new_card_holder.querySelector(".card_title").innerText = card_data.title;
