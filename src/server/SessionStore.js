@@ -23,6 +23,7 @@
     }
   }
   
-  module.exports = {
-    InMemorySessionStore
-  };
+export{
+  SessionStore,
+  InMemorySessionStore
+}

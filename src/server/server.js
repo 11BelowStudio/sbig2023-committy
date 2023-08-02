@@ -4,6 +4,9 @@
  * Uses sqlite.js to connect to db
  */
 
+import sample from "underscore";
+
+/*
 const {
   sample
 } = require("underscore");
@@ -12,45 +15,92 @@ const fastify = require("fastify")({
   // Set this to true for detailed logging:
   logger: true
 });
-const path = require('path');
+*/
 
+import _fastify from "fastify";
 
-const crypto = require('crypto');
+const fastify = _fastify({
+  // Set this to true for detailed logging:
+  logger: true
+});
+
+import path from "node:path";
+//const path = require('path');
+
+import crypto from "node:crypto";
+
+//const crypto = require('crypto');
 const randomId = () => crypto.randomBytes(8).toString("hex");
 
+const randomSeedSource = () => crypto.randomBytes(4).readUInt32LE() + 1;
 
-fastify.register(require("@fastify/formbody"));
 
-const io = require("fastify-socket.io");
+import _fs_formbody from "@fastify/formbody";
+import io from "fastify-socket.io";
+
+fastify.register(_fs_formbody);
+
+//fastify.register(require("@fastify/formbody"));
+
+//const io = require("fastify-socket.io");
 
 fastify.register(io);
 
+import { Random } from 'random';
+import seedrandom from 'seedrandom';
 
 
+import { InMemorySessionStore } from "./SessionStore.js";
 
-const { InMemorySessionStore } = require("./game/SessionStore");
+//const { InMemorySessionStore } = require("./SessionStore");
 const sessionStore = new InMemorySessionStore();
 
+import _fs_view from "@fastify/view";
+import _hdb from "handlebars";
 
 
 // View is a templating manager for fastify
+fastify.register(
+  _fs_view, {
+    engine: {
+      handlebars : _hdb
+    }
+  }
+);
+
+
+/*
 fastify.register(require("@fastify/view"), {
   engine: {
     handlebars: require("handlebars"),
   },
 });
+*/
 
+import * as db from "./db/sqlite.js";
 
-const db = require("./db/sqlite.js");
-const { request } = require("express");
-const { card_consts } = require("./constants.js");
+//const db = require("./db/sqlite.js");
+import { card_consts } from "./constants.js";
+//const { card_consts } = require("./constants.js");
 
+import _fs_static from "@fastify/static";
+
+import url from 'url';
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // Setup our static files
-fastify.register(require("@fastify/static"), {
+fastify.register(_fs_static, {
   root: path.join(__dirname,'../','public'),
   prefix: "/", // optional: default '/'
 });
 
+
+/*
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname,'../','public'),
+  prefix: "/", // optional: default '/'
+});
+*/
 
 // Helper function to authenticate the user key
 const authorized = key => {
@@ -64,18 +114,19 @@ const authorized = key => {
   else return true;
 };
 
+export{
+  fastify,
+  authorized,
+  db,
+  sessionStore,
+  randomId
+}
 
 
-module.exports = {
-  fastify: fastify,
-  authorized: function(key) { return authorized(key); },
-  db: db,
-  sessionStore: sessionStore,
-  randomId: function(){ return randomId(); }
-};
+import {ShortURL} from "./utils/ShortURL.js";
 
 
-const {RoomsManager} = require("./game/RoomsManager");
+//const ShortURL = require("./utils/ShortURL");
 
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
@@ -148,7 +199,7 @@ fastify.get('/submit_card', async(req, reply) => {
   let otherCards = [];
 
   
-  let otherResult = await db.getRandomCards(2);
+  let otherResult = db.getRandomCards(2);
   if (!otherResult.success){
     reply.status(500).send(
       {
@@ -222,7 +273,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
   };
 
   try{
-    let cardResult = await db.getCard(cardID);
+    let cardResult = db.getCard(cardID);
 
     if (cardResult.success){
       params.card = {
@@ -296,7 +347,7 @@ fastify.delete("/message", async (request, reply) => {
 fastify.get("/api/cards", async(request, reply) => {
   
   let data = {};
-  data.result = await db.getAllCards();
+  data.result = db.getAllCards();
   console.log(data.result);
   if (!data.result || !data.result.success){ data.error = errorMessage;}
   const status = data.error ? 400 : 200;
@@ -308,7 +359,7 @@ fastify.get("/api/card/:id", async(request, reply) => {
   let data = {};
   console.log(request.params);
 
-  data.result = await db.getCard(request.params.id);
+  data.result = db.getCard(request.params.id);
   console.log(data.result);
   if (!data.result || !data.result.success) {
     data.error = errorMessage;
@@ -320,7 +371,7 @@ fastify.get("/api/card/:id", async(request, reply) => {
 
 fastify.get("/api/card_ids", async(request, reply) => {
   let data = {};
-  data.result = await db.getCardIDs();
+  data.result = db.getCardIDs();
   console.log(data.result);
   if (!data.result || !data.result.success){
      data.error = errorMessage;
@@ -334,7 +385,7 @@ fastify.get("/api/card_ids", async(request, reply) => {
  */
 fastify.get("/api/card_links", async(request, reply) => {
   let data = {};
-  data.result = await db.getCardIDs();
+  data.result = db.getCardIDs();
   if (!data.result || !data.result.success){
     data.error = errorMessage;
   } else {
@@ -373,7 +424,7 @@ fastify.get("/api/n_card_ids/:n", async(request, reply) => {
 fastify.get("/api/n_cards/:n", async(request, reply) => {
   let data = {};
 
-  data.result = await db.getRandomCards(request.params.n);
+  data.result = db.getRandomCards(request.params.n);
   if (!data.result || !data.result.success){
     data.error = errorMessage;
   }
@@ -406,7 +457,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
     }
   }
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
-  let allIDs = await db.getCardIDsExcept(except);
+  let allIDs = db.getCardIDsExcept(except);
   console.log(allIDs);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
@@ -426,7 +477,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
 
 fastify.get("/api/wins/:c1/:c2", async(request, reply) => {
   let data = {};
-  data.result = await db.getWinData(request.params.c1, request.params.c2);
+  data.result = db.getWinData(request.params.c1, request.params.c2);
   if (!data.result || !data.result.success){
     data.error = errorMessage;
   }
@@ -466,7 +517,7 @@ fastify.post("/api/declare_winner", async(request, reply) => {
   }
   
   
-  data.result = await db.setWinData(body.winner, body.loser);
+  data.result = db.setWinData(body.winner, body.loser);
   data.success = data.result.success;
   if (!data.result || !data.result.success){
     data.error = (data.result.existsAlready) ? "A record for these two cards exists already!" :  errorMessage;
@@ -613,7 +664,7 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
   }
 
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.newID}`;
-  let allIDs = await db.getCardIDsExcept(request.params.newID);
+  let allIDs = db.getCardIDsExcept(request.params.newID);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
@@ -631,11 +682,64 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
 });
 
 
+/*
+fastify.get("/temp_game",function(req, reply) {
+  reply.header('content-type', 'text/html; charset=utf-8');
+  reply.sendFile("game.html");
+})
+*/
+
+fastify.get("/i",function(req, reply) {
+  reply.header('content-type', 'text/html; charset=utf-8');
+  reply.sendFile("index.html");
+})
 
 
+fastify.get("/drawHands/:handSize", function(req, reply){
 
 
+  let rawSeed = randomSeedSource();
 
+  reply.redirect(
+    `/game/${req.params.handSize}/${ShortURL.encode(rawSeed)}`
+  );
+
+
+})
+
+
+fastify.get("/game/:handSize/:seed", function(req, reply){
+
+  let data = {
+    handSize : req.params.handSize,
+    seed: req.params.seed
+  };
+
+  let rawSeed = "";
+
+  try{
+    rawSeed = ShortURL.decode(seed);
+  } catch (error){
+    reply.status(400).send(
+      {
+        error: "that's not a valid seed 🗞️",
+        go_to: `http://${req.hostname}/${req.params.handSize}`
+      }
+    );
+    return;
+  }
+
+  let seeded_rng = seedrandom(rawSeed);
+
+  // TODO: is cardCount >= (handSize * 2)
+  // TODO: obtain all IDs
+  // TODO: use seeded RNG to sample (handSize * 2) from them
+  // TODO: and divide into two sets of handSize
+
+
+  
+  reply.status(501).send(data);
+});
 
 
 

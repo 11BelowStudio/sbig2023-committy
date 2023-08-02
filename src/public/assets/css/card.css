@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
 
@@ -43,6 +44,11 @@ div.card_inner{
 
     background-color:mintcream;
     z-index: 2;
+
+    background-image: url("../icons/committy-90deg.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 }
 
 div.card_icon_holder{
@@ -257,10 +263,10 @@ div.card_error > .card_number {
 Example card HTML:
 
 <div class="card card_gray" style="width:250px; height: 350px;">
-	<div class="card_title">card title goes here</div>
+	<div class="card_title">behold the man!</div>
     <div class="card_inner"></div>
     <div class="card_icon_holder">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Abbaye_de_saint_Hilaire.jpg"/>
+      <img src="https://i.imgur.com/O3i102U.jpg"/>
     </div>
     <div class="card_stats_parent">
     	<div class="card_stats_cell card_stat_1">

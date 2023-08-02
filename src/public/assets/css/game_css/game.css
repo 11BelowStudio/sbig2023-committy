@@ -1,0 +1,14 @@
+#play_table > td{
+    justify-content: center;
+}
+.hand_card {
+    height: 210px;
+    font-size: 60%;
+}
+.play_card {
+    position: relative;
+    height: 350px;
+}
+.card_details{
+    visibility: visible;
+}

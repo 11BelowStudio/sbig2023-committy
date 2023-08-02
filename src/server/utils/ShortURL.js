@@ -287,16 +287,19 @@ const ShortURL = new function() {
 
 	this.encode = function(num) {
 
-        let sum = num
-        let arr = []
-        let reducer = (a,b) => parseInt(a) + parseInt(b)
+        for(let extra = 0; extra < 2; extra++){
 
-        while (sum > 9) {
-            arr = sum.toString().split("")
-            sum = arr.reduce(reducer)
+            let sum = num
+            let arr = []
+            let reducer = (a,b) => parseInt(a) + parseInt(b)
+
+            while (sum > 9) {
+                arr = sum.toString().split("")
+                sum = arr.reduce(reducer)
+            }
+
+            num = (num * 10) + sum;
         }
-
-        num = (num * 10) + sum;
 
         var result = [];
         while (num > 0){
@@ -334,23 +337,16 @@ const ShortURL = new function() {
             
 		}
 
-        var numRoot = num % 10;
+        var numRoots = num % 100;
 
-        var numRaw = (num - numRoot)/10;
+        var numRaw = (num - numRoots)/100;
 
 		return numRaw;
 	};
 
-};
+}();
 
 
-module.exports = {
-
-    encode: function(num){
-        return ShortURL.encode(num);
-    },
-
-    decode: function(str){
-        return ShortURL.decode(str);
-    }
-};
+export{
+    ShortURL
+}

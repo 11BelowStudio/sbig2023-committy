@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<svg width="70" height="230" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient gradientUnits="objectBoundingBox" id="gradient0" spreadMethod="pad" x1="0" x2="1.14" y1="0" y2="0.9">
+   <stop offset="0.33" stop-color="#f59b14"/>
+   <stop offset="0.6" stop-color="#96f06e"/>
+  </linearGradient>
+ </defs>
+ <g class="layer">
+  <title>Layer 1</title>
+  <g id="svg_5">
+   <g id="svg_6">
+    <path d="m132.48,118.49c-186.97,25.97 -200.68,-31.93 -140.19,-41.54c-84.63,5.28 -72.17,88.7 140.19,41.54z" fill="url(#gradient0)" id="shape0" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="0.48" transform="rotate(90.8351, 37.9474, 104.914)"/>
+    <path d="m-9.24,83.28c-66.4,5.54 -73.11,78.06 139.5,41.54" fill="none" id="shape1" stroke="#ffffff" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="0.72" transform="rotate(90.8351, 39.9619, 109.17)"/>
+    <circle cx="3.28" cy="44.84" fill="none" id="shape01" r="9.6" stroke="#82d322" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="3.6" transform="rotate(90.8351, 43.0417, 59.3818) matrix(1, 0, 0, 1, 39.7604, 14.5439)"/>
+    <text fill="#77b3fe" font-family="Magneto" font-size="36" font-weight="700" id="shape11" letter-spacing="0" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="0" stroke-width="0" transform="rotate(90.8351, 36.657, 92.1686) matrix(1, 0, 0, 1, 62.0451, 41.0501)" word-spacing="0" x="-45.58" y="62.12">
+     <tspan id="svg_1" x="-45.58" y="62.12">M</tspan>
+    </text>
+    <text fill="#2a3c37" font-family="Berlin Sans FB" font-size="36" id="shape2" letter-spacing="0" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="0" stroke-width="0" transform="rotate(90.8351, 42.0938, 131.382) matrix(1, 0, 0, 1, 106.267, 36.5423)" word-spacing="0" x="-79.27" y="107.34">
+     <tspan id="svg_2" x="-79.27" y="107.34">m</tspan>
+    </text>
+    <text fill="#fb3b02" font-family="Vivaldi" font-size="48" font-style="italic" id="shape3" letter-spacing="0" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="0" stroke-width="0" transform="rotate(90.8351, 51.1516, 156.176) matrix(1, 0, 0, 1, 139.901, 29.1242)" word-spacing="0" x="-94.87" y="141.55">
+     <tspan id="svg_3" x="-94.87" y="141.55">i</tspan>
+    </text>
+    <text fill="#000000" font-family="Corbel" font-size="36" id="shape4" letter-spacing="-4" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="0" stroke-width="0" transform="rotate(90.8351, 40.9882, 179.365) matrix(1, 0, 0, 1, 151.728, 36.4486)" word-spacing="0" x="-128.37" y="154.92">
+     <tspan id="svg_4" x="-128.37" y="154.92">TT</tspan>
+    </text>
+    <path d="m32.29,200.54c8.75,9.66 12.9,14.51 12.46,14.53" fill="none" id="shape011" stroke="#ff0000" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="2.4" transform="rotate(90.8351, 38.5369, 207.807)"/>
+    <path d="m54.87,173.76c-2.65,9.25 -1.98,15.86 -11.01,27.69c-9.04,11.82 -29.86,17.48 -45.01,5.45" fill="none" id="shape111" stroke="#ff0000" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="2.4" transform="rotate(90.8351, 26.8632, 193.67)"/>
+   </g>
+  </g>
+ </g>
+</svg>
