@@ -915,14 +915,16 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 
 fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
 
+  console.log(req.params);
   const _id1 = parseInt(req.params.c1);
   const _id2 = parseInt(req.params.c2);
 
   
+  
   if (Number.isNaN(_id1)){
     reply.status(400).send(
       {
-        error: `input ${req.params.c1} is not a valid card!`
+        error: `c1 input ${req.params.c1} is not a valid card!`
       }
     )
     return;
@@ -930,7 +932,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   else if (Number.isNaN(_id2)){
     reply.status(400).send(
       {
-        error: `input ${req.params.c2} is not a valid card!`
+        error: `c2 input ${req.params.c2} is not a valid card!`
       }
     )
     return;
@@ -989,6 +991,8 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   let params = {
     p1_card: card_to_param_string(c1),
     p2_card: card_to_param_string(c2),
+    p1_id: _id1,
+    p2_id: _id2,
     url: `/game/chosen/${_id1}/${_id2}`
   };
 
@@ -1017,6 +1021,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
  */
 function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent){
 
+
   reply.status(501).send({
     error: "not yet implemented",
     winner_id: winner_id,
@@ -1030,10 +1035,17 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
 
 fastify.post("/game/verdict", (req, reply) => {
 
-  const _c1 = parseInt(req.body.c1);
+  console.log(req.body);
 
-  const _c2 = parseInt(req.body.c2);
+  const bodyData = JSON.parse(req.body.data);
 
+  console.log(bodyData);
+
+  const _c1 = parseInt(bodyData.c1);
+
+  const _c2 = parseInt(bodyData.c2);
+
+  
   const _exist_check = db.checkIfCardsExist(_c1, _c2);
 
   if (!(_exist_check.success && _exist_check.all_exist)){
@@ -1046,14 +1058,14 @@ fastify.post("/game/verdict", (req, reply) => {
     return;
   }
 
-  const _winner = parseInt(req.body.verdict);
+  const _winner = parseInt(bodyData.verdict);
 
   if ((_winner != _c1) && (_winner != _c2)){
     reply.status(400).send(
       {
-        _c1: c2,
-        _c2: c2,
-        _winner: _winner,
+        c1: _c1,
+        c2: _c2,
+        winner: _winner,
         error: `The chosen winning card (${_winner}) wasn't one of the given cards!`
       }
     );
@@ -1074,8 +1086,9 @@ fastify.post("/game/verdict", (req, reply) => {
   }
   
   if (precedent.win_data_exists){
+
     const win_entry = precedent.entries[0];
-    const p1_won = _c1 == win_entry.winner_id;
+    const p1_won = (_c1 == win_entry.winner_id);
     const when_precedent = new Date(win_entry.time);
 
     if (win_entry.winner_id == _winner){

@@ -60,7 +60,7 @@
                     <p>
                         When they come to a conclusion about which card is objectively better, click on the next button!
                     </p>
-                    <button onclick="next_pressed()">Proceed!</button>
+                    <!--<button onclick="next_pressed()">Proceed!</button>-->
                 </div>
                 
 
@@ -75,26 +75,30 @@
                 <p>Find a third party, and convince them that your card is objectively better than the other player's card!</p>
                 <p>Then input their verdict to proceed to the next stage.</p>
 
-                <div id="player_1_div">
-                    <h2>Player 1</h2>
+                <form method="post" action="/game/verdict" target="_self">
 
-                    <div class="hand_menu" id="p1_card_parent" onclick="p1_selected_card()">
-                        <div class="card_holder" id="p1_card_holder">
-                            <!-- this gets filled automatically with your cards -->
-                        </div>
+                    <div id="player_1_div">
+                        <h2>Player 1's card <input type="radio" name="data" value='{ "c1":{{p1_id}}, "c2":{{p2_id}}, "verdict":{{p1_id}} }' required/></h2>
 
-                        
-                    </div>
-                </div>
+                        <div class="hand_menu" id="p1_card_parent" >
+                            <div class="card_holder" id="p1_card_holder">
+                                <!-- this gets filled automatically with your cards -->
+                            </div>
 
-                <div id="player_2_div">
-                    <h2>Player A</h2>
-                    <div class="hand_menu" id="p2_card_parent" onclick="p2_selected_card()">
-                        <div class="card_holder" id="p2_card_holder">
-                            <!-- this also gets filled automatically with cards -->
+                            
                         </div>
                     </div>
-                </div>
+
+                    <div id="player_2_div">
+                        <h2>Player A's card <input type="radio" name="data" value='{"c1":{{p1_id}},"c2":{{p2_id}},"verdict":{{p2_id}} }' required/></h2>
+                        <div class="hand_menu" id="p2_card_parent">
+                            <div class="card_holder" id="p2_card_holder">
+                                <!-- this also gets filled automatically with cards -->
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit">I certify that this choice was made legit eecks dee</button>
+                </form>
             </div>
 
         </div>
@@ -117,7 +121,7 @@
 
             let chosen_element = null;
 
-            function next_pressed(){
+            async function next_pressed(){
 
                 if (p1_is_winner === undefined || !winner_has_been_chosen){
                     window.alert("You actually need to complete The Ritual.");
@@ -146,26 +150,35 @@
                 }
                 else {
 
-                    let form = new HTMLFormElement();
+                    const submitPost = await fetch(
+                        "/game/verdict",
+                        {
+                            method: "POST",
+                            body: JSON.stringify({
+                                c1: p1_card_data.id,
+                                c2: p2_card_data.id,
+                                verdict: win_card.id
+                            }),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        }
+                    );
 
-                    let f_c1 = new HTMLInputElement();
-                    f_c1.valueAsNumber = p1_card_data.id;
-                    let f_c2 = new HTMLInputElement();
-                    f_c2.valueAsNumber = p2_card_data.id;
-                    let f_verdict = new HTMLInputElement();
-                    f_verdict.valueAsNumber = (p1_is_winner) ? p1_card_data.id : p1_card_data.id;
+                    //let submitResult = fetch.
 
-                    form.appendChild(f_c1);
-                    form.appendChild(f_c2);
-                    form.appendChild(f_verdict);
+                    console.log(submitPost);
+                    // TODO: work out how to actually read the response properly.
 
-                    const submitData = new window.FormData({
-                        c1: p1_card_data.id,
-                        c2: p1_card_data.id,
-                        verdict: (p1_is_winner) ? p1_card_data.id : p1_card_data.id
-                    });
+                    open(submitPost);
+                    return;
 
-                    console.log(submitData);
+                    let postResponse;
+
+                    submitPost.then((postResponse))
+
+                    
+
 
                     // TODO: submit form somehow???
                     
@@ -308,6 +321,8 @@
 
                 const p1_card = generate_card(p1_card_data);
                 const p2_card = generate_card(p2_card_data);
+
+                console.log(p2_card_data.id);
 
                 document.getElementById(
                     "p1_card_holder"

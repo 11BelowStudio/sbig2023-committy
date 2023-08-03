@@ -1332,7 +1332,8 @@ export {
 
   getRandomCardIDs,
 
-  getRandomCards
+  getRandomCards,
+  checkIfCardsExist
 }
 
 
