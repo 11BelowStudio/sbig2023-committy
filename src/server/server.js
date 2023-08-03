@@ -274,7 +274,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
   try{
     let cardResult = db.getCard(cardID);
 
-    if (cardResult.success){
+    if (cardResult.success && cardResult.card_exists){
       params.card = {
         id: cardID,
         colour: card_consts.card_id_to_css_class(cardID),
@@ -355,15 +355,24 @@ fastify.get("/api/cards", async(request, reply) => {
 });
 
 fastify.get("/api/card/:id", async(request, reply) => {
-  let data = {};
+  const _id = parseInt(request.params.id);
+  let data = {id: _id };
   console.log(request.params);
+  let status = 500;
 
-  data.result = db.getCard(request.params.id);
+  data.result = db.getCard(_id);
   console.log(data.result);
   if (!data.result || !data.result.success) {
     data.error = errorMessage;
+    status = 500;
   }
-  const status = data.error ? 400 : 200;
+  else if (!data.result.card_exists){
+    data.error = `Card ${_id} does not exist!`
+    status = 400;
+  } else {
+    status = 200;
+  }
+  
   reply.status(status).send(data);
 
 });
@@ -734,6 +743,20 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
 })
 
 
+function card_to_param_string(card_data){
+  return `{
+    id: ${card_data.id},
+    title: "${card_data.name}",
+    desc: "${card_data.desc}",
+    img: "${card_data.img}",
+    stat1: ${card_data.stat1},
+    stat2: ${card_data.stat2},
+    stat3: ${card_data.stat3},
+    stat4: ${card_data.stat4}
+  }`
+}
+
+
 fastify.get("/game/:handSize/:seed", function(req, reply){
 
 
@@ -841,6 +864,8 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   for(const entry of hand1){
 
     params.hand_1.push(
+      card_to_param_string(entry)
+      /*
       `{
         id: ${entry.id},
         title: "${entry.name}",
@@ -851,12 +876,15 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
         stat3: ${entry.stat3},
         stat4: ${entry.stat4}
       }`
+      */
     )
   }
 
   for(const entry of hand2){
 
     params.hand_2.push(
+      card_to_param_string(entry)
+      /*
       `{
         id: ${entry.id},
         title: "${entry.name}",
@@ -867,6 +895,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
         stat3: ${entry.stat3},
         stat4: ${entry.stat4}
       }`
+      */
     )
   }
 
@@ -886,44 +915,200 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 
 fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
 
+  const _id1 = parseInt(req.params.c1);
+  const _id2 = parseInt(req.params.c2);
 
-  if (parseInt(req.params.c1) == parseInt(req.params.c2)){
+  
+  if (Number.isNaN(_id1)){
     reply.status(400).send(
       {
-        error: `how/why are you trying to put card ${parseInt(reqreq.params.c1)} against itself??`
+        error: `input ${req.params.c1} is not a valid card!`
+      }
+    )
+    return;
+  }
+  else if (Number.isNaN(_id2)){
+    reply.status(400).send(
+      {
+        error: `input ${req.params.c2} is not a valid card!`
+      }
+    )
+    return;
+  }
+  else if (_id1 == _id2){
+    reply.status(400).send(
+      {
+        error: `how/why are you trying to put card ${req.params.c1} against itself??`
       }
     )
     return;
   }
 
-  const _id1 = parseInt(req.params.c1);
-  const _id2 = parseInt(req.params.c2);
+  
 
 
-  const c1 = db.getCard(_id1);
+  const res_c1 = db.getCard(_id1);
 
-  const c2 = db.getCard(_id2);
+  const res_c2 = db.getCard(_id2);
 
-  let data = {};
+  if (!res_c1.success){
+    reply.status(500).send(
+      {
+        error: `Unable to retrieve card ${_id1}`
+      }
+    )
+    return;
+  }
+  else if (!res_c2.success){
+    reply.status(500).send(
+      {
+        error: `Unable to retrieve card ${_id2}`
+      }
+    )
+    return;
+  }
+  else if (!res_c1.card_exists){
+    reply.status(400).send(
+      {
+        error: `Card ${_id1} does not exist!`
+      }
+    )
+    return;
+  }
+  else if (!res_c2.card_exists){
+    reply.status(400).send(
+      {
+        error: `Card ${_id2} does not exist!`
+      }
+    )
+    return;
+  }
+  const c1 = res_c1.card;
+  const c2 = res_c2.card;
 
-  data.c1 = c1;
-  data.c2 = c2;
+  let params = {
+    p1_card: card_to_param_string(c1),
+    p2_card: card_to_param_string(c2),
+    url: `/game/chosen/${_id1}/${_id2}`
+  };
+
+  reply.header('content-type', 'text/html; charset=utf-8');
+  return reply.view("/src/client/game_clientside_chosen.hbs", params);
+  return;
+
+  //data.c1 = c1.card;
+  //data.c2 = c2.card;
 
 
-  reply.status(501).send(data);
+  //reply.status(501).send(data);
 
 });
+
+/**
+ * Used to actually show the outcome of the game (who won, precedent, etc)
+ * @param {import("fastify/types/request.js").FastifyRequest} req 
+ * @param {import("fastify/types/reply.js").FastifyReply} reply 
+ * @param {int} winner_id ID of the card that won 
+ * @param {int} loser_id ID of the card that lost
+ * @param {bool} p1_won did P1 win
+ * @param {bool} overruled was initial verdict overruled
+ * @param {bool} new_outcome if true, there wasn't a precedent
+ * @param {Date} when_precedent when was the verdict 
+ */
+function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent){
+
+  reply.status(501).send({
+    error: "not yet implemented",
+    winner_id: winner_id,
+    loser_id: loser_id,
+    p1_won: p1_won,
+    overruled, new_outcome,
+    when_precedent, when_precedent
+  });
+}
 
 
 fastify.post("/game/verdict", (req, reply) => {
 
-  const c1 = request.body.c1;
+  const _c1 = parseInt(req.body.c1);
 
-  const c2 = request.body.c2;
+  const _c2 = parseInt(req.body.c2);
 
+  const _exist_check = db.checkIfCardsExist(_c1, _c2);
 
+  if (!(_exist_check.success && _exist_check.all_exist)){
+    reply.status(400).send({
+      c1: _c1,
+      c2: _c2,
+      whichActuallyExist: _exist_check.exists,
+      error: "not all the given cards exist!"
+    });
+    return;
+  }
 
-  const precedent = db.getWinData(c1, c2);
+  const _winner = parseInt(req.body.verdict);
+
+  if ((_winner != _c1) && (_winner != _c2)){
+    reply.status(400).send(
+      {
+        _c1: c2,
+        _c2: c2,
+        _winner: _winner,
+        error: `The chosen winning card (${_winner}) wasn't one of the given cards!`
+      }
+    );
+    return;
+  } 
+
+  const _loser = (_winner == _c1) ? _c2 : _c1;
+
+  const precedent = db.getWinData(_winner, _loser);
+
+  if (!precedent.success){
+    reply.status(500).send({
+      winner: _winner,
+      loser: _loser,
+      error: `unable to verify status of cards ${_winner} and ${_loser}`
+    });
+    return;
+  }
+  
+  if (precedent.win_data_exists){
+    const win_entry = precedent.entries[0];
+    const p1_won = _c1 == win_entry.winner_id;
+    const when_precedent = new Date(win_entry.time);
+
+    if (win_entry.winner_id == _winner){
+      // TODO: precedent has been preserved, today is a good day
+      show_results(req, reply, _winner, _loser, p1_won, false, false, when_precedent);
+      return;
+    } else {
+      // TODO: inform users that they are WRONG and that precedent exists
+      show_results(req, reply, win_entry.winner_id, win_entry.loser_id, p1_won, true, false, when_precedent);
+    } 
+    return;
+  }
+  else {
+    const p1_won = _c1 == _winner;
+    const win_added_outcome = db.setWinData(_winner, _loser);
+
+    if (!win_added_outcome.success){
+      reply.status(500).reply(
+        {
+          winner: _winner,
+          loser: _loser,
+          p1_won: p1_won,
+          error: `Error adding data for ${winner} beating ${loser} to the database!`
+        }
+      );
+      return;
+    }
+    else {
+      show_results(req, reply, _winner, _loser, p1_won, false, true, new Date(win_added_outcome.when));
+      return;
+    }
+  }
+
 
 
   reply.status(501).send(precedent);
@@ -942,8 +1127,10 @@ fastify.get("/api/admin/delete/:id", async(request, reply) => {
 
 fastify.ready(err => {
   if (err) throw err
-
   
+  return; 
+  // ignore this, we aren't actually using sockets
+
   fastify.io.use((socket, next) => {
   
     const sessionID = socket.handshake.auth.sessionID;

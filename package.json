@@ -1,7 +1,7 @@
 {
-  "name": "committy",
+  "name": "committy!",
   "version": "0.2.0",
-  "description": "A Node app with SQLite database, instantly up and running.",
+  "description": "A Node app with SQLite database - and it's a card game which is the end result of the combination of everyone's suggestions.",
   "exports": "./src/server/server.js",
 
   "scripts": {
@@ -35,9 +35,9 @@
     "npm": "^9.8.1"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/glitch-blank-sqlite"
+    "url": "https://github.com/11BelowStudio/SBIG2023-committy"
   },
-  "license": "MIT",
+  "license": "MPL 2.0",
   "keywords": [
     "node",
     "glitch",

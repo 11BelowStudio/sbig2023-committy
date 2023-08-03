@@ -75,22 +75,9 @@
                             Press the button below to proceed to the next step
                         </li>
                     </ol>
+                    <button onclick="next_pressed()">Proceed!</button>
                 </div>
                 
-
-                <div>
-                    <h3>selections</h3>
-                    <ul>
-                        <li>
-                            Player 1 has <span id="p1_selection">not chosen a card</span>!
-                        </li>
-                        <li>
-                            Player A  has <span id="p2_selection">not chosen a card</span>!
-                        </li>
-                    </ul>
-
-                    <button onclick="next_pressed()">Press this when both players have chosen a card.</button>
-                </div>
 
                 <div>
                     <h2><a href="/">back</a></h2>
@@ -100,7 +87,7 @@
             <div class="content">
 
                 <div id="player_1_div">
-                    <h2>Player 1</h2>
+                    <h2>Player 1 <span id="p1_selection">not chosen a card</span>!</h2>
 
                     <div class="hand_menu" id="player_1_hand">
                         <!-- this gets filled automatically with your cards -->
@@ -108,7 +95,7 @@
                 </div>
 
                 <div id="player_2_div">
-                    <h2>Player A</h2>
+                    <h2>Player A <span id="p2_selection">not chosen a card</span>!</h2>
                     <div class="hand_menu" id="player_2_hand">
                         <!-- this also gets filled automatically with cards -->
                     </div>
@@ -147,7 +134,7 @@
                 //window.location.replace(`/game/chosen/${p1_chosen}/${p2_chosen}`);
             }
 
-
+            
             function p1_selected_card(id, card_element){
                 p1_chosen = id;
                 document.getElementById("p1_selection").innerHTML = `chosen card ${id}`;
@@ -162,7 +149,6 @@
                     card_element.classList.add("selected_card");
                     p1_chosen_element = card_element;
                 }
-
                 
             }
 
@@ -265,38 +251,6 @@
 
             }
 
-
-            function upper_0_pressed(){
-
-            }
-
-            function upper_1_pressed(){
-                
-            }
-
-            function upper_2_pressed(){
-                
-            }
-
-            function lower_0_pressed(){
-
-            }
-
-            function lower_1_pressed(){
-                
-            }
-
-            function lower_2_pressed(){
-                
-            }
-
-            function upper_played_pressed(){
-
-            }
-
-            function lower_played_pressed(){
-
-            }
         </script>
     </body>
 </html>

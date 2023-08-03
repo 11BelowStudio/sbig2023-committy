@@ -550,7 +550,7 @@ function getCardIDsExcept(...args) {
    */
 function getCard(cId) {
 
-  let result = {success: false, card: {}};
+  let result = {success: false, card: {}, card_exists: false};
   try{
     const stmt = db.prepare(
       "SELECT id, name, desc, img, stat1, stat2, stat3, stat4 FROM cards "
@@ -558,7 +558,8 @@ function getCard(cId) {
     );
     //await stmt.bind({1: cId});
     result.card = stmt.get(cId);
-    result.success = (result.entries != false);
+    result.card_exists = (result.card != {});
+    result.success = true;
   } catch (dbError){
     console.error(dbError);
     
@@ -570,10 +571,14 @@ function getCard(cId) {
    * Attempts to find wins data for cards card1 and card2
    * @param {*} card1 ID for first card
    * @param {*} card2 ID for other card
-   * @returns object of {success:bool, entries: [{"time": int, "winner_id": int, "loser_id": int}]}
+   * @returns object of {
+   *    success:bool,
+   *    win_data_exists: bool,
+   *    entries: [{time: int, winner_id: int, loser_id: int}]
+   * }
    */
 function getWinData(card1, card2) {
-  let result = {success: false, entries: []};
+  let result = {success: false, win_data_exists: false, entries: []};
   
   try {
 
@@ -590,7 +595,8 @@ function getWinData(card1, card2) {
       {"c1" : card1, "c2": card2}
     );
 
-    result.success = (result.entries != false || result.entries.length >= 0);
+    result.success = result.entries.length >= 0;
+    result.win_data_exists = result.entries.length > 0;
 
     return result;
 
@@ -604,10 +610,10 @@ function getWinData(card1, card2) {
    * Attempts to set the win data when the card 'winner' beats the card 'loser'
    * @param {*} winner ID of winning card
    * @param {*} loser ID of losing card
-   * @returns object of {success: bool, existsAlready: bool }
+   * @returns object of {success: bool, existsAlready: bool, message: str, when: int }
    */
 function setWinData(winner, loser) {
-  let result = {success: false, existsAlready: false, message: ""};
+  let result = {success: false, existsAlready: false, message: "", when: 0};
   try {
     
 
@@ -669,14 +675,16 @@ function setWinData(winner, loser) {
     const stmt2 = db.prepare(
       "INSERT INTO wins (winner_id, loser_id, time) VALUES (@win, @lose, @t)"
     );
+    const t = Date.now();
     const res = stmt2.run(
       {
         "win": winner,
         "lose":loser,
-        "t":Date.now()
+        "t":t
       }
     );
     result.success = res.changes > 0;
+    result.when = t;
     return result;
 
   } catch (dbError){

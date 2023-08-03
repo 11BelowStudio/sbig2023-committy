@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>committy (the actual game itself)</title>
+        <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/css/card.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/css/cols.css"/>
+        
+        <link rel="stylesheet" type="text/css" href="/assets/css/game_css/game.css"/>
+        
+    </head>
+    <body>
+        
+
+        <template id="card_template">
+            
+            <div class="card play_card" style="width:250px" onclick="">
+                <div class="card_inner"></div>
+                <div class="card_details play_card_details">
+                    <div class="card_title">???</div>
+                    <div class="card_icon_holder">
+                        <img class="card_icon" src=""/>
+                    </div>
+                    <div class="card_stats_parent">
+                        <div class="card_stats_cell card_stat_1">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number">???</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_2">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number">???</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_3">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number">???</div>
+                        </div>
+                        <div class="card_stats_cell card_stat_4">
+                            <div class="card_stat_icon"></div>
+                            <div class="card_stat_number">???</div>
+                        </div>
+                    </div>
+                    <div class="card_description">
+                        ???
+                    </div>
+                    <div class="card_number">#???</div>
+                </div>
+            </div>
+        </template>
+
+        <div class="wrap">
+
+            <div class="sidebar">
+                <div>
+                    <h1>The clientside version of<br>
+                    <img src="/assets/icons/committy.svg" alt="Committy!"/></h1>
+                </div>
+                <div>
+                    <p>Convince a third party that your card is objectively the best card!</p>
+                    <p>this page's URL suffix: <code>{{ url }}</code></p>
+                    <p>
+                        When they come to a conclusion about which card is objectively better, click on the next button!
+                    </p>
+                    <button onclick="next_pressed()">Proceed!</button>
+                </div>
+                
+
+                <div>
+                    <h2><a href="/">Quit</a></h2>
+                </div>
+            </div>
+
+            <div class="content">
+
+                <h1>Step 2</h1>
+                <p>Find a third party, and convince them that your card is objectively better than the other player's card!</p>
+                <p>Then input their verdict to proceed to the next stage.</p>
+
+                <div id="player_1_div">
+                    <h2>Player 1</h2>
+
+                    <div class="hand_menu" id="p1_card_parent" onclick="p1_selected_card()">
+                        <div class="card_holder" id="p1_card_holder">
+                            <!-- this gets filled automatically with your cards -->
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+                <div id="player_2_div">
+                    <h2>Player A</h2>
+                    <div class="hand_menu" id="p2_card_parent" onclick="p2_selected_card()">
+                        <div class="card_holder" id="p2_card_holder">
+                            <!-- this also gets filled automatically with cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        
+        
+        
+       
+
+        <script type="text/javascript" src="/imports/card_consts.js"></script>
+
+        <script>
+            
+
+            const p1_card_data = {{{p1_card}}};
+            const p2_card_data = {{{p2_card}}};
+
+            let p1_is_winner = undefined;
+            let winner_has_been_chosen = false;
+
+            let chosen_element = null;
+
+            function next_pressed(){
+
+                if (p1_is_winner === undefined || !winner_has_been_chosen){
+                    window.alert("You actually need to complete The Ritual.");
+                    return;
+                }
+
+                const win_card = (p1_is_winner === true) ? p1_card_data : p2_card_data;
+                const lose_card = (p1_is_winner === false) ? p1_card_data : p2_card_data;
+
+                if (win_card == lose_card){
+                    window.alert("ERROR: the winning and losing cards chosen are identical!");
+                    return;
+                }
+
+                
+
+                const submit_it = window.confirm(
+                    "IMPORTANT: Do you solemnly swear on your life that a third party was " +
+                    "sucessfully convinced that\n" +
+                    `Card #${win_card.id} (${win_card.title})` + "\n is objectively better than\n"+
+                    `Card #${lose_card.id} (${lose_card.title})`+"?"
+                );
+
+                if (!submit_it){
+                    return;
+                }
+                else {
+
+                    let form = new HTMLFormElement();
+
+                    let f_c1 = new HTMLInputElement();
+                    f_c1.valueAsNumber = p1_card_data.id;
+                    let f_c2 = new HTMLInputElement();
+                    f_c2.valueAsNumber = p2_card_data.id;
+                    let f_verdict = new HTMLInputElement();
+                    f_verdict.valueAsNumber = (p1_is_winner) ? p1_card_data.id : p1_card_data.id;
+
+                    form.appendChild(f_c1);
+                    form.appendChild(f_c2);
+                    form.appendChild(f_verdict);
+
+                    const submitData = new window.FormData({
+                        c1: p1_card_data.id,
+                        c2: p1_card_data.id,
+                        verdict: (p1_is_winner) ? p1_card_data.id : p1_card_data.id
+                    });
+
+                    console.log(submitData);
+
+                    // TODO: submit form somehow???
+                    
+                }
+
+                // TODO: submit form (POST) to /game/verdict 
+
+
+                if (p1_chosen == null || p1_chosen == NaN){
+                    window.alert("Player 1 needs to choose a card!");
+                    return;
+                }
+                else if (p2_chosen == null || p2_chosen == NaN){
+                    window.alert("Player A needs to choose a card!");
+                    return;
+                }
+
+                window.open(`/game/chosen/${p1_chosen}/${p2_chosen}`);
+                //window.location.replace(`/game/chosen/${p1_chosen}/${p2_chosen}`);
+            }
+
+            
+            function p1_selected_card(){
+
+                const winner_changed = ((!winner_has_been_chosen) || (winner_has_been_chosen && (p1_is_winner == false)));
+                p1_is_winner = true;
+                winner_has_been_chosen = true;
+                //document.getElementById("p1_selection").innerHTML = `chosen card ${id}`;
+
+
+                if (winner_changed) {
+                    if (chosen_element != null){
+                        chosen_element.classList.remove("selected_card");
+                    }
+                    chosen_element = document.getElementById("p1_card_parent");
+                    chosen_element.classList.add("selected_card");
+                }
+                return;
+
+                if (p1_chosen_element != null){
+                    p1_chosen_element.classList.remove("selected_card");
+                    if (p1_chosen_element == card_element){
+                        document.getElementById("p1_selection").innerHTML = `chosen a card!`;
+                    }
+                }
+                else {
+                    card_element.classList.add("selected_card");
+                    p1_chosen_element = card_element;
+                }
+                
+            }
+
+            function p2_selected_card(){
+                const winner_changed = ((!winner_has_been_chosen) || (winner_has_been_chosen && (p1_is_winner === true)));
+                p1_is_winner = false;
+                winner_has_been_chosen = true;
+
+                if (winner_changed) {
+                    if (chosen_element != null){
+                        chosen_element.classList.remove("selected_card");
+                    }
+                    chosen_element = document.getElementById("p2_card_parent");
+                    chosen_element.classList.add("selected_card");
+                }
+                return;
+
+                return;
+                document.getElementById("p2_selection").innerHTML = `chosen card ${id}`;
+                if (p2_chosen_element != null){
+                    p2_chosen_element.classList.remove("selected_card");
+                    if (p2_chosen_element == card_element){
+                        document.getElementById("p2_selection").innerHTML = `chosen a card!`;
+                    }
+
+                } else {
+                    card_element.classList.add("selected_card");
+                    p2_chosen_element = card_element;
+                }
+            }
+
+
+
+            function generate_card(card_data){
+
+                console.log(card_data);
+
+
+                // obtains template
+                const cardTemplate = document.getElementById("card_template");
+                //console.log(cardTemplate);
+                //console.log(cardTemplate.content);
+                //console.log(cardTemplate.content.firstElementChild);
+
+                //deep copy of the first element within template contents (the card)
+                let new_card = cardTemplate.content.firstElementChild.cloneNode(true);
+                //cardTemplate.firstElementChild.cloneNode(true);
+
+                new_card.classList.add(
+                    card_consts.card_id_to_css_class(
+                        card_data.id
+                    )
+                );
+                /*
+                new_card.querySelector(".card").classList.add(
+                    card_consts.card_id_to_css_class(
+                        card_data.id
+                    )
+                );
+                */
+
+                
+
+                new_card.querySelector(".card_title").innerText = card_data.title;
+
+                new_card.querySelector(".card_icon").src = card_data.img;
+
+                new_card.querySelector(".card_description").innerText = card_data.desc;
+
+                new_card.querySelector(".card_number").innerText = `#${card_data.id}`;
+
+                new_card.querySelector(".card_stat_1 .card_stat_number").innerText = card_data.stat1;
+
+                new_card.querySelector(".card_stat_2 .card_stat_number").innerText = card_data.stat2;
+
+                new_card.querySelector(".card_stat_3 .card_stat_number").innerText = card_data.stat3;
+
+                new_card.querySelector(".card_stat_4 .card_stat_number").innerText = card_data.stat4;
+
+                console.log(new_card);
+
+                return new_card;
+
+
+            }
+
+
+            window.onload = function(){
+
+                
+
+                const p1_card = generate_card(p1_card_data);
+                const p2_card = generate_card(p2_card_data);
+
+                document.getElementById(
+                    "p1_card_holder"
+                ).appendChild(
+                    p1_card
+                );
+                
+                document.getElementById(
+                    "p2_card_holder"
+                ).appendChild(
+                    p2_card
+                );
+                
+                
+
+            }
+
+        </script>
+    </body>
+</html>
