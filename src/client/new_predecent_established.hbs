@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Committy!</title>
+        <style>
+
+            @import "/fonts/Ruthie.css";
+
+            marquee {
+                vspace: 0px;
+                font-size: 1.5em;
+            }
+            
+            
+            marquee.slide{
+                behavior: slide; 
+            }
+
+            .mid{
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                text-align: center;
+            }
+            
+            html, body {
+                min-height: 100%;
+                margin: 0;
+            }
+
+            .bigMarq{
+                font-family: Ruthie, fantasy, "Times New Roman", Times, serif;
+                width: 100%;
+                min-height: 100%;
+                height: max(100%, 100vh);
+                display: block;
+                box-sizing: border-box;
+                
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                font-size: 1em;
+            }
+
+            .bigMarq .mid{
+                width: 80%;
+            }
+
+            .bigMarq .just {
+                width: 80%;
+                text-align: justify;
+            }
+
+            #veryproper {
+                
+                display: block;
+                
+
+                width: 1000%;
+                height: 1000%;
+        
+                top: -500%;
+                left: -500%;
+                padding-top: 100%; 
+                
+                
+                background-repeat: tiled;
+                z-index:-100;
+                object-position:  center;
+
+                background-image: url("/img/old-parchment.jpg");
+        
+                position: fixed;
+                
+            }
+      
+        </style>
+    </head>
+    <body>
+        <div style="display: block; position: center;">
+            <div id="veryproper" ></div>
+        </div>
+
+        <div class="bigMarq">
+            <marquee class="bigMarq" behavior="slide" direction="up">
+                <div class="mid">
+                    <h1>The Declaration of the Committy</h1>
+                </div>
+                <div class="just">
+                    <p>
+                        <b>IT IS HEREBY DECLARED</b>, in þe presence of and by þe grace and mercy of
+                        our most supreme and glorious benevolent overlord and patron of þe Committy,
+                        <b>VOTEBOT</b>, þat þe following truþ, hereby established by þe suggestions
+                        of my most honourable friends here, shall be enshrined and codified and 
+                        referred to as <p>PRECEDENT</p> for all time:
+                    </p>
+                    <p>
+                        <b>ÞE</p> most esteemed and worshipful card of ${ winCardName },
+                        þe card bearing þe glorious and most pleasing sigil of #${ winCardID }
+                        in þe Committy deck, as played by my most honourable and respected friend,
+                        Player ${ winPlayer }, is objectively superior and better in every way,
+                        shape, and form, boþ measurable and immeasurable, þan þe most unpleasant
+                        and inferior and þoroughly abhorrent card of ${ loseCardName }, bearing þe
+                        unimpressive and þoroughly resentful mark of #${ loseCardID }, as played by
+                        my slightly less respectful and slightly less esteemed friend,
+                        Player { losePlayer }.
+                    </p>
+                    <p>
+                        ÞEREFORE, let it be ensured þat, wheresoe'er þe card ${ winCardName } is
+                        put in contention against card ${ loseCardName }, þe most wise and learned
+                        individual whom played þe card ${ winCardName } shall have VICTORY most promptly
+                        and well-deserved conferred upon þem, in recognition of þis newly established precedent.
+                    </p>
+                    <p>
+                        FURTHERMORE, let it be also known þat any such unclean and uncultured HERETIC whom
+                        disrespects þis MOST GLORIOUS PRECEDENT shall most promptly SNUFF IT,
+                        for such is the only just punishment for þose whom disregard such obvious and
+                        most evident PRECEDENT.
+                    </p>
+                    <p>
+                        ÞIS HAS BEEN DECREED by þe Committy with þe grace and glory of our most
+                        dear supreme Overlord and Patron VOTEBOT, on second number ${ whenSecond }
+                        of þe minute of þe number ${ whenMinute } of þe hour number ${ whenHour }
+                        of þe day number ${ whenDay } of þe month number ${ whenMonth } of þe YEAR
+                        of OUR MOST GLORIOUS SUPREME SUGGESTOR VOTEBOT ${ yearNumber }.
+                    </p>
+                </div>
+                <div class="mid">
+                    <h2>
+                        <a href="/">Amen!</a>
+                    </h2>
+                </div>
+           </marquee>
+        </div>
+    </body>
+</html>
