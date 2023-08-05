@@ -34,7 +34,16 @@ div.selected_card {
 .hand_card {
     height: 350px;
 }
-  
+
+.result_card {
+    width: 350px;
+    height: 490px;
+    font-size: 140%;
+}
+
+.hidden {
+    visibility: hidden;
+}
 
 /*
 #play_table > td{

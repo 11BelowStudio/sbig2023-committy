@@ -1,9 +1,13 @@
-IT IS HEREBY DECLARED, in the presence of and by þe grace and mercy of our most supreme and glorious benevolent overlord and patron of þe Committy, VOTEBOT, þat þe following truþ, hereby established by þe suggestions of my most honourable friends here, shall be enshrined and codified and referred to as PRECEDENT for all time:
 
-ÞE most esteemed and worshipful card of ${ winCardName }, þe card bearing þe glorious and most pleasing sigil of #${ winCardID } in þe Committy deck, as played by my most honourable and respected friend, Player ${ winPlayer }, is objectively superior and better in every way, shape, and form, boþ measurable and immeasurable, þan þe most unpleasant and inferior and þoroughly abhorrent card of ${ loseCardName }, bearing þe unimpressive and þoroughly resentful mark of #${ loseCardID }, as played by my slightly less respectful and slightly less esteemed friend, Player { losePlayer }.
+The Declaration of the Committy
 
-ÞEREFORE, let it be ensured þat, wheresoe'er þe card ${ winCardName } is put in contention against card ${ loseCardName }, þe most wise and learned individual whom played þe card ${ winCardName } shall have VICTORY most promptly and well-deserved conferred upon þem, in recognition of þis newly established precedent.
+IT Is Hereby Declared, in þe presence of and by þe grace and mercy of our most supreme and glorious benevolent overlord and patron of þe Committy, Votebot, þat þe following truþ, hereby established by þe suggestions of my most honourable friends here, shall be enshrined and codified and referred to as Precedent for all time:
 
-FURTHERMORE, let it be also known þat any such unclean and uncultured HERETIC whom disrespects þis MOST GLORIOUS PRECEDENT shall most promptly SNUFF IT, for such is the only just punishment for þose whom disregard such obvious and most evident PRECEDENT.
+Þe Most Esteemed and worshipful card of spoon cat, þe card bearing þe glorious and most pleasing sigil of #8 in þe Committy deck, as played by my most honourable and respected friend, Player A, is objectively superior and better in every way, shape, and form, boþ measurable and immeasurable, þan þe most unpleasant and inferior and þoroughly abhorrent card of An open Nokia E72, bearing þe unimpressive and þoroughly resentful mark of #3, as played by my slightly less respectful and slightly less honourable friend, Player 1.
 
-ÞIS HAS BEEN DECREED by þe Committy with þe grace and glory of our most dear supreme Overlord and Patron VOTEBOT, on second number ${ whenSecond } of þe minute of þe number ${ whenMinute } of þe hour number ${ whenHour } of þe day number ${ whenDay } of þe month number ${ whenMonth } of þe YEAR of OUR MOST GLORIOUS SUPREME SUGGESTOR ${ yearNumber }.
+Henceforþ, let it be ensured þat, wheresoe'er þe Card of spoon cat is put in contention against þe Card of An open Nokia E72, þe most wise and learned individual whom played þe Card of shall have Victory most promptly and well-deserved conferred upon þem, in recognition of þis newly established precedent.
+
+Furþermore, let it be also known þat any such unclean and uncultured Heretic whom disrespects þis Most Glorious Precedent shall most promptly Snuff It, for such is the only just punishment for þose whom disregard such obvious and most evident Precedent.
+
+Þis has been Decreed by þe Committy, wiþ þe grace and glory of our most dear supreme Overlord and Patron Votebot, on second number 39 of þe minute of þe number 57 of þe hour number 16 of þe Saturday bearing þe day number 5 of þe month number 8 of þe Year Of Our Most Glorious Supereme Suggestor Votebot 2023.
+Amen!

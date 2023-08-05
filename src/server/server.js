@@ -985,20 +985,66 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     )
     return;
   }
+  
+
   const c1 = res_c1.card;
   const c2 = res_c2.card;
 
-  let params = {
-    p1_card: card_to_param_string(c1),
-    p2_card: card_to_param_string(c2),
-    p1_id: _id1,
-    p2_id: _id2,
-    url: `/game/chosen/${_id1}/${_id2}`
-  };
+  const winDataResult = db.getWinData(_id1, _id2);
 
-  reply.header('content-type', 'text/html; charset=utf-8');
-  return reply.view("/src/client/game_clientside_chosen.hbs", params);
-  return;
+  if (
+    winDataResult.success &&
+    winDataResult.win_data_exists
+  ){
+    const theWinData = winDataResult.entries[0];
+
+    const winner_id = theWinData.winner_id;
+    const loser_id = theWinData.loser_id;
+    const when = theWinData.time;
+    const p1_won = (winner_id == _id1);
+
+    const win_card  = (p1_won)? c1 : c2;
+    const lose_card = (p1_won)? c2 : c1;
+
+    const winner = (p1_won)? "1" : "A";
+    const loser  = (p1_won)? "A" : "1";
+
+    const d_when = new Date(when);
+
+    let params = {
+      winner: winner,
+      loser:  loser, 
+      win:    win_card,
+      lose:   lose_card,
+      time: {
+        second: d_when.getSeconds(),
+        min: d_when.getMinutes(),
+        hour: d_when.getHours(),
+        day: intToWeekday(d_when.getDay()),
+        date: d_when.getDate(),
+        month: d_when.getMonth(),
+        year: d_when.getFullYear()
+      }
+    };
+    reply.header('content-type', 'text/html; charset=utf-8');
+    return reply.view("/src/client/standard_result.hbs", params);
+
+
+  }
+  else {
+    let params = {
+      p1_card: card_to_param_string(c1),
+      p2_card: card_to_param_string(c2),
+      p1_id: _id1,
+      p2_id: _id2,
+      url: `/game/chosen/${_id1}/${_id2}`
+    };
+
+    reply.header('content-type', 'text/html; charset=utf-8');
+    return reply.view("/src/client/game_clientside_chosen.hbs", params);
+  }
+
+  
 
   //data.c1 = c1.card;
   //data.c2 = c2.card;
@@ -1007,6 +1053,19 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   //reply.status(501).send(data);
 
 });
+
+function intToWeekday(weekdayNum){
+  
+  return({
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Þursday",
+    5: "Friday",
+    6: "Saturday",
+    0: "Sunday"
+  }[weekdayNum % 7]);
+}
 
 /**
  * Used to actually show the outcome of the game (who won, precedent, etc)
@@ -1017,11 +1076,50 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
  * @param {bool} p1_won did P1 win
  * @param {bool} overruled was initial verdict overruled
  * @param {bool} new_outcome if true, there wasn't a precedent
- * @param {Date} when_precedent when was the verdict 
+ * @param {int} when_precedent when was the verdict 
  */
 function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent){
 
 
+  if (overruled){
+
+    const c1 = (p1_won) ? winner_id : loser_id;
+    const c2 = (p1_won) ? loser_id : winner_id;
+
+    reply.redirect(`/game/chosen/${c1}/${c2}`);
+    return;
+  }
+
+
+  const win_card = db.getCard(winner_id).card;
+  const lose_card = db.getCard(loser_id).card;
+  const winner = (p1_won) ? "1" : "A";
+  const loser  = (p1_won) ? "A" : "1";
+  const when = new Date(when_precedent);
+
+  
+
+  const params = {
+    win : win_card,
+    lose: lose_card,
+    winner: winner,
+    loser : loser,
+    when: {
+      second: when.getSeconds(),
+      minute: when.getMinutes(),
+      hour: when.getHours(),
+      day: intToWeekday(when.getDay()),
+      date: when.getDate(),
+      month: when.getMonth()+1,
+      year: when.getFullYear(),
+    }
+  }
+
+  reply.header('content-type', 'text/html; charset=utf-8');
+  return reply.view("/src/client/new_precedent_established.hbs", params);
+
+
+  return;
   reply.status(501).send({
     error: "not yet implemented",
     winner_id: winner_id,
@@ -1089,15 +1187,14 @@ fastify.post("/game/verdict", (req, reply) => {
 
     const win_entry = precedent.entries[0];
     const p1_won = (_c1 == win_entry.winner_id);
-    const when_precedent = new Date(win_entry.time);
 
     if (win_entry.winner_id == _winner){
       // TODO: precedent has been preserved, today is a good day
-      show_results(req, reply, _winner, _loser, p1_won, false, false, when_precedent);
+      show_results(req, reply, _winner, _loser, p1_won, false, false, win_entry.time);
       return;
     } else {
       // TODO: inform users that they are WRONG and that precedent exists
-      show_results(req, reply, win_entry.winner_id, win_entry.loser_id, p1_won, true, false, when_precedent);
+      show_results(req, reply, win_entry.winner_id, win_entry.loser_id, p1_won, true, false, win_entry.time);
     } 
     return;
   }
@@ -1117,14 +1214,14 @@ fastify.post("/game/verdict", (req, reply) => {
       return;
     }
     else {
-      show_results(req, reply, _winner, _loser, p1_won, false, true, new Date(win_added_outcome.when));
+      show_results(req, reply, _winner, _loser, p1_won, false, true, win_added_outcome.when);
       return;
     }
   }
 
 
 
-  reply.status(501).send(precedent);
+  //reply.status(501).send(precedent);
 });
 
 // for emergency use only.

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>committy (the actual game itself)</title>
+        <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/css/card.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/css/cols.css"/>
+        
+        <link rel="stylesheet" type="text/css" href="/assets/css/game_css/game.css"/>
+        
+    </head>
+    <body>
+        
+        <div class="wrap">
+
+            <div class="sidebar">
+                <div>
+                    <h1><img src="/assets/icons/committy.svg" alt="Committy!"/> results</h1>
+                </div>
+                <div>
+                    <p>Click on the card to reveal who won!</p>
+                    <p>(Please do it, the tension is unbearable!)</p>
+                </div>
+                
+
+                <div>
+                    <h2><a href="/">back</a></h2>
+                </div>
+            </div>
+
+            <div class="content">
+                <h1 id="winnerTitle">And the winner whom played the best card is...</h1>
+                <h2 class="hidden" id="winningPlayerTitle"></h2>
+                <div id="result_card" class="card result_card" onclick="onResultClicked()">
+                    <div class="card_inner"></div>
+                    <div id="details_div" class="card_details play_card_details hidden">
+                        <div class="card_title">{{ win.name }}</div>
+                        <div class="card_icon_holder">
+                            <img class="card_icon" src={{{ win.img }}}/>
+                        </div>
+                        <div class="card_stats_parent">
+                            <div class="card_stats_cell card_stat_1">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">{{ win.stat1 }}</div>
+                            </div>
+                            <div class="card_stats_cell card_stat_2">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">{{ win.stat2 }}</div>
+                            </div>
+                            <div class="card_stats_cell card_stat_3">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">{{ win.stat3 }}</div>
+                            </div>
+                            <div class="card_stats_cell card_stat_4">
+                                <div class="card_stat_icon"></div>
+                                <div class="card_stat_number">{{ win.stat4 }}</div>
+                            </div>
+                        </div>
+                        <div class="card_description">
+                            {{ win.desc }}
+                        </div>
+                        <div class="card_number">#{{ win.id }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- fade in the constitutionality -->
+        <div id="constitushun">
+
+        </div>
+         <script type="text/javascript" src="/imports/card_consts.js"></script>
+        <script>
+
+            const winner = {{ winner }};
+            const win_id = {{ win.id }};
+            const loser = {{ loser }};
+
+            async function onResultClicked(){
+
+                // step 1: reveal the winning card
+                {
+                    const winCard = document.getElementById("result_card");
+
+                    winCard.classList.add(
+                        card_consts.card_id_to_css_class(
+                            win_id
+                        )
+                    );
+
+                    winCard.onclick = null;
+
+                    const winDetails = document.getElementById("details_div");
+
+                    winDetails.classList.remove("hidden");
+                }
+
+                // step 2: reveal who actually won
+                {
+                    const winTitle = document.getElementById("winningPlayerTitle");
+                    winTitle.innerHTML = `Player <b>${winner}!</b>`;
+                    winTitle.classList.remove("hidden");
+                }
+                // step 3: play a celebration noise
+                {
+                    // TODO: play the noise
+                }
+
+                // step 4: constitushonality
+                {
+                    // TODO: wait like 15 seconds or so
+                    // TODO: start fading in the theme of legalese
+                    // TODO: start to fade in the constitushonality background over the top of everything
+                    // TODO: start scrolling in the declaration.
+                    // TODO: voice line
+                }
+
+
+            }
+
+        </script>

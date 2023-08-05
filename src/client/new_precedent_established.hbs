@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Committy!</title>
+        <style>
+
+            @import "/assets/fonts/Ruthie.css";
+
+            
+            
+            marquee.slide{
+                behavior: slide; 
+            }
+
+            .mid{
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                text-align: center;
+            }
+            
+            html, body {
+                min-height: 100%;
+                margin: 0;
+            }
+
+            .bigMarq{
+                font-family: Ruthie, fantasy, "Times New Roman", Times, serif;
+                width: 100%;
+                min-height: 100%;
+                height: max(100%, 100vh);
+                display: block;
+                box-sizing: border-box;
+                align-content: center;
+                padding-left: 10%;
+                padding-right: 10%;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+
+                vspace: 0px;
+                font-size: 1.5em;
+            }
+
+            .bigMarq .mid{
+                width: 100%;
+                text-align: center;
+            }
+
+            .bigMarq h1{
+                font-size: 1.5em;
+                z-index: 10;
+            }
+
+            .bigMarq p{
+                font-size: 1.35em;
+                z-index: 10;
+            }
+
+            .bigMarq .just {
+                width: 100%;
+                text-align: justify;
+                
+            }
+
+            .scroller{
+                font-family: Ruthie, fantasy, "Times New Roman", Times, serif;
+                width: 100%;
+                min-height: 100%;
+                height: max(100%, 100vh);
+                display: block;
+                box-sizing: border-box;
+                align-content: center;
+                padding-left: 10%;
+                padding-right: 10%;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+
+                vspace: 0px;
+                font-size: 1.5em;
+            }
+
+            
+
+            @keyframes scroll_frames {
+                
+                from {
+                    /*
+                    TODO: start with everything off-screen
+                    */
+                    transform: translateY(200%);
+
+                    /*
+                    top: 100%;
+                    bottom: -100%;
+                    */
+                }
+
+                to {
+
+                    transform: translateY(0%);
+                    /*
+                    top: 0%;
+                    bottom: 0%;
+                    */
+                }
+            }
+
+            .scroller_container {
+                display: block;
+                position: absolute;
+
+                animation-name: scroll_frames;
+                animation-duration: 60s;
+                animation-timing-function: linear;
+                
+                
+            }
+
+            .scroller .mid{
+                width: 100%;
+                text-align: center;
+            }
+
+            .scroller h1{
+                font-size: 1.5em;
+                z-index: 10;
+            }
+
+            .scroller p{
+                font-size: 1.35em;
+                z-index: 10;
+            }
+
+            .scroller .just {
+                width: 100%;
+                text-align: justify;
+                
+            }
+
+            #veryproper {
+                
+                display: block;
+                
+
+                width: 1000%;
+                height: 1000%;
+        
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                padding-top: 100%; 
+                
+                
+                background-repeat: tiled;
+                z-index:-100;
+                object-position:  center;
+
+                background-image: url("/assets/img/old-parchment.jpg");
+        
+                position: fixed;
+                
+            }
+      
+        </style>
+    </head>
+    <body>
+        <div style="display: block; position: center;">
+            <div id="veryproper" ></div>
+        </div>
+
+        <div class="scroller"> <!--<div class="bigMarq">-->
+            <div class ="scroller scroller_container" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
+                <div class="mid">
+                    <h1 style="text-decoration: underline;">The Declaration of the Committy</h1>
+                </div>
+                <div class="just">
+                    <p>
+                        <b>IT Is Hereby Declared</b>, in þe presence of and by þe grace and mercy of
+                        our most supreme and glorious benevolent overlord and patron of þe Committy,
+                        <b>Votebot</b>, þat þe following truþ, hereby established by þe suggestions
+                        of my most honourable friends here, shall be enshrined and codified and 
+                        referred to as <b>Precedent</b> for all time:
+                    </p>
+                    <p>
+                        <b>Þe Most Esteemed</b> and worshipful card of <b>{{ win.name }}</b>,
+                        þe card bearing þe glorious and most pleasing sigil of <b>#{{ win.id }}</b>
+                        in þe Committy deck, as played by my most honourable and respected friend,
+                        <b>Player {{ winner }}</b>, is objectively superior and better in every way,
+                        shape, and form, boþ measurable and immeasurable, þan þe most unpleasant
+                        and inferior and þoroughly abhorrent card of <b>{{ lose.name }}</b>, bearing þe
+                        unimpressive and þoroughly resentful mark of <b>#{{ lose.id }}</b>, as played by
+                        my slightly less respectful and slightly less honourable friend,
+                        <b>Player {{ loser }}</b>.
+                    </p>
+                    <p>
+                        <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b> is
+                        put in contention against þe Card of <b>{{ lose.name }}</b>, þe most wise and learned
+                        individual whom played þe Card of <b>{{ win.card }}</b> shall have <b>Victory</b> most promptly
+                        and well-deserved conferred upon þem, in recognition of þis newly established precedent.
+                    </p>
+                    <p>
+                        <b>Furþermore</b>, let it be also known þat any such unclean and uncultured <b>Heretic</b> whom
+                        disrespects þis <b>Most Glorious Precedent</b> shall most promptly <b>Snuff It</b>,
+                        for such is the only just punishment for þose whom disregard such obvious and
+                        most evident <b>Precedent</b>.
+                    </p>
+                    <p>
+                        <b>Þis has been Decreed</b> by þe Committy, wiþ þe grace and glory of our most
+                        dear supreme Overlord and Patron <b>Votebot</b>, on second number {{ when.second }}
+                        of þe minute of þe number {{ when.minute }} of þe hour number {{ when.hour }}
+                        of þe {{when.day}} bearing þe day number {{ when.date }} of þe month number {{when.month}} of þe Year Of 
+                        Our Most Glorious Supereme Suggestor <b>Votebot</b> {{when.year}}.
+                    </p>
+                </div>
+                <div class="mid">
+                    <h2>
+                        <a href="/">Amen!</a>
+                    </h2>
+                </div>
+            </div><!--</marquee>-->
+        </div>
+        <script>
+            // TODO: record audio reading out the precedent declaration
+            // TODO: play aforementioned audio
+        </script>
+    </body>
+</html>
