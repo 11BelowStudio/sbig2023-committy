@@ -1022,7 +1022,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
         hour: d_when.getHours(),
         day: intToWeekday(d_when.getDay()),
         date: d_when.getDate(),
-        month: d_when.getMonth(),
+        month: d_when.getMonth()+1,
         year: d_when.getFullYear()
       }
     };
