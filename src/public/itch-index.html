@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The committy redirect page</title>
+        <meta http-equiv="Refresh" content="0; url='https://committy.glitch.me'" />
+        
+        <style>
+            @import "./assets/css/draculuhhh.css";
+            @import "./assets/css/fonts.css";
+
+            body{
+                background-color: var(--background, #101010);
+                color: var(--foreground, #fafaf2);
+                font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            }
+              
+            h1{
+                font-family: 'HK Grotesk', Arial, Helvetica, sans-serif;
+                font-weight: 900;
+               color: var(--pink, #ff80c0); 
+              }
+              
+              h2{
+                  
+                font-weight: 800;
+               color: var(--purple, #d080ff); 
+              }
+              
+              h3{
+                
+                font-weight: 700;
+                color: var(--cyan, #80ffff);
+              }
+              
+              h4{
+                
+                font-weight: 600;
+                color: var(--orange, #ffa040);
+              }
+              
+              h5 {
+               
+                color: var(--red, #ff4040);
+              }
+              
+              h6{
+
+               color: var(--yellow, #ffff80); 
+              }
+              
+              
+              
+              em{
+                color: var(--orange, #ffa040);
+              }
+              
+              strong{
+                color: var(--cyan, #80ffff);
+              }
+              
+               /* unvisited link */
+              a:link {
+                color: var(--pink, #ff80c0);
+              }
+              
+              /* visited link */
+              a:visited {
+                color: var(--purple, #d080ff);
+              }
+              
+              /* mouse over link */
+              a:hover {
+                color: var(--green, #80ff80);
+              }
+              
+              /* selected link */
+              a:active {
+                color: var(--cyan, #80ffff);
+              } 
+
+              #mid {
+                position: fixed;
+                background-color: #181818;
+                top: 50%;
+                left: 50%;
+                width: 50%;
+                height: fit-content;
+                /* bring your own prefixes */
+                transform: translate(-50%, -50%);
+              }
+
+              #mid img_div{
+                background-color: #202020;
+              }
+
+              @keyframes speeeeeeen {
+                0%{
+                    background-position: 0px 0px;
+                    transform:rotate(0deg);
+                }
+                50% {
+                    transform:rotate(180deg);
+                }
+                100%{
+                  background-position: -602px 302px;
+                  transform: rotate(360deg);
+                }
+              }
+              
+              .spinner{
+                
+                display: block;
+                animation: speeeeeeen 6s infinite;
+                animation-timing-function: linear; 
+              }
+              
+              .a5{
+                animation-duration: 5s;
+              }
+              
+              .a4{
+                animation-duration: 4s;
+              }
+              
+              .a3{
+                animation-duration: 3s;
+              }
+              
+              
+              .a2{
+                animation-duration: 2s;
+              }
+              
+              .a1{
+                animation-duration: 1s;
+              }
+              
+              .reverse{
+                animation-direction: reverse;
+              }
+              
+              @keyframes tilty30 {
+                
+                0%{
+                  transform:rotate(30deg);
+                }
+                100%{
+                  transform:rotate(-30deg);
+                }
+              }
+              
+              .tilty30{
+                
+                display: block;
+                animation: tilty30 4s infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out; 
+              }
+              
+              @keyframes tilty20 {
+                
+                0%{
+                  transform:rotate(20deg);
+                }
+                100%{
+                  transform:rotate(-20deg);
+                }
+              }
+              
+              .tilty20{
+                
+                display: block;
+                animation: tilty20 3s infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out; 
+              }
+              .mid{
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                text-align: center;
+              }
+
+              .img_div {
+                width: 80%;
+                display: inline-block;
+              }
+
+              .img_div img{
+                width: 100%;
+              }
+
+
+              #middle {
+                position: fixed;
+                background-color: #181818;
+                top: 50%;
+                left: 50%;
+                width: 50%;
+                height: fit-content;
+                /* bring your own prefixes */
+                transform: translate(-50%, -50%);
+              }
+
+
+              #topleft{
+                position: fixed;
+                top:10%;
+                left:10%;
+                transform: translate(-50%, -50%);
+              }
+
+              #left{
+                position: fixed;
+                top:50%;
+                left:10%;
+                transform: translate(-50%, -50%);
+              }
+
+
+              #bottomleft {
+                position: fixed;
+                top:90%;
+                left:0%;
+                transform: translate(-50%, -50%);
+              }
+
+
+              #topright{
+                position: fixed;
+                top:10%;
+                left:90%;
+                height: fit-content;
+                transform: translate(-50%, -50%);
+                
+              }
+
+              #right{
+                position: fixed;
+                top:50%;
+                left:80%;
+                transform: translate(-50%, -50%);
+                
+              }
+
+
+              #bottomright {
+                position: fixed;
+                top:90%;
+                left:90%;
+                transform: translate(-50%, -50%);
+              }
+
+              
+        </style>
+    </head>    
+    <script type="text/javascript" src="./imports/howler.min.js"></script>
+    <body onclick="percival_time()">
+
+        <div style="position:fixed;top:0%;bottom:0%;left:0%;right:0%; z-index:-1;"></div>
+
+        <div id="middle" class="mid">
+            <h1>Click the Committy logo to go to Committy!</h1>
+            <div class="img_div"><a href="https://committy.glitch.me"><img src="./assets/icons/committy.svg" alt="The Committy Logo"></a></div>
+        </div>
+
+        <div id="topleft">
+            <h2 class="tilty30 mid">Mandatory internet connection!</h2>
+        </div>
+
+        <div id="left">
+            <h3 class="tilty20 mid reverse">proprietary!!!!</h2>
+        </div>
+
+        <div id="bottomleft" class="spinner">
+            <h1 class="mid red"><span class="red">WHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</span></h2>
+        </div>
+        
+        <div id="topright" class="tilty30">
+            <img class="tilty20 reverse" src="./assets/icons/plastic-duck.svg" style="width:128px; height:128px;" alt="ducc!">
+        </div>
+        <div id="right" class="spinner">
+            <h2 class="spinner tilty30 yellow">so many cards!!!!!!!!!!</h1>
+            <h1 class="tilty20 reverse cyan"><b class="green spinner" style="display: inline-block;">LODS</b> of suggestions!!!</h1>
+        </div>
+
+        <div id="bottomright">
+            
+            <marquee style="background-color: #101010; position:absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                <h3 class="comment">I regert everything</h3>
+            </marquee>
+            <h2 class="pink tilty30">WHO SAID THAT I DIDN'T HEAR ANYTHING NOTHING TO SEE HERE</h2>
+        </div>
+
+    </body>
+
+    <script>
+        let percival = new Howl({
+            src: ["./assets/audio/obligatory_percival.ogg"],
+            html5: true,
+            volume: 1.0
+        });
+
+        let bg_audio = new Howl({
+            src: ["./assets/audio/redirect_page_theme.ogg"],
+            html5: true,
+            volume: 0.5,
+            loop: true
+        });
+
+        bg_audio.play();
+
+
+        let percival_happened = false;
+
+        function percival_time(){
+
+            if (!bg_audio.playing()){
+                bg_audio.play();
+            }
+
+            if (!percival_happened){
+                percival.play();
+                percival_happened = true;
+            }
+        }
+    </script>
+
+</html>
