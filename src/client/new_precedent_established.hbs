@@ -124,11 +124,18 @@
             }
 
 
-            window.onload = async() => {
-
-                await sleep(1_000);
+            async function declaration_time(){
+             await sleep(1_000);
 
                 speak_this("The Declaration of the Committy");
+           }
+
+
+            window.onload = function() {
+              
+               return new Promise( resolve => declaration_time() );
+
+                
             }
 
 
