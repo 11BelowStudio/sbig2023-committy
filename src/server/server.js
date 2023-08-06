@@ -762,6 +762,15 @@ function card_to_param_string(card_data){
 }
 
 
+fastify.get("/game", function(req, reply){
+  reply.redirect("/draw_hands/3")
+});
+
+fastify.get("/game/:handSize", function(req, reply){
+  reply.redirect(`/draw_hands/${req.params.handSize}`);
+});
+
+
 fastify.get("/game/:handSize/:seed", function(req, reply){
 
 
