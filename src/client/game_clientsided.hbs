@@ -111,6 +111,7 @@
 
         <script type="text/javascript" src="/scripts/audio_check.js"></script>
         <script type="text/javascript" src="/scripts/card_consts.js"></script>
+        <script type="text/javascript" src="/imports/howler.min.js"></script>
 
         <script>
             
@@ -120,14 +121,33 @@
             let p2_chosen = null;
             let p2_chosen_element = null;
 
+            const bweb = new Howl({
+                src: ["/assets/audio/bweb.ogg"],
+                html5: true,
+                volume: 1.0
+            });
+            const bwoab = new Howl({
+                src: ["/assets/audio/bwoab.ogg"],
+                html5: true,
+                volume: 1.0
+            });
+
+            const disapprove = new Howl({
+                src: ["/assets/audio/disapproval.ogg"],
+                html5:true,
+                volume:1.0
+            });
+
             function next_pressed(){
 
                 if (p1_chosen == null || p1_chosen == NaN){
                     window.alert("Player 1 needs to choose a card!");
+                    disapprove.play();
                     return;
                 }
                 else if (p2_chosen == null || p2_chosen == NaN){
                     window.alert("Player A needs to choose a card!");
+                    disapprove.play();
                     return;
                 }
 
@@ -139,6 +159,8 @@
             function p1_selected_card(id, card_element){
                 p1_chosen = id;
                 document.getElementById("p1_selection").innerHTML = `chosen card ${id}`;
+
+                bweb.play();
 
                 if (p1_chosen_element != null){
                     p1_chosen_element.classList.toggle("selected_card");
@@ -159,6 +181,7 @@
 
             function p2_selected_card(id, card_element){
                 p2_chosen = id;
+                bwoab.play();
                 document.getElementById("p2_selection").innerHTML = `chosen card ${id}`;
                 if (p2_chosen_element != null){
                     p2_chosen_element.classList.toggle("selected_card");
