@@ -4,7 +4,7 @@
  * Uses sqlite.js to connect to db
  */
 
-import sample, { random } from "underscore";
+import sample from "underscore";
 
 /*
 const {
@@ -21,7 +21,7 @@ import _fastify from "fastify";
 
 const fastify = _fastify({
   // Set this to true for detailed logging:
-  logger: true
+  //logger: true
 });
 
 import path from "node:path";
