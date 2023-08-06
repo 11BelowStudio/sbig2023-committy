@@ -41,16 +41,17 @@
                 
                 <ul>
                     <li>
-                        <h2><a href="./submit_card">Card creator!</a></h2>
+                        <h2><a href="/submit_card">Card creator!</a></h2>
                     </li>
                     <li>
-                        <h2><a href="./view_card/random">View a random card!</a></h2>
+                        <h2><a href="/view_card/random">View a random card!</a></h2>
                     </li>
                     <li>
-                        <h2><a href="./draw_hands/3">Play game clientside (WIP)</a></h2>
+                        <h2 onclick="onStartClicked()"><a>Play game clientside</a></h2>
+                        <ul><li>Hand size: <input label="hand size" type="number" id="hand_size" name="hand_size" min="3", max="{{maxHand}}" value="3"/></li></ul>
                     </li>
                     <li>
-                        <h2><a href="./api">The undocumented API!!!</a></h2>
+                        <h2><a href="/api">The undocumented API!!!</a></h2>
                     </li>
                     <li>
                         In terms of cards we currently have {{ cardCount }} cards.
@@ -78,5 +79,30 @@
                 -->
             </div>
         </div>
+        <script type="text/javascript" src="/scripts/audio_check.js"></script>
+        <script>
+
+            
+            const cardCount = {{ cardCount }};
+            const maxHand = Math.floor(cardCount/2);
+
+            function onStartClicked(){
+
+                const desiredHandSize = parseInt(document.getElementById("hand_size").value);
+
+                if (desiredHandSize < 3){
+                    window.alert(`Uh oh! Your requested hand size (${desiredHandSize}) is too small for a decent game!`);
+                    return;
+                }
+                else if (desiredHandSize > maxHand){
+                    window.alert(`Unfortunately, we don't have enough cards to support a game with hands containing ${desiredHandSize} cards.`
+                        +"\n"+
+                        `Consider contributing ${cardCount - (parseInt(maxHand) * 2)} more cards so you can actually do that.`
+                    );
+                }
+
+                window.location = `draw_hands/${desiredHandSize}`;
+            }
+        </script>
     </body>
 </html>

@@ -1,9 +1,8 @@
 {
   "name": "committy",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "A Node app with SQLite database - and it's a card game which is the end result of the combination of everyone's suggestions.",
   "exports": "./src/server/server.js",
-
   "scripts": {
     "start": "node ./src/server/server.js",
     "nodemon": "nodemon ./src/server/server.js"
@@ -20,6 +19,7 @@
     "fastify": "^4.19.2",
     "fastify-socket.io": "^4.0.0",
     "handlebars": "^4.7.7",
+    "howler": "^2.2.3",
     "jquery": "^3.7.0",
     "jquery-ui": "^1.13.2",
     "leo-profanity": "^1.7.0",

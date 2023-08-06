@@ -33,19 +33,19 @@
             }
             
             .icon.icon_a {
-                background-image: url("./assets/icons/plastic-duck.svg");
+                background-image: url("/assets/icons/plastic-duck.svg");
             }
             
             .icon.icon_b {
-                background-image: url("./assets/icons/rialto-bridge.svg");
+                background-image: url("/assets/icons/rialto-bridge.svg");
             }
             
             .icon.icon_c {
-                background-image: url("./assets/icons/whistle.svg");
+                background-image: url("/assets/icons/whistle.svg");
             }
             
             .icon.icon_d {
-                background-image: url("./assets/icons/abstract-084.svg");
+                background-image: url("/assets/icons/abstract-084.svg");
             }
             
             .slideParent{
@@ -110,9 +110,9 @@
 
     <body>
         
-        <script src="/imports/jquery.js"></script>
-        <script src="/imports/jquery-ui.js"></script>
-        
+        <script type="text/javascript" src="/imports/jquery.js"></script>
+        <script type="text/javascript" src="/imports/jquery-ui.js"></script>
+        <script type="text/javascript" src="/scripts/card_consts.js"></script>
         <script>
 
         
@@ -129,7 +129,7 @@
             }
     
             function onNameChanged(newName){
-                let cleanName = cleanup(newName, 29);
+                let cleanName = cleanup(newName, card_consts.card_name_length);
                 document.getElementById("your_title").innerText = cleanName;
 
                 const titleHolders = document.getElementsByClassName("your_title_holder_class");
@@ -139,13 +139,13 @@
             }
     
             function onDescChanged(newDesc){
-                let cleanDesc = cleanup(newDesc, 125);
+                let cleanDesc = cleanup(newDesc, card_consts.card_desc_length);
     
                 document.getElementById("your_desc").innerText = cleanDesc;
             }
     
             function onImgChanged(newImg){
-                let trimmedUrl = newImg.substring(0, 125);
+                let trimmedUrl = newImg.substring(0, card_consts.card_img_url_length);
                 if (trimmedUrl.match(/\.(jpeg|jpg|gif|png|svg)$/) != null){
                     document.getElementById("your_img").src = trimmedUrl;
                 } else {

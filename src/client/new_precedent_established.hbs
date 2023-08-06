@@ -2,172 +2,8 @@
 <html>
     <head>
         <title>Committy!</title>
-        <style>
-
-            @import "/assets/fonts/Ruthie.css";
-
-            
-            
-            marquee.slide{
-                behavior: slide; 
-            }
-
-            .mid{
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                text-align: center;
-            }
-            
-            html, body {
-                min-height: 100%;
-                margin: 0;
-            }
-
-            .bigMarq{
-                font-family: Ruthie, fantasy, "Times New Roman", Times, serif;
-                width: 100%;
-                min-height: 100%;
-                height: max(100%, 100vh);
-                display: block;
-                box-sizing: border-box;
-                align-content: center;
-                padding-left: 10%;
-                padding-right: 10%;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-
-                vspace: 0px;
-                font-size: 1.5em;
-            }
-
-            .bigMarq .mid{
-                width: 100%;
-                text-align: center;
-            }
-
-            .bigMarq h1{
-                font-size: 1.5em;
-                z-index: 10;
-            }
-
-            .bigMarq p{
-                font-size: 1.35em;
-                z-index: 10;
-            }
-
-            .bigMarq .just {
-                width: 100%;
-                text-align: justify;
-                
-            }
-
-            .scroller{
-                font-family: Ruthie, fantasy, "Times New Roman", Times, serif;
-                width: 100%;
-                min-height: 100%;
-                height: max(100%, 100vh);
-                display: block;
-                box-sizing: border-box;
-                align-content: center;
-                padding-left: 10%;
-                padding-right: 10%;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-
-                vspace: 0px;
-                font-size: 1.5em;
-            }
-
-            
-
-            @keyframes scroll_frames {
-                
-                from {
-                    /*
-                    TODO: start with everything off-screen
-                    */
-                    transform: translateY(200%);
-
-                    /*
-                    top: 100%;
-                    bottom: -100%;
-                    */
-                }
-
-                to {
-
-                    transform: translateY(0%);
-                    /*
-                    top: 0%;
-                    bottom: 0%;
-                    */
-                }
-            }
-
-            .scroller_container {
-                display: block;
-                position: absolute;
-
-                animation-name: scroll_frames;
-                animation-duration: 60s;
-                animation-timing-function: linear;
-                
-                
-            }
-
-            .scroller .mid{
-                width: 100%;
-                text-align: center;
-            }
-
-            .scroller h1{
-                font-size: 1.5em;
-                z-index: 10;
-            }
-
-            .scroller p{
-                font-size: 1.35em;
-                z-index: 10;
-            }
-
-            .scroller .just {
-                width: 100%;
-                text-align: justify;
-                
-            }
-
-            #veryproper {
-                
-                display: block;
-                
-
-                width: 1000%;
-                height: 1000%;
-        
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                padding-top: 100%; 
-                
-                
-                background-repeat: tiled;
-                z-index:-100;
-                object-position:  center;
-
-                background-image: url("/assets/img/old-parchment.jpg");
-        
-                position: fixed;
-                
-            }
-      
-        </style>
+        <link rel="stylesheet" type="text/css" href="/assets/css/results.css"/>
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/results.css"/>
     </head>
     <body>
         <div style="display: block; position: center;">
@@ -175,7 +11,7 @@
         </div>
 
         <div class="scroller"> <!--<div class="bigMarq">-->
-            <div class ="scroller scroller_container" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
+            <div class ="scroller scroller_container" style="animation-duration:125s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
                 <div class="mid">
                     <h1 style="text-decoration: underline;">The Declaration of the Committy</h1>
                 </div>
@@ -189,7 +25,7 @@
                     </p>
                     <p>
                         <b>Þe Most Esteemed</b> and worshipful card of <b>{{ win.name }}</b>,
-                        þe card bearing þe glorious and most pleasing sigil of <b>#{{ win.id }}</b>
+                        þe card bearing þe most glorious and most pleasing sigil of <b>#{{ win.id }}</b>
                         in þe Committy deck, as played by my most honourable and respected friend,
                         <b>Player {{ winner }}</b>, is objectively superior and better in every way,
                         shape, and form, boþ measurable and immeasurable, þan þe most unpleasant
@@ -199,35 +35,103 @@
                         <b>Player {{ loser }}</b>.
                     </p>
                     <p>
-                        <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b> is
+                        <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b>
+                        is
                         put in contention against þe Card of <b>{{ lose.name }}</b>, þe most wise and learned
-                        individual whom played þe Card of <b>{{ win.card }}</b> shall have <b>Victory</b> most promptly
-                        and well-deserved conferred upon þem, in recognition of þis newly established precedent.
+                        individual whom played þe Card of <b>{{ win.card }}</b> shall have
+                        <b>Victory</b> most promptly
+                        and well-deserved conferred upon þem, in recognition of þis newly established
+                        <b>Precedent</b>.
                     </p>
                     <p>
-                        <b>Furþermore</b>, let it be also known þat any such unclean and uncultured <b>Heretic</b> whom
+                        <b>Furþermore</b>, let it be also known þat any such unclean and uncultured
+                        <b>Heretic</b> whom
                         disrespects þis <b>Most Glorious Precedent</b> shall most promptly <b>Snuff It</b>,
-                        for such is the only just punishment for þose whom disregard such obvious and
-                        most evident <b>Precedent</b>.
+                        for such is þe only just punishment for þose whom disregard such obvious and
+                        most self-evident <b>Precedent</b>.
                     </p>
                     <p>
                         <b>Þis has been Decreed</b> by þe Committy, wiþ þe grace and glory of our most
-                        dear supreme Overlord and Patron <b>Votebot</b>, on second number {{ when.second }}
-                        of þe minute of þe number {{ when.minute }} of þe hour number {{ when.hour }}
-                        of þe {{when.day}} bearing þe day number {{ when.date }} of þe month number {{when.month}} of þe Year Of 
-                        Our Most Glorious Supereme Suggestor <b>Votebot</b> {{when.year}}.
+                        supreme Overlord and Patron of þe Committy <b>Votebot</b>, on second number {{ when.second }}
+                        of þe minute bearing þe number {{ when.minute }} of þe hour numbered {{ when.hour }}
+                        of þe {{when.day}} bearing þe day number {{ when.date }} of þe monþ number {{when.month}} of þe Year Of 
+                        Our Most Glorious Supreme Suggestor <b>Votebot</b> {{when.year}}.
                     </p>
                 </div>
-                <div class="mid">
+                <div class="mid hidden" id="amen">
                     <h2>
                         <a href="/">Amen!</a>
                     </h2>
                 </div>
             </div><!--</marquee>-->
         </div>
+
+        <script type="text/javascript" src="../public/scripts/speech_synth.js"></script>
+        <script type="text/javascript" src="/scripts/speech_synth.js"></script>
+        
+        <script type="text/javascript" src="../public/imports/howler.min.js"></script>
+        <script type="text/javascript" src="/imports/howler.min.js"></script>
+        
+
+        <script type="text/javascript" src="/scripts/audio_check.js"></script>
         <script>
             // TODO: record audio reading out the precedent declaration
             // TODO: play aforementioned audio
+
+            let bgAudio;
+
+            window.addEventListener("tts_done", e=>{
+                startLegalese();
+            });
+
+            function showAmen(){
+                bgAudio.volume(1.0);
+                document.getElementById("amen").classList.remove("hidden");
+            }
+
+            function play_bg(){
+
+            }
+
+            async function startLegalese(){
+
+                bgAudio = new Howl({
+                    src: ["/assets/audio/legalese_theme.ogg"],
+                    html5: true,
+                    loop: true,
+                    volume: 1.0
+                });
+                bgAudio.play();
+
+                //TODO: start audio
+
+                await sleep(1_000);
+
+                // TODO: start speech
+
+                //var audio = new Audio("../public/assets/audio/new_precedent.ogg");
+                
+                var speech = new Howl({
+                    src: ["/assets/audio/new_precedent.ogg"],
+                    html5: true,
+                    onend: () => showAmen(),
+                    volume: 1.0
+                });
+                bgAudio.volume(0.5);
+                speech.play();
+                
+                //audio.play();
+            }
+
+
+            window.onload = async() => {
+
+                await sleep(1_000);
+
+                speak_this("The Declaration of the Committy");
+            }
+
+
         </script>
     </body>
 </html>

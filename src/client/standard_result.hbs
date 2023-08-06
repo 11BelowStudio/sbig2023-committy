@@ -5,9 +5,15 @@
         <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
         <link rel="stylesheet" type="text/css" href="/assets/css/card.css"/>
         <link rel="stylesheet" type="text/css" href="/assets/css/cols.css"/>
-        
         <link rel="stylesheet" type="text/css" href="/assets/css/game_css/game.css"/>
-        
+        <link rel="stylesheet" type="text/css" href="/assets/css/results.css"/>
+
+
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/card.css"/>
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/cols.css"/>
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/game_css/game.css"/>
+        <link rel="stylesheet" type="text/css" href="../public/assets/css/results.css"/>
     </head>
     <body>
         
@@ -17,7 +23,7 @@
                 <div>
                     <h1><img src="/assets/icons/committy.svg" alt="Committy!"/> results</h1>
                 </div>
-                <div>
+                <div id="sidebar_message">
                     <p>Click on the card to reveal who won!</p>
                     <p>(Please do it, the tension is unbearable!)</p>
                 </div>
@@ -65,9 +71,9 @@
             </div>
         </div>
         <!-- fade in the constitutionality -->
-        <div id="constitushun">
-            <div id="veryproper" style="z-index: 1000;"></div>
-            <div class="scroller" style="z-index: 1001;"> <!--<div class="bigMarq">-->
+        <div id="constitushun" style="z-index: 1000;" class="hidden">
+            <div id="veryproper"></div>
+            <div id="scrollparent" class="scroller hidden" style="animation-duration:90s;" > <!--<div class="bigMarq">-->
                 <div class ="scroller scroller_container" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
                     <div class="mid">
                         <h1 style="text-decoration: underline;">A Proclamation From The Committy</h1>
@@ -89,13 +95,13 @@
                             <b>Þerefore</b>, as þe most wise and learned Player {{ winner }} took heed of þis
                             established truþ and opted to play {{ win.name }} against Player {{ loser }}'s
                             firmly established inferior {{ lose.name }}, it is only correct and just for þis
-                            <b>Precedent</b>, as established at precisely {{when.hour}}/{{when.minute}}/{{when.second}}
+                            <b>Precedent</b>, as established at precisely {{when.hour}}:{{when.minute}}:{{when.second}}
                             on {{ when.day }} þe {{ when.date }}/{{ when.month }}/{{ when.year }},
                             to be applied in þis situation, via þe following proclamation:
 
                         </p>
                         <p>
-                            <b>We Hereby Confer</b>upon þe most Noble and Learned Player {{ winner }}
+                            <b>We Hereby Confer</b> upon þe most Noble and Learned Player {{ winner }}
                             a truly Noble and Glorious <b>Victory</b> over þeir opponent, Player {{ loser }}.
                         </p>
                         <p>
@@ -103,7 +109,7 @@
                             benevolent overlord and patron of þe Committy, <b>Votebot</b>.
                         </p>
                     </div>
-                    <div class="mid">
+                    <div id="amen" class="mid hidden">
                         <h2>
                             <a href="/">Amen!</a>
                         </h2>
@@ -111,14 +117,45 @@
                 </div>
             </div>
         </div>
-         <script type="text/javascript" src="/imports/card_consts.js"></script>
+        <script type="text/javascript" src="../public/scripts/card_consts.js"></script>
+        <script type="text/javascript" src="../public/scripts/speech_synth.js"></script>
+
+
+        <script type="text/javascript" src="/scripts/card_consts.js"></script>
+        <script type="text/javascript" src="/scripts/speech_synth.js"></script>
+
+        <script type="text/javascript" src="/imports/howler.min.js"></script>
+        <script type="text/javascript" src="/imports/confetti.min.js"></script>
         <script>
 
-            const winner = {{ winner }};
+            const winner = "{{ winner }}";
             const win_id = {{ win.id }};
             const loser = {{ loser }};
 
-            async function onResultClicked(){
+            let bgAudio;
+
+            function showAmen(){
+                bgAudio.volume(1.0);
+                document.getElementById("amen").classList.remove("hidden");
+            }
+
+            let confetti = new Confetti('result_card');
+
+            // Edit given parameters
+            confetti.setCount(75);
+            confetti.setSize(1);
+            confetti.setPower(25);
+            confetti.setFade(false);
+            confetti.destroyTarget(false); 
+            
+
+            function onResultClicked(){
+                confetti = null;
+                return new Promise( resolve => ResultClickedLogic() );
+            }
+
+            async function ResultClickedLogic()
+            {
 
                 // step 1: reveal the winning card
                 {
@@ -130,11 +167,11 @@
                         )
                     );
 
-                    winCard.onclick = null;
-
                     const winDetails = document.getElementById("details_div");
 
                     winDetails.classList.remove("hidden");
+                    
+                    winCard.onclick = null;
                 }
 
                 // step 2: reveal who actually won
@@ -143,13 +180,41 @@
                     winTitle.innerHTML = `Player <b>${winner}!</b>`;
                     winTitle.classList.remove("hidden");
                 }
+                // 2.5: this time with the sidebar
+                {
+                    const sidebarMessage = document.getElementById("sidebar_message");
+                    sidebarMessage.innerHTML = 
+                        `<p>congrats <b>Player ${winner}</b>, u did it!!!!</p>
+                        <p>🎉🎉🎉🎉🎉</p>` ;
+                }
                 // step 3: play a celebration noise
                 {
-                    // TODO: play the noise
+                    var victory = new Howl({
+                        src: ["/assets/audio/victory_theme.ogg"],
+                        html5: true,
+                        volume: 1.0
+                    });
+                    victory.play();
                 }
 
                 // step 4: constitushonality
                 {
+                    // waits 5 seconds
+                    await sleep(5_000);
+
+                    const constitushun = document.getElementById("constitushun");
+                    constitushun.classList.add("fades_in");
+                    constitushun.classList.remove("hidden");
+
+                
+                    var intro = new Howl({
+                        src: ["/assets/audio/legalese_intro.ogg"],
+                        html5: true,
+                        onend: () => proclaim(),
+                        volume: 1.0
+                    });
+                    intro.play();
+
                     // TODO: wait like 15 seconds or so
                     // TODO: start fading in the theme of legalese
                     // TODO: start to fade in the constitushonality background over the top of everything
@@ -158,6 +223,44 @@
                 }
 
 
+            }
+
+            function proclaim(){
+                speak_this("A Proclamation From The Committy");
+            }
+
+            window.addEventListener("tts_done", e=>{
+                startLegalese();
+            });
+
+            async function startLegalese(){
+                const scrollParent = document.getElementById("scrollparent")
+                scrollParent.classList.remove("hidden");
+
+                bgAudio = new Howl({
+                    src: ["/assets/audio/legalese_theme.ogg"],
+                    html5: true,
+                    loop: true,
+                    volume: 1.0
+                });
+                bgAudio.play();
+
+                //TODO: start audio
+
+                
+
+                await sleep(1_000);
+
+                var speech = new Howl({
+                    src: ["/assets/audio/precedent_exists_theme.ogg"],
+                    html5: true,
+                    onend: () => showAmen(),
+                    volume: 1.0
+                });
+                bgAudio.volume(0.5);
+                speech.play();
+
+                // TODO: start speech
             }
 
         </script>

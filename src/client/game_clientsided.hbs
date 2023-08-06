@@ -87,7 +87,7 @@
             <div class="content">
 
                 <div id="player_1_div">
-                    <h2>Player 1 <span id="p1_selection">not chosen a card</span>!</h2>
+                    <h2>Player 1 has <span id="p1_selection">not chosen a card</span>!</h2>
 
                     <div class="hand_menu" id="player_1_hand">
                         <!-- this gets filled automatically with your cards -->
@@ -95,7 +95,7 @@
                 </div>
 
                 <div id="player_2_div">
-                    <h2>Player A <span id="p2_selection">not chosen a card</span>!</h2>
+                    <h2>Player A has <span id="p2_selection">not chosen a card</span>!</h2>
                     <div class="hand_menu" id="player_2_hand">
                         <!-- this also gets filled automatically with cards -->
                     </div>
@@ -109,7 +109,8 @@
         
        
 
-        <script type="text/javascript" src="/imports/card_consts.js"></script>
+        <script type="text/javascript" src="/scripts/audio_check.js"></script>
+        <script type="text/javascript" src="/scripts/card_consts.js"></script>
 
         <script>
             
@@ -130,7 +131,7 @@
                     return;
                 }
 
-                window.open(`/game/chosen/${p1_chosen}/${p2_chosen}`);
+                window.location.replace(`/game/chosen/${p1_chosen}/${p2_chosen}`);
                 //window.location.replace(`/game/chosen/${p1_chosen}/${p2_chosen}`);
             }
 
@@ -140,13 +141,17 @@
                 document.getElementById("p1_selection").innerHTML = `chosen card ${id}`;
 
                 if (p1_chosen_element != null){
-                    p1_chosen_element.classList.remove("selected_card");
+                    p1_chosen_element.classList.toggle("selected_card");
                     if (p1_chosen_element == card_element){
+                        //card_element.classList.toggle("selected_card");
                         document.getElementById("p1_selection").innerHTML = `chosen a card!`;
+                    } else{
+                        p1_chosen_element.classList.toggle("selected_card", false);
                     }
+                    p1_chosen_element = card_element;
                 }
                 else {
-                    card_element.classList.add("selected_card");
+                    card_element.classList.toggle("selected_card",true);
                     p1_chosen_element = card_element;
                 }
                 
@@ -156,13 +161,17 @@
                 p2_chosen = id;
                 document.getElementById("p2_selection").innerHTML = `chosen card ${id}`;
                 if (p2_chosen_element != null){
-                    p2_chosen_element.classList.remove("selected_card");
+                    p2_chosen_element.classList.toggle("selected_card");
                     if (p2_chosen_element == card_element){
+                        //card_element.classList.toggle("selected_card");
                         document.getElementById("p2_selection").innerHTML = `chosen a card!`;
+                    } else{
+                        p2_chosen_element.classList.toggle("selected_card", false);
                     }
+                    p2_chosen_element = card_element;
 
                 } else {
-                    card_element.classList.add("selected_card");
+                    card_element.classList.toggle("selected_card", true);
                     p2_chosen_element = card_element;
                 }
             }

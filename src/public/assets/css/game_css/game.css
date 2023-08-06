@@ -43,7 +43,10 @@ div.selected_card {
 
 .hidden {
     visibility: hidden;
+    display: none;
 }
+
+
 
 /*
 #play_table > td{

@@ -140,12 +140,17 @@ fastify.addHook("onRoute", routeOptions => {
 function _index(req, reply){
 
   let params = {
-    username: ""
+    username: "",
+    cardCount : 0,
+    maxHand: 0
   };
 
   {
     const cardCountRes = db.getCardCount();
     params.cardCount = (cardCountRes.success) ? cardCountRes.cards : "database had a whoopsie";
+    
+    params.maxHand = (cardCountRes.success) ? (Math.floor(cardCountRes.cards / 2)) : 3;
+
   }
 
   {
@@ -1016,9 +1021,9 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
       loser:  loser, 
       win:    win_card,
       lose:   lose_card,
-      time: {
+      when: {
         second: d_when.getSeconds(),
-        min: d_when.getMinutes(),
+        minute: d_when.getMinutes(),
         hour: d_when.getHours(),
         day: intToWeekday(d_when.getDay()),
         date: d_when.getDate(),

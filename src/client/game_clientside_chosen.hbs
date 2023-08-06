@@ -58,9 +58,13 @@
                     <p>Convince a third party that your card is objectively the best card!</p>
                     <p>this page's URL suffix: <code>{{ url }}</code></p>
                     <p>
-                        When they come to a conclusion about which card is objectively better, click on the next button!
+                        When they come to a conclusion about which card is objectively better,
+                        click on the 'next' button
                     </p>
-                    <!--<button onclick="next_pressed()">Proceed!</button>-->
+                    <p>
+                        (you'll need to refresh this page if they're on a different browser)
+                    </p>
+                    <button onclick="toggle_audio()">Toggle dramatic music</button>
                 </div>
                 
 
@@ -76,6 +80,7 @@
                 <p>Then input their verdict to proceed to the next stage.</p>
 
                 <form method="post" action="/game/verdict" target="_self">
+                    <button type="submit">I certify that this choice was made legit eecks dee</button>
 
                     <div id="player_1_div">
                         <h2>Player 1's card <input type="radio" name="data" value='{ "c1":{{p1_id}}, "c2":{{p2_id}}, "verdict":{{p1_id}} }' required/></h2>
@@ -97,7 +102,6 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit">I certify that this choice was made legit eecks dee</button>
                 </form>
             </div>
 
@@ -108,9 +112,28 @@
         
        
 
-        <script type="text/javascript" src="/imports/card_consts.js"></script>
+        <script type="text/javascript" src="/scripts/audio_check.js"></script>
+        <script type="text/javascript" src="/scripts/card_consts.js"></script>
+        <script type="text/javascript" src="/imports/howler.min.js"></script>
 
         <script>
+
+            const drama = new Howl({
+                src: ["/assets/audio/discussion_theme.ogg"],
+                html5: true,
+                loop: true,
+                volume: 1.0
+            });
+
+            drama.play();
+
+            function toggle_audio(){
+                if (drama.playing()){
+                    drama.pause();
+                } else {
+                    drama.play();
+                }
+            }
             
 
             const p1_card_data = {{{p1_card}}};
