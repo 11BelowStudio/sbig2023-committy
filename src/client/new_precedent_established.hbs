@@ -121,8 +121,24 @@
             }
 
 
+            async function start_things_off(){
+                await sleep(1_000);
+                var intro = new Howl({
+                    src: ["/assets/audio/legalese_intro.ogg"],
+                    html5: true,
+                    onend: () => declaration_time(),
+                    onerror: () => declaration_time()
+                    volume: 1.0
+                });
+                intro.play();
+            }
+
+
             async function declaration_time(){
-             await sleep(1_000);
+             
+
+
+
 
                 speak_this("The Declaration of the Committy");
            }
@@ -130,7 +146,7 @@
 
             window.onload = function() {
                window.onload = null;
-               return new Promise( resolve => declaration_time() );
+               return new Promise( resolve => start_things_off() );
 
                 
             }
