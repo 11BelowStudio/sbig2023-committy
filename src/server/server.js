@@ -767,7 +767,7 @@ fastify.get("/game", function(req, reply){
 });
 
 fastify.get("/game/:handSize", function(req, reply){
-  reply.redirect(`/draw_hands/${req.params.handSize}`);
+  reply.redirect(`/draw_hands/${(req.params.handSize) ? req.params.handSize : 3}`);
 });
 
 
