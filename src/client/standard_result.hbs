@@ -35,7 +35,7 @@
                     <div id="details_div" class="card_details play_card_details hidden">
                         <div class="card_title">{{ win.name }}</div>
                         <div class="card_icon_holder">
-                            <img class="card_icon" src={{{ win.img }}}/>
+                            <img class="card_icon" src="{{{ win.img }}}"/>
                         </div>
                         <div class="card_stats_parent">
                             <div class="card_stats_cell card_stat_1">
@@ -69,7 +69,7 @@
             <div id="scrollparent" class="scroller hidden" > <!--<div class="bigMarq">-->
                 <div class ="scroller scroller_container" style="animation-duration:90s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
                     <div class="mid">
-                        <h1 style="text-decoration: underline;">A Proclamation From The Committy</h1>
+                        <h1 style="text-decoration: underline;">A Proclamation From Þe Committy</h1>
                     </div>
                     <div class="just">
                         <p>
@@ -81,13 +81,14 @@
                         </p>
                         <p>
                             <b>It Is A Fact</b>, most universal and true, þat, in all aspects boþ measurable and
-                            immeasurable, þe Card of {{ win.name }} (bearing þe seal of #{{ win.id }})
-                            is objectively superior to þe Card of {{ lose.name}} (bearing þe mark of #{{ lose.id }}).
+                            immeasurable, þe Card of <b>{{ win.name }}</b> (bearing þe seal of #<b>{{ win.id }}</b>)
+                            is objectively superior to þe Card of <b>{{ lose.name}}</b>
+                            (bearing þe mark of #<b>{{ lose.id }}</b>).
                         </p>
                         <p>
                             <b>Þerefore</b>, as þe most wise and learned Player {{ winner }} took heed of þis
-                            established truþ and opted to play {{ win.name }} against Player {{ loser }}'s
-                            firmly established inferior {{ lose.name }}, it is only correct and just for þis
+                            established truþ and opted to play <b>{{ win.name }}</b> against Player {{ loser }}'s
+                            firmly established inferior <b>{{ lose.name }}</b>, it is only correct and just for þis
                             <b>Precedent</b>, as established at precisely {{when.hour}}:{{when.minute}}:{{when.second}}
                             on {{ when.day }} þe {{ when.date }}/{{ when.month }}/{{ when.year }},
                             to be applied in þis situation, via þe following proclamation:
@@ -115,11 +116,12 @@
 
         <script type="text/javascript" src="/imports/howler.min.js"></script>
         <script type="text/javascript" src="/imports/confetti.min.js"></script>
+      
         <script>
 
             const winner = "{{ winner }}";
             const win_id = {{ win.id }};
-            const loser = {{ loser }};
+            const loser = "{{ loser }}";
 
             let bgAudio;
 
@@ -140,6 +142,8 @@
 
             function onResultClicked(){
                 confetti = null;
+              const winCard = document.getElementById("result_card");
+                winCard.onclick = null;
                 return new Promise( resolve => ResultClickedLogic() );
             }
 
@@ -159,8 +163,7 @@
                     const winDetails = document.getElementById("details_div");
 
                     winDetails.classList.remove("hidden");
-                    
-                    winCard.onclick = null;
+
                 }
 
                 // step 2: reveal who actually won

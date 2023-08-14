@@ -1,19 +1,17 @@
 let startPlayPromise = new Audio("/assets/audio/silence.ogg").play();
 
 if (startPlayPromise !== undefined) {
-startPlayPromise
-    .then(() => {
-    })
+  startPlayPromise
+    .then(() => {})
     .catch((error) => {
-    if (error.name === "NotAllowedError") {
+      if (error.name === "NotAllowedError") {
         let res = window.confirm(
-            "ERROR!\n" +
+          "ERROR!\n" +
             "It appears that you have not granted Committy permission to autoplay audio.\n" +
             "Committy won't function correctly without this permission.\nPlease enable it."
         );
-        window.location.reload();
-    } else {
+      } else {
         // Handle a load or playback error
-    }
+      }
     });
 }

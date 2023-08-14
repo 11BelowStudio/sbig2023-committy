@@ -12,7 +12,7 @@
         <div class="scroller"> <!--<div class="bigMarq">-->
             <div class ="scroller scroller_container" style="animation-duration:125s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
                 <div class="mid">
-                    <h1 style="text-decoration: underline;">The Declaration of the Committy</h1>
+                    <h1 style="text-decoration: underline;">Þe Declaration of Þhe Committy</h1>
                 </div>
                 <div class="just">
                     <p>
@@ -37,7 +37,7 @@
                         <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b>
                         is
                         put in contention against þe Card of <b>{{ lose.name }}</b>, þe most wise and learned
-                        individual whom played þe Card of <b>{{ win.card }}</b> shall have
+                        individual whom played þe Card of <b>{{ win.name }}</b> shall have
                         <b>Victory</b> most promptly
                         and well-deserved conferred upon þem, in recognition of þis newly established
                         <b>Precedent</b>.
@@ -127,7 +127,7 @@
                     src: ["/assets/audio/legalese_intro.ogg"],
                     html5: true,
                     onend: () => declaration_time(),
-                    onerror: () => declaration_time()
+                    onerror: () => declaration_time(),
                     volume: 1.0
                 });
                 intro.play();
@@ -145,7 +145,7 @@
 
 
             window.onload = function() {
-               window.onload = null;
+               //window.onload = null;
                return new Promise( resolve => start_things_off() );
 
                 

@@ -154,6 +154,7 @@ function _index(req, reply){
   }
 
   {
+    /*
     fastify.io.use((socket, next) => {
       const sessionID = socket.handshake.auth.sessionID;
       if (sessionID) {
@@ -171,6 +172,7 @@ function _index(req, reply){
       params.username = username;
       next();
     })
+    */
   }
 
   reply.header('content-type', 'text/html; charset=utf-8');
@@ -178,11 +180,11 @@ function _index(req, reply){
   return reply.view("/src/client/index.hbs", params);
 }
 
-fastify.get('/', function (req, reply) {
-  reply.redirect("/index");
+fastify.get('/index', function (req, reply) {
+  reply.redirect("/");
 })
 
-fastify.get('/index', function (req, reply) {
+fastify.get('/', function (req, reply) {
   _index(req, reply)
 })
 
