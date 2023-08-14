@@ -39,6 +39,19 @@ import io from "fastify-socket.io";
 
 fastify.register(_fs_formbody);
 
+import {
+  index_seo,
+  view_card_seo,
+  submit_card_seo,
+  mvp_game_seo,
+  mvp_judgement_seo,
+  mvp_verdict_seo
+} from "./seo.js"
+
+if (index_seo.url === "glitch-default") {
+  index_seo.url = `https://committy.glitch.me`;
+}
+
 //fastify.register(require("@fastify/formbody"));
 
 //const io = require("fastify-socket.io");
@@ -136,13 +149,26 @@ fastify.addHook("onRoute", routeOptions => {
   routes.endpoints.push(routeOptions.method + " " + routeOptions.path);
 });
 
-
+/**
+ * the actual logic for the index page.<br/>
+ * If 'request.raw' is defined, will just return the SEO stuff for the site.
+ * Otherwise, it'll return a formatted index.html
+ * @param {import("fastify/types/request.js").FastifyRequest} req 
+ * @param {import("fastify/types/reply.js").FastifyReply} reply 
+ * @returns reply.view stuff.
+ */
 function _index(req, reply){
+
+  if (req.query.raw){
+    reply.send({seo:index_seo});
+    return;
+  }
 
   let params = {
     username: "",
     cardCount : 0,
-    maxHand: 0
+    maxHand: 0,
+    seo: index_seo
   };
 
   {
@@ -202,6 +228,10 @@ fastify.get("/api", (request, reply) => {
 
 fastify.get('/submit_card', async(req, reply) => {
 
+  if (req.query.raw){
+    return req.reply({seo: submit_card_seo});
+  }
+
   let otherCards = [];
 
   
@@ -217,6 +247,7 @@ fastify.get('/submit_card', async(req, reply) => {
   otherCards = otherResult.entries;
 
   let params = {
+    seo: submit_card_seo,
     card1: otherCards[0],
     card2: otherCards[1]
   };
@@ -230,11 +261,27 @@ fastify.get('/submit_card', async(req, reply) => {
   return reply.view("/src/client/submit_card.hbs", params);
 })
 
+fastify.get('/view_card', async(req, reply) => {
+  if (req.query.raw){
+    return req.reply({seo:view_card_seo("random")});
+  }
+  reply.redirect("/view_card/random");
+})
 
 fastify.get('/view_card/:id', async(req, reply) => {
   let cardID = -1;
+
+  if (req.query.raw){
+    let id = "";
+    if (req.params.id !== undefined){
+      id = req.params.id.trim();
+    }
+
+    return req.reply({seo:view_card_seo(id)});
+  }
+
   try{
-    if (req.params.id.trim()==="random"){
+    if (req.params.id === undefined || req.params.id.trim() === "" || req.params.id.trim()==="random"){
       
       let randResult = db.getRandomCardIDs(1);
       if (randResult.success){
@@ -265,6 +312,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
   
 
   let params = {
+    seo: view_card_seo(cardID),
     card: {
       id: `${cardID}???`,
       name : "A card that doesn't exist yet",
@@ -765,15 +813,24 @@ function card_to_param_string(card_data){
 
 
 fastify.get("/game", function(req, reply){
+  
+
   reply.redirect("/draw_hands/3")
 });
 
 fastify.get("/game/:handSize", function(req, reply){
+  
   reply.redirect(`/draw_hands/${(req.params.handSize) ? req.params.handSize : 3}`);
 });
 
 
 fastify.get("/game/:handSize/:seed", function(req, reply){
+
+  if (req.query.raw){
+    return req.reply({
+      seo: mvp_game_seo(handSize, seed)
+    });
+  }
 
 
   if (!req.params || !req.params.handSize){
@@ -873,7 +930,8 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   const params = {
     hand_1: [],
     hand_2: [],
-    url: `http://${req.hostname}/game/${handSize}/${seed}`
+    url: `http://${req.hostname}/game/${handSize}/${seed}`,
+    seo: mvp_game_seo(handSize, seed)
   };
 
 
@@ -936,6 +994,8 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   const _id2 = parseInt(req.params.c2);
 
   
+
+  
   
   if (Number.isNaN(_id1)){
     reply.status(400).send(
@@ -962,7 +1022,9 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
 
-  
+  if (req.query.raw){
+    return req.reply({seo: mvp_judgement_seo(_id1, _id2)});
+  }
 
 
   const res_c1 = db.getCard(_id1);
@@ -1040,7 +1102,8 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
         date: d_when.getDate(),
         month: d_when.getMonth()+1,
         year: d_when.getFullYear()
-      }
+      },
+      seo: mvp_judgement_seo(_id1, _id2)
     };
     reply.header('content-type', 'text/html; charset=utf-8');
     return reply.view("/src/client/standard_result.hbs", params);
@@ -1053,7 +1116,8 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
       p2_card: card_to_param_string(c2),
       p1_id: _id1,
       p2_id: _id2,
-      url: `/game/chosen/${_id1}/${_id2}`
+      url: `/game/chosen/${_id1}/${_id2}`,
+      seo: mvp_judgement_seo(_id1, _id2)
     };
 
     reply.header('content-type', 'text/html; charset=utf-8');
@@ -1128,7 +1192,8 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
       date: when.getDate(),
       month: when.getMonth()+1,
       year: when.getFullYear(),
-    }
+    },
+    seo: mvp_verdict_seo
   }
 
   reply.header('content-type', 'text/html; charset=utf-8');

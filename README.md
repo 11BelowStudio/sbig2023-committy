@@ -2,7 +2,7 @@
 
 [https://committy.glitch.me](https://committy.glitch.me)
 
-**The collaborative card game that's the sum of everyone's suggestions!**
+**The collaborative card game that you will ~~not~~ regret unwillingly contributing to!**
 
 This is the git repository for *Committy*, a 'game' I made for the
 [*So Bad It's Good Jam 2023*](https://itch.io/jam/sbigjam2023).

@@ -2,10 +2,19 @@
 <html>
     <head>
         <title>
-            Viewing a card!
+            {{seo.title}}
         </title>
         <link rel="stylesheet" href="/assets/css/style.css">
         <link rel="stylesheet" href="/assets/css/card.css">
+
+        <link rel="canonical" href="{{seo.url}}">
+        <meta name="description" content="{{seo.description}}">
+        <meta property="og:title" content="{{seo.title}}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{seo.url}}">
+        <meta property="og:description" content="{{seo.description}}">
+        <meta property="og:image" content="{{seo.image}}">
+        <meta name="twitter:card" content="summary">
     </head>
     <body>
 
