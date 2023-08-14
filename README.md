@@ -2,6 +2,10 @@
 
 [https://committy.glitch.me](https://committy.glitch.me)
 
+[https://11BelowStudio.itch.io/committy](https://11belowstudio.itch.io/committy)
+
+[https://github.com/11BelowStudio/sbig2023-committy](https://github.com/11BelowStudio/sbig2023-committy)
+
 **The collaborative card game that you will ~~not~~ regret unwillingly contributing to!**
 
 This is the git repository for *Committy*, a 'game' I made for the
