@@ -1329,15 +1329,46 @@ function _archive_redirect(req, reply){
 
 fastify.get("/api/xcvg", (req, reply) => {
   // see https://discord.com/channels/328746547716292609/328746547716292609/1140864868518477914
+
+  /*
+  reply.header("og:site_name","Committy");
+  reply.header("og:title","The Official Committy Data Hoarding URL!")
+  reply.header("og:description","Oh hello there XCVG from XCVGSystems.com");
+  reply.header("og:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("twitter:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("og:url","https://committy.glitch.me/api/xcvg");
+  reply.header("twitter:site","Committy");
+  reply.header("og:type","application/vnd.sqlite3");
+  */
+  
   _archive_redirect(req, reply)
 });
 
 fastify.get("/api/archive", (req, reply) => {
+  /*
+  reply.header("og:site_name","Committy");
+  reply.header("og:title","The Official Committy Data Archive")
+  reply.header("og:description","Here's an archive of Committy's data.");
+  reply.header("og:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("twitter:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("og:url","https://committy.glitch.me/api/archive");
+  reply.header("twitter:site","Committy");
+  reply.header("og:type","application/vnd.sqlite3");
+  */
   _archive_redirect(req, reply);
 });
 
 fastify.get("/api/archive/:fname", (req, reply) => {
-
+  /*
+  reply.header("og:site_name","Committy");
+  reply.header("og:title","The Official Committy Data Archive")
+  reply.header("og:description","Here's an archive of Committy's data.");
+  reply.header("og:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("twitter:image","https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027");
+  reply.header("og:url","https://committy.glitch.me/api/archive/");
+  reply.header("twitter:site","Committy");
+  reply.header("og:type","application/vnd.sqlite3");
+  */
   if (!req.params || !req.params.fname){
     _archive_redirect(req, reply);
     return;
