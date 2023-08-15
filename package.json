@@ -20,6 +20,7 @@
     "fastify-socket.io": "^4.0.0",
     "handlebars": "^4.7.7",
     "howler": "^2.2.3",
+    "http-status": "^1.6.2",
     "jquery": "^3.7.0",
     "jquery-ui": "^1.13.2",
     "leo-profanity": "^1.7.0",

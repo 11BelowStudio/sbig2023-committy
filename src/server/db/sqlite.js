@@ -32,12 +32,16 @@ import seedrandom from "seedrandom";
  */
 import _db from "better-sqlite3";
 
+
+// opens the database (or creates it if it didn't already exist)
 const db = _db(
   dbFile,
   {
     "verbose": console.log
   }
 );
+
+let _backup_running = false;
 
 // and we use write-ahead log for performance reasons
 db.pragma('journal_mode = WAL');
@@ -1307,6 +1311,34 @@ function getRandomCards(cardsToGet, seedToUse) {
 
 }
 
+
+
+/**
+ * Will attempt to run a backup of the database
+ * @returns object of {success: bool, message: str}
+ */
+function runBackup(){
+
+
+  throw "Not yet implemented!";
+
+  let result = {success: false, message: "not yet implemented!"};
+
+  if (_backup_running){
+    result.message = "please wait for the current backup to end smh my head"
+    return result;
+  }
+
+
+  return result;
+
+
+}
+
+
+
+
+
 export {
 
   //db,
@@ -1333,7 +1365,9 @@ export {
   getRandomCardIDs,
 
   getRandomCards,
-  checkIfCardsExist
+  checkIfCardsExist,
+
+  
 }
 
 

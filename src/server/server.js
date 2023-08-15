@@ -136,6 +136,7 @@ export{
 
 
 import {ShortURL} from "./utils/ShortURL.js";
+import httpStatus from "http-status";
 
 
 //const ShortURL = require("./utils/ShortURL");
@@ -223,7 +224,7 @@ fastify.get("/api", (request, reply) => {
     intro: "This is a database-backed API with the following endpoints",
     routes: routes.endpoints
   };
-  reply.status(200).send(data);
+  reply.status(httpStatus.OK).send(data);
 });
 
 fastify.get('/submit_card', async(req, reply) => {
@@ -237,7 +238,7 @@ fastify.get('/submit_card', async(req, reply) => {
   
   let otherResult = db.getRandomCards(2);
   if (!otherResult.success){
-    reply.status(500).send(
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
       {
         error: `unable to build the card submission form!`
       }
@@ -289,7 +290,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
         
       }
       else {
-        reply.status(500).send(
+        reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
           {
             error: `unable to find a random card ID!`
           }
@@ -302,7 +303,7 @@ fastify.get('/view_card/:id', async(req, reply) => {
     }
     
   } catch(error){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `${cardID} needs to be an integer or "random"`
       }
@@ -404,7 +405,7 @@ fastify.get("/api/cards", async(request, reply) => {
   data.result = db.getAllCards();
   console.log(data.result);
   if (!data.result || !data.result.success){ data.error = errorMessage;}
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
   
 });
@@ -413,19 +414,19 @@ fastify.get("/api/card/:id", async(request, reply) => {
   const _id = parseInt(request.params.id);
   let data = {id: _id };
   console.log(request.params);
-  let status = 500;
+  let status = httpStatus.BAD_REQUEST;
 
   data.result = db.getCard(_id);
   console.log(data.result);
   if (!data.result || !data.result.success) {
     data.error = errorMessage;
-    status = 500;
+    status = httpStatus.INTERNAL_SERVER_ERROR;
   }
   else if (!data.result.card_exists){
     data.error = `Card ${_id} does not exist!`
-    status = 400;
+    status = httpStatus.BAD_REQUEST;
   } else {
-    status = 200;
+    status = httpStatus.OK;
   }
   
   reply.status(status).send(data);
@@ -439,7 +440,7 @@ fastify.get("/api/card_ids", async(request, reply) => {
   if (!data.result || !data.result.success){
      data.error = errorMessage;
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 });
 
@@ -457,7 +458,7 @@ fastify.get("/api/card_links", async(request, reply) => {
     }
     
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 });
 
@@ -479,7 +480,7 @@ fastify.get("/api/n_card_ids/:n", async(request, reply) => {
     }
     
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 
 })
@@ -492,7 +493,7 @@ fastify.get("/api/n_cards/:n", async(request, reply) => {
     data.error = errorMessage;
   }
 
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 });
 
@@ -501,13 +502,13 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
   let except = -1;
   if (!request.params || !request.params.n){
     data.error = `please define a value for n and except. ${request.hostname}/api/n_cards_except/NUMBER/ID_TO_OMIT`;
-    reply.status(400).send(data);
+    reply.status(httpStatus.BAD_REQUEST).send(data);
     return;
   }
   else if (!request.params.except){
     data.error = `If you don't want to exclude a card, please use ${request.hostname}/api/n_cards/${request.params.n} instead.`;
     data.useThis = `http://${request.hostname}/api/n_cards/${request.params.n}`;
-    reply.status(303).send(data);
+    reply.status(httpStatus.SEE_OTHER).send(data);
     return;
   }
   else {
@@ -517,6 +518,8 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
     } catch (error){
       console.log(error);
       data.error = `hey it looks like ${request.params.except} wasn't a number smh my head`;
+      reply.status(httpStatus.BAD_REQUEST).send(data);
+      return;
     }
   }
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
@@ -534,7 +537,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
     data.result = {success : allIDs.success};
     data.result.entries = sampledIDs;
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 });
 
@@ -544,7 +547,7 @@ fastify.get("/api/wins/:c1/:c2", async(request, reply) => {
   if (!data.result || !data.result.success){
     data.error = errorMessage;
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
 });
 
@@ -569,13 +572,13 @@ fastify.post("/api/declare_winner", async(request, reply) => {
   if (!body || !body.winner || !body.loser){
     data.success = false;
     data.error = "please declare a 'winner' and a 'loser'";
-    reply.status(400).send(data);
+    reply.status(httpStatus.BAD_REQUEST).send(data);
     return;
   }
   else if (body.winner == body.loser){
     data.success = false;
     data.error = "the 'winner' and the 'loser' can't be the same card!";
-    reply.status(400).send(data);
+    reply.status(httpStatus.BAD_REQUEST).send(data);
     return;
   }
   
@@ -585,10 +588,10 @@ fastify.post("/api/declare_winner", async(request, reply) => {
   if (!data.result || !data.result.success){
     data.error = (data.result.existsAlready) ? "A record for these two cards exists already!" :  errorMessage;
 
-    reply.status(400).send(data);
+    reply.status(httpStatus.CONFLICT).send(data);
     return;
   }
-  reply.status(200).send(data);
+  reply.status(httpStatus.OK).send(data);
 
 });
 
@@ -607,7 +610,7 @@ fastify.post("/api/report", async (request, reply) => {
   else {
     data = db.reportThisCard(request.body.id);
   }
-  const status = data.success ? 201 : 400;
+  const status = data.success ? httpStatus.CREATED : httpStatus.BAD_REQUEST;
   reply.status(status).send(data);
 });
 
@@ -619,7 +622,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
   if (!request.body){
     data.success = false;
     data.error = "you forgor to submit the form :skull:";
-    response = 400;
+    response = httpStatus.BAD_REQUEST;
   }
   else{
 
@@ -631,14 +634,14 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
     ){
       data.success = false;
       data.error = "please give your card a `name`.";
-      response = 400;
+      response = httpStatus.BAD_REQUEST;
     }
     else if (
       !request.body.beats_loses_choice || request.body.beats_loses_choice.trim() == false
     ){
       data.success = false;
       data.error = "you need to pick a card which your card beats/loses to! (`beats_loses_choice`)";
-      response = 400;
+      response = httpStatus.BAD_REQUEST;
     }
     else {
       try{
@@ -648,7 +651,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
       } catch(error){
         data.success = false;
         data.error = "expected `beats_loses_choice` to be in the form `beats_id,loses_to_id`, and it wasn't!";
-        response = 400;
+        response = httpStatus.BAD_REQUEST;
       }
     }
 
@@ -670,7 +673,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
       if (data.success){
         result.view_url = `http://${request.hostname}/view_card/${result.cardID}`;
         data.result = result;
-        response = 201;
+        response = httpStatus.CREATED;
 
         reply.redirect(result.view_url);
         return;
@@ -682,7 +685,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
     }
 
     if (response == 0){
-      response = (data.success ? 201 : 400);
+      response = (data.success ? httpStatus.CREATED : httpStatus.BAD_REQUEST);
     }
     reply.status(response).send(data);
 
@@ -712,7 +715,7 @@ fastify.post("/api/add_card", async(request, reply) => {
     data.twoOthers = `http://${request.hostname}/api/new_card_two_others/${data.result.cardID}`;
     data.success = data.result.success;
   }
-  const status = data.success ? 201 : 400;
+  const status = data.success ? httpStatus.CREATED : httpStatus.BAD_REQUEST;
   reply.status(status).send(data);
 });
 
@@ -722,7 +725,7 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
   let data = {};
   if (!request.params || !request.params.newID){
     data.error = `please define a value for newID. ${request.hostname}/api/two_other_cards/ID_OF_NEW`;
-    reply.status(400).send(data);
+    reply.status(httpStatus.BAD_REQUEST).send(data);
     return;
   }
 
@@ -739,7 +742,7 @@ fastify.get("/api/two_other_cards/:newID", async(request, reply) => {
     data.result = {success : allIDs.success};
     data.result.entries = sampledIDs;
   }
-  const status = data.error ? 400 : 200;
+  const status = data.error ? httpStatus.INTERNAL_SERVER_ERROR : httpStatus.OK;
   reply.status(status).send(data);
 
 });
@@ -753,8 +756,7 @@ fastify.get("/temp_game",function(req, reply) {
 */
 
 fastify.get("/i",function(req, reply) {
-  reply.header('content-type', 'text/html; charset=utf-8');
-  reply.sendFile("index.html");
+  return req.redirect("/");
 })
 
 
@@ -762,7 +764,7 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
 
 
   if (!req.params || !req.params.handSize){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "Please declare a hand size parameter!"
       }
@@ -771,14 +773,14 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
   
   const handSize = parseInt(req.params.handSize);
   if (handSize === NaN){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `given hand size ${req.params.handSize} isn't a number smh my head`
       }
     )
   }
   else if (handSize < 1){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "Please declare a hand size of at least 1"
       }
@@ -834,7 +836,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 
 
   if (!req.params || !req.params.handSize){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Please declare a hand size and go to http://${req.hostname}/drawHands/HAND_SIZE`
       }
@@ -846,14 +848,14 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 
   
   if (handSize === NaN){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `given hand size ${req.params.handSize} isn't a number smh my head`
       }
     )
   }
   else if (handSize < 1){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "Please declare a hand size of at least 1"
       }
@@ -876,7 +878,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   try{
     rawSeed = ShortURL.decode(seed);
   } catch (error){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "that's not a valid seed 🗞️",
         go_to: `http://${req.hostname}/draw_hands/${handSize}`
@@ -894,7 +896,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   const cardCountResult = db.getCardCount();
 
   if (cardCountResult.success == false){
-    reply.status(500).send(
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
       {
         error: "Unable to check how many cards the database actually has!"
       }
@@ -902,7 +904,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     return;
   }
   else if (cardCountResult.cards < totalNeeded){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Cannot support a game with a hand size of ${handSize} - ${totalNeeded} total cards required (two hands), database only has ${cardCountResult.cards}! Consider contributing some more cards yourself.`,
         go_to: `http://${req.hostname}/submit_card`
@@ -916,7 +918,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 
   
   if (!randomCards.success){
-    reply.status(500).send(
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
       {
         error: `Unable to successfully obtain ${totalNeeded} cards from database (seed ${rawSeed})!`
       }
@@ -998,7 +1000,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   
   
   if (Number.isNaN(_id1)){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `c1 input ${req.params.c1} is not a valid card!`
       }
@@ -1006,7 +1008,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
   else if (Number.isNaN(_id2)){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `c2 input ${req.params.c2} is not a valid card!`
       }
@@ -1014,7 +1016,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
   else if (_id1 == _id2){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `how/why are you trying to put card ${req.params.c1} against itself??`
       }
@@ -1032,7 +1034,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
   const res_c2 = db.getCard(_id2);
 
   if (!res_c1.success){
-    reply.status(500).send(
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
       {
         error: `Unable to retrieve card ${_id1}`
       }
@@ -1040,7 +1042,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
   else if (!res_c2.success){
-    reply.status(500).send(
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send(
       {
         error: `Unable to retrieve card ${_id2}`
       }
@@ -1048,7 +1050,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
   else if (!res_c1.card_exists){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Card ${_id1} does not exist!`
       }
@@ -1056,7 +1058,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     return;
   }
   else if (!res_c2.card_exists){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Card ${_id2} does not exist!`
       }
@@ -1201,7 +1203,7 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
 
 
   return;
-  reply.status(501).send({
+  reply.status(httpStatus.NOT_IMPLEMENTED).send({
     error: "not yet implemented",
     winner_id: winner_id,
     loser_id: loser_id,
@@ -1228,7 +1230,7 @@ fastify.post("/game/verdict", (req, reply) => {
   const _exist_check = db.checkIfCardsExist(_c1, _c2);
 
   if (!(_exist_check.success && _exist_check.all_exist)){
-    reply.status(400).send({
+    reply.status(httpStatus.BAD_REQUEST).send({
       c1: _c1,
       c2: _c2,
       whichActuallyExist: _exist_check.exists,
@@ -1240,7 +1242,7 @@ fastify.post("/game/verdict", (req, reply) => {
   const _winner = parseInt(bodyData.verdict);
 
   if ((_winner != _c1) && (_winner != _c2)){
-    reply.status(400).send(
+    reply.status(httpStatus.BAD_REQUEST).send(
       {
         c1: _c1,
         c2: _c2,
@@ -1256,7 +1258,7 @@ fastify.post("/game/verdict", (req, reply) => {
   const precedent = db.getWinData(_winner, _loser);
 
   if (!precedent.success){
-    reply.status(500).send({
+    reply.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       winner: _winner,
       loser: _loser,
       error: `unable to verify status of cards ${_winner} and ${_loser}`
@@ -1284,7 +1286,7 @@ fastify.post("/game/verdict", (req, reply) => {
     const win_added_outcome = db.setWinData(_winner, _loser);
 
     if (!win_added_outcome.success){
-      reply.status(500).reply(
+      reply.status(httpStatus.INTERNAL_SERVER_ERROR).reply(
         {
           winner: _winner,
           loser: _loser,
@@ -1308,11 +1310,41 @@ fastify.post("/game/verdict", (req, reply) => {
 // for emergency use only.
 fastify.get("/api/admin/delete/:id", async(request, reply) => {
   
-  reply.status(400).send({message:"no."});
+  reply.status(httpStatus.UNAUTHORIZED).send({message:"no."});
   return false;
-  //reply.status(200).send(db.deleteCard(request.params.id));
+  //reply.status(httpStatus.AUTHORIZED).send(db.deleteCard(request.params.id));
   
 });
+
+// and now some stuff that allows the database to be obtained for archiving purposes
+
+/**
+ * generates correct filename URL for database download and redirects
+ * @param {import("fastify/types/request.js").FastifyRequest} req 
+ * @param {import("fastify/types/reply.js").FastifyReply} reply
+ */
+function _archive_redirect(req, reply){
+  reply.redirect(`/api/archive/cards ${new Date(Date.now()).toISOString().replaceAll(":","-")}.db`);
+}
+
+fastify.get("/api/xcvg", (req, reply) => {
+  // see https://discord.com/channels/328746547716292609/328746547716292609/1140864868518477914
+  _archive_redirect(req, reply)
+});
+
+fastify.get("/api/archive", (req, reply) => {
+  _archive_redirect(req, reply);
+});
+
+fastify.get("/api/archive/:fname", (req, reply) => {
+
+  if (!req.params || !req.params.fname){
+    _archive_redirect(req, reply);
+    return;
+  }
+  reply.type("application/vnd.sqlite3");
+  reply.sendFile("cards.db",path.join(".data"),{serveDotFiles: true, extensions:"db"});
+})
 
 
 
