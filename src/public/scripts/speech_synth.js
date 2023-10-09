@@ -48,6 +48,8 @@ function speak_this(words_to_speak){
         window.dispatchEvent(ttsDone);
     }
 
+    speechSynthesis.resume();
+    
     const utterThis = new SpeechSynthesisUtterance(words_to_speak);
     utterThis.voice = randomItem(voices);
 

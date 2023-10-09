@@ -1291,7 +1291,7 @@ fastify.post("/game/verdict", (req, reply) => {
           winner: _winner,
           loser: _loser,
           p1_won: p1_won,
-          error: `Error adding data for ${winner} beating ${loser} to the database!`
+          error: `Error adding data for ${_winner} beating ${_loser} to the database!`
         }
       );
       return;
@@ -1312,7 +1312,7 @@ fastify.get("/api/admin/delete/:id", async(request, reply) => {
   
   reply.status(httpStatus.UNAUTHORIZED).send({message:"no."});
   return false;
-  //reply.status(httpStatus.AUTHORIZED).send(db.deleteCard(request.params.id));
+  //reply.status(httpStatus.OK).send(db.deleteCard(request.params.id));
   
 });
 
