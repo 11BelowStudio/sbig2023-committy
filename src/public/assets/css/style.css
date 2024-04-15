@@ -114,35 +114,36 @@ h1{
     flex-direction: row;
   }
   
-  div.sidebar {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column; 
-    justify-content: flex-start;
-    align-items: center;
+  div.sidebar, aside.sidebar {
+    columns: 100% 1;
+    justify-content: start;
+    align-items: start;
+    text-align: center;
     text-align: center;
     background-color: var(--currentLine, #181818);
     margin: 4px;
     padding: 0px;
-    width: 280px;
+    max-width: 280px;
     position: fixed;
-    height: 100%;
-    overflow: auto;
-    white-space: wrap;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x : hidden;
   }
   
-  div.sidebar div{
+  div.sidebar div, aside.sidebar div{
     
     background-color: #202020;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-    margin: 4px;
+    box-sizing: border-box;
+    margin: 2.5%;
     padding: 0px;
     width: 95%;
   }
   
-  div.content {
+  div.content, article.content {
     margin-left: 290px;
     padding: 1px 8px;
     height: auto;
@@ -161,17 +162,22 @@ h1{
      flex-direction: column; 
     }
     
-    div.sidebar {
+    div.sidebar, aside.sidebar {
       
-      justify-content: flex-start;
-      align-items: center;
+      justify-content: start;
+      align-items: start;
       text-align: center;
       width: auto;
       height: auto;
+      top: auto;
+      bottom: auto;
+      min-height: 0;
+      max-height: none;
+      max-width: none;
       position: relative;
       /*order: 2;*/
     }
-    div.content {
+    div.content, article.content {
       margin-left: 0;
       padding: 4px 4px;
       /*order: 1;*/
