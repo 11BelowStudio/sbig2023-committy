@@ -1,5 +1,5 @@
 const index_seo = {
-    glitch_help_instructions: "For a custom domain, change the 'url' parameter from 'glitch-default' to your domain _without_ a traling slash, like 'https://www.example.com'",
+    glitch_help_instructions: "For a custom domain, change the 'url' parameter from 'glitch-default' to your domain _without_ a trailing slash, like 'https://www.example.com'",
     title: "Committy",
     description: "The collaborative card game that you may or may not regret unwillingly contributing to",
     url: "https://committy.glitch.me",
@@ -15,15 +15,15 @@ function view_card_seo(id){
         return {
             title: "Committy - View a random card!",
             description: "Ever wanted to see a random card from Committy? Well, now's your chance!",
-            url: "https://committy.glitch.me/view_card",
-            image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+            url: `${index_seo.url}/view_card`,
+            image: index_seo.image
         }
     }
     return {
         title: `Committy - Viewing card #${id}`,
         description: "I wonder what this card is!",
-        url: `https://committy.glitch.me/view_card/${id}`,
-        image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+        url: `${index_seo.url}//view_card/${id}`,
+        image: index_seo.image
     }
 }
 
@@ -38,8 +38,8 @@ function mvp_game_seo(hand_size, seed) {
     return {
         title: "Committy (the game itself)",
         description: "Simply pick whichever card you think is objectively superior to whatever card you think your opponent will choose.",
-        url: `https://committy.glitch.me/game/${hand_size}/${seed}`,
-        image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+        url: `${index_seo.url}/game/${hand_size}/${seed}`,
+        image: index_seo.image
     }
 }
 
@@ -47,23 +47,23 @@ function mvp_judgement_seo(c1, c2) {
     return {
         title: "Committy - Judgement time!",
         description: "Which of these two cards is objectively superior?",
-        url: `https://committy.glitch.me/game/chosen/${c1}/${c2}`,
-        image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+        url: `${index_seo.url}/game/chosen/${c1}/${c2}`,
+        image: index_seo.image
     }
 }
 
 const submit_card_seo = {
     title: "Committy - Card Creator",
     description: "Do you think all of the existing cards in Committy are bad? Yes? Well, here's your chance to add something better",
-    url: "https://committy.glitch.me",
-    image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+    url: `${index_seo.url}/submit_card`,
+    image: index_seo.image
 }
 
 const mvp_verdict_seo = {
     title: "Committy - Judgement time!",
     description: "Let's see which card is the best card!",
-    url: `https://committy.glitch.me/game/verdict`,
-    image: "https://cdn.glitch.global/4b696f81-b7e8-4183-8f3c-c687afece712/committy_logo.png?v=1692028542027"
+    url: `${index_seo.url}/game/verdict`,
+    image: index_seo.image
 }
 
 export{

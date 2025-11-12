@@ -35,7 +35,7 @@ const rngSeedSource = () => webcrypto.getRandomValues(new Uint32Array(1))[0];
 
 
 import _fs_formbody from "@fastify/formbody";
-import io from "fastify-socket.io";
+//import io from "fastify-socket.io";
 
 fastify.register(_fs_formbody);
 
@@ -52,11 +52,8 @@ if (index_seo.url === "glitch-default") {
   index_seo.url = `https://committy.glitch.me`;
 }
 
-//fastify.register(require("@fastify/formbody"));
 
-//const io = require("fastify-socket.io");
-
-fastify.register(io);
+//fastify.register(io);
 
 import { Random } from 'random';
 import seedrandom from 'seedrandom';
@@ -64,7 +61,6 @@ import seedrandom from 'seedrandom';
 
 import { InMemorySessionStore } from "./SessionStore.js";
 
-//const { InMemorySessionStore } = require("./SessionStore");
 const sessionStore = new InMemorySessionStore();
 
 import _fs_view from "@fastify/view";
@@ -81,19 +77,9 @@ fastify.register(
 );
 
 
-/*
-fastify.register(require("@fastify/view"), {
-  engine: {
-    handlebars: require("handlebars"),
-  },
-});
-*/
-
 import * as db from "./db/sqlite.js";
 
-//const db = require("./db/sqlite.js");
 import { card_consts } from "./constants.js";
-//const { card_consts } = require("./constants.js");
 
 import _fs_static from "@fastify/static";
 
@@ -107,12 +93,6 @@ fastify.register(_fs_static, {
 });
 
 
-/*
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname,'../','public'),
-  prefix: "/", // optional: default '/'
-});
-*/
 
 // Helper function to authenticate the user key
 const authorized = key => {
@@ -137,9 +117,6 @@ export{
 
 import {ShortURL} from "./utils/ShortURL.js";
 import httpStatus from "http-status";
-
-
-//const ShortURL = require("./utils/ShortURL");
 
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
@@ -1201,8 +1178,7 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
   reply.header('content-type', 'text/html; charset=utf-8');
   return reply.view("/src/client/new_precedent_established.hbs", params);
 
-
-  return;
+  /*
   reply.status(httpStatus.NOT_IMPLEMENTED).send({
     error: "not yet implemented",
     winner_id: winner_id,
@@ -1210,7 +1186,7 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
     p1_won: p1_won,
     overruled, new_outcome,
     when_precedent, when_precedent
-  });
+  });*/
 }
 
 
@@ -1384,7 +1360,7 @@ fastify.ready(err => {
   
   return; 
   // ignore this, we aren't actually using sockets
-
+  /*
   fastify.io.use((socket, next) => {
   
     const sessionID = socket.handshake.auth.sessionID;
@@ -1408,7 +1384,8 @@ fastify.ready(err => {
     next();
   });
 
-  fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id))
+  fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id));
+  */
 })
 
 
