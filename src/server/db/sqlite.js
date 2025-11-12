@@ -80,7 +80,7 @@ if (!exists){
     {
       name:"Kevin",
       desc:"Holy shit it's Kevin!!!",
-      img: "https://i.imgur.com/rf0hpyh.png",
+      img: "https://i.postimg.cc/nL5pD7K1/kevin.png",
       s1: 10,
       s2: 3,
       s3: 4,
@@ -89,7 +89,7 @@ if (!exists){
     {
       name:"Ke'in",
       desc:"Kevin's evil bri'ish counterpart. He's rather rude.",
-      img: "https://i.imgur.com/hIHI4M5.png",
+      img: "https://i.postimg.cc/zDT8yyyK/ke-in.png",
       s1: 2,
       s2: 5,
       s3: 4,
@@ -98,7 +98,7 @@ if (!exists){
     {
       name:"An open Nokia E72",
       desc:"as photographed by highwycombe on wikipedia.",
-      img: "https://upload.wikimedia.org/wikipedia/commons/6/65/NokiaE72Open.JPG",
+      img: "https://i.postimg.cc/hGMKP6v2/Nokia-E72Open.jpg",
       s1: 7,
       s2: 2,
       s3: 7,
@@ -1183,7 +1183,7 @@ function getReport(reportID) {
     const stmt = db.prepare("SELECT * FROM reports WHERE id = ?");
     //success = await db.run("SELECT * FROM reports WHERE id = ?"", reportID);
     result.entries = stmt.all(reportID);
-    success = (result.entries != false || result.entries.length > 0);
+    const success = (result.entries != false || result.entries.length > 0);
     //console.log(result);
 
     //result.data = await db.all("SELECT * FROM reports WHERE id = ?",reportID);
