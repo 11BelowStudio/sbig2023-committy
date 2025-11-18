@@ -17,8 +17,9 @@ import {
 
 
 import {
+  isNumber,
   sample
-} from "underscore";
+} from 'underscore'
 
 import random from "random";
 
@@ -50,9 +51,9 @@ db.pragma('journal_mode = WAL');
 if (!exists){
 
   const cardsTableStmt = db.prepare(
-    `CREATE TABLE cards (
+    `CREATE TABLE IF NOT EXISTS cards (
         id INTEGER NOT NULL PRIMARY KEY,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
         desc TEXT NOT NULL,
         img TEXT NOT NULL,
         stat1 INTEGER NOT NULL DEFAULT 1,
@@ -122,7 +123,7 @@ if (!exists){
 
 
   const winsTableStmt = db.prepare(
-    `CREATE TABLE wins (
+    `CREATE TABLE IF NOT EXISTS wins (
         winner_id INTEGER NOT NULL,
         loser_id INTEGER NOT NULL,
         time INTEGER NOT NULL,
@@ -140,7 +141,7 @@ if (!exists){
 
 
   const reportTableStmt = db.prepare(
-    `CREATE TABLE reports(
+    `CREATE TABLE  IF NOT EXISTS reports(
         id INTEGER NOT NULL PRIMARY KEY,
         card_id INTEGER NOT NULL,
         time INTEGER NOT NULL,
@@ -317,10 +318,10 @@ function getCardIDs() {
 /**
  * gets the IDs of n random cards, chosen randomly
  * @param {int} cardsToGet how many cards we want
- * @param {*} seed we're using for the RNG
+ * @param {*} seedToUse the seed we're using for the RNG (optional)
  * @returns object of { success: bool, entries: [{id: int}], ids: []}
  */
-function getRandomCardIDs(cardsToGet, seedToUse) {
+function getRandomCardIDs(cardsToGet, seedToUse = undefined) {
 
   let result = {success: false, entries: []};//, ids: []};
 
@@ -331,25 +332,24 @@ function getRandomCardIDs(cardsToGet, seedToUse) {
     return result;
   }
 
-  const givenSeed = (seedToUse !== undefined && seedToUse != null && seedToUse != NaN);
+  const givenSeed = (seedToUse === undefined || seedToUse == null || Number.isNaN(seedToUse));
 
-  console.log(`${givenSeed}, ${seedToUse}`);
+  //console.log(`${givenSeed}, ${seedToUse}`);
 
   result = getCardIDs();
 
   //console.log(result);
 
-  if (result.success == false){
+  if (result.success === false){
     return result;
   }
 
   let allEntries = result.entries;
-
-  
-
+  /*
   for(let ient = 0; ient < allEntries.length; ient++){
     console.log(allEntries[ient]);
   }
+ */
 
 
   if (givenSeed){
@@ -357,10 +357,10 @@ function getRandomCardIDs(cardsToGet, seedToUse) {
     
     cardsToGet = Math.max(Math.min(cardsToGet, allEntries.length), 0);
 
-    var last = allEntries.length - 1;
-    for (var index = 0; index < cardsToGet; index++){
-      var rand = rng.integer(index, last);
-      var temp = allEntries[index];
+    const last = allEntries.length - 1
+    for (let index = 0; index < cardsToGet; index++){
+      const rand = rng.integer(index, last)
+      const temp = allEntries[index]
       allEntries[index] = allEntries[rand];
       allEntries[rand] = temp;
     }
@@ -400,7 +400,7 @@ function checkIfCardsExist(...ids){
 
   let result = {success: false, exists: [], all_exist: false, message: ""};
 
-  if (ids.length == 0){
+  if (ids.length === 0){
     // technically the truth.
     result.message = "all 0 of these IDs exist, but why would you want to check that?";
     result.success = true;
@@ -460,7 +460,7 @@ function getCardCount(){
 
   try {
     result.cards = db.prepare("SELECT count(id) FROM cards").pluck().get();
-    result.success = (result.cards != NaN);
+    result.success = (!isNaN(result.cards));
   } catch (dbError){
     console.error(dbError);
   }
@@ -1253,13 +1253,13 @@ function deleteReportsForCard(cardId) {
    *     entries:[{id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int}]
    *   }
    */
-function getRandomCards(cardsToGet, seedToUse) {
+function getRandomCards(cardsToGet, seedToUse = undefined) {
 
   let result = {success: false, entries: []};
 
-  if (cardsToGet < 0){
+  if (!isNumber(cardsToGet) || Number.isNaN(cardsToGet) || !Number.isFinite(cardsToGet) || cardsToGet < 0){
     return result;
-  } else if (cardsToGet == 0){
+  } else if (cardsToGet === 0){
     result.success = true;
     return result;
   }

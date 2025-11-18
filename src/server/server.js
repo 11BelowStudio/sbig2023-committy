@@ -135,7 +135,12 @@ fastify.addHook("onRoute", routeOptions => {
  * @param {import("fastify/types/reply.js").FastifyReply} reply 
  * @returns reply.view stuff.
  */
-function _index(req, reply){
+function _index(
+  req,
+  reply
+){
+
+  //console.log(req);
 
   if (req.query.raw){
     reply.send({seo:index_seo});
@@ -184,18 +189,30 @@ function _index(req, reply){
   return reply.view("/src/client/index.hbs", params);
 }
 
-fastify.get('/index', function (req, reply) {
+
+fastify.get('/index', function (
+    req,
+    reply
+) {
   reply.redirect("/");
 })
 
-fastify.get('/', function (req, reply) {
+fastify.get('/',
+  function (
+    req,
+    reply
+) {
   _index(req, reply)
 })
 
 
 
 // Just send some info at the home route
-fastify.get("/api", (request, reply) => {
+fastify.get("/api",
+    (
+        request,
+        reply
+    ) => {
   const data = {
     title: "Committy API",
     intro: "This is a database-backed API with the following endpoints",
@@ -204,7 +221,11 @@ fastify.get("/api", (request, reply) => {
   reply.status(httpStatus.OK).send(data);
 });
 
-fastify.get('/submit_card', async(req, reply) => {
+fastify.get('/submit_card',
+    async(
+        req,
+        reply
+    ) => {
 
   if (req.query.raw){
     return req.reply({seo: submit_card_seo});
@@ -239,14 +260,22 @@ fastify.get('/submit_card', async(req, reply) => {
   return reply.view("/src/client/submit_card.hbs", params);
 })
 
-fastify.get('/view_card', async(req, reply) => {
+fastify.get('/view_card',
+    async(
+        req,
+        reply
+    ) => {
   if (req.query.raw){
     return req.reply({seo:view_card_seo("random")});
   }
   reply.redirect("/view_card/random");
 })
 
-fastify.get('/view_card/:id', async(req, reply) => {
+fastify.get('/view_card/:id',
+    async(
+        req,
+        reply
+    ) => {
   let cardID = -1;
 
   if (req.query.raw){
@@ -376,7 +405,11 @@ fastify.delete("/message", async (request, reply) => {
 });
 */
 
-fastify.get("/api/cards", async(request, reply) => {
+fastify.get("/api/cards",
+    async(
+        request,
+        reply
+    ) => {
   
   let data = {};
   data.result = db.getAllCards();
@@ -387,7 +420,11 @@ fastify.get("/api/cards", async(request, reply) => {
   
 });
 
-fastify.get("/api/card/:id", async(request, reply) => {
+fastify.get("/api/card/:id",
+    async(
+        request,
+        reply
+    ) => {
   const _id = parseInt(request.params.id);
   let data = {id: _id };
   console.log(request.params);
@@ -410,7 +447,11 @@ fastify.get("/api/card/:id", async(request, reply) => {
 
 });
 
-fastify.get("/api/card_ids", async(request, reply) => {
+fastify.get("/api/card_ids",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
   data.result = db.getCardIDs();
   console.log(data.result);
@@ -424,7 +465,11 @@ fastify.get("/api/card_ids", async(request, reply) => {
 /**
  * obtains the cards via HATEOAS (Hypermedia As The Engine of Application State)
  */
-fastify.get("/api/card_links", async(request, reply) => {
+fastify.get("/api/card_links",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
   data.result = db.getCardIDs();
   if (!data.result || !data.result.success){
@@ -440,7 +485,11 @@ fastify.get("/api/card_links", async(request, reply) => {
 });
 
 
-fastify.get("/api/n_card_ids/:n", async(request, reply) => {
+fastify.get("/api/n_card_ids/:n",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
 
   data.result = db.getRandomCardIDs(request.params.n);
@@ -462,7 +511,10 @@ fastify.get("/api/n_card_ids/:n", async(request, reply) => {
 
 })
 
-fastify.get("/api/n_cards/:n", async(request, reply) => {
+fastify.get("/api/n_cards/:n", async(
+    request,
+    reply
+) => {
   let data = {};
 
   data.result = db.getRandomCards(request.params.n);
@@ -530,7 +582,10 @@ fastify.get("/api/wins/:c1/:c2", async(request, reply) => {
 
 
 
-fastify.post("/api/declare_winner", async(request, reply) => {
+fastify.post("/api/declare_winner", async(
+    request,
+    reply
+) => {
 
   let data = {};
 
@@ -574,7 +629,11 @@ fastify.post("/api/declare_winner", async(request, reply) => {
 
 
 
-fastify.post("/api/report", async (request, reply) => {
+fastify.post("/api/report",
+    async (
+        request,
+        reply
+    ) => {
   let data = {
     success: false,
     message: ""
@@ -592,7 +651,11 @@ fastify.post("/api/report", async (request, reply) => {
 });
 
 
-fastify.post("/api/submit_card_form", async(request, reply) => {
+fastify.post("/api/submit_card_form",
+    async(
+        request,
+        reply
+    ) => {
 
   let data = {success: false};
   let response = 0;
@@ -661,7 +724,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
 
     }
 
-    if (response == 0){
+    if (response === 0){
       response = (data.success ? httpStatus.CREATED : httpStatus.BAD_REQUEST);
     }
     reply.status(response).send(data);
@@ -672,7 +735,11 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
 
 });
 
-fastify.post("/api/add_card", async(request, reply) => {
+fastify.post("/api/add_card",
+    async(
+        request,
+        reply
+    ) => {
 
   let data = {};
   if(!request.body || !request.body.name){
@@ -1392,8 +1459,6 @@ fastify.ready(err => {
 // Run the server and report out to the logs
 fastify.listen({
   port:process.env.PORT,
-  //host:'0.0.0.0'
-  host: 'localhost'
 }, function(err, address) {
   if (err) {
     console.error(err);

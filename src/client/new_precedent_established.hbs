@@ -19,64 +19,63 @@
         <meta name="robots" content="noindex, nofollow">
     </head>
     <body>
-        <div style="display: block; position: center;">
-            <div id="veryproper" ></div>
-        </div>
-
-        <div class="scroller"> <!--<div class="bigMarq">-->
-            <div class ="scroller scroller_container" style="animation-duration:125s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
-                <div class="mid">
-                    <h1 style="text-decoration: underline;">Þe Declaration of Þhe Committy</h1>
-                </div>
-                <div class="just">
-                    <p>
-                        <b>IT Is Hereby Declared</b>, in þe presence of and by þe grace and mercy of
-                        our most supreme and glorious benevolent overlord and patron of þe Committy,
-                        <b>Votebot</b>, þat þe following truþ, hereby established by þe suggestions
-                        of my most honourable friends here, shall be enshrined and codified and 
-                        referred to as <b>Precedent</b> for all time:
-                    </p>
-                    <p>
-                        <b>Þe Most Esteemed</b> and worshipful card of <b>{{ win.name }}</b>,
-                        þe card bearing þe most glorious and most pleasing sigil of <b>#{{ win.id }}</b>
-                        in þe Committy deck, as played by my most honourable and respected friend,
-                        <b>Player {{ winner }}</b>, is objectively superior and better in every way,
-                        shape, and form, boþ measurable and immeasurable, þan þe most unpleasant
-                        and inferior and þoroughly abhorrent card of <b>{{ lose.name }}</b>, bearing þe
-                        unimpressive and þoroughly resentful mark of <b>#{{ lose.id }}</b>, as played by
-                        my slightly less respectful and slightly less honourable friend,
-                        <b>Player {{ loser }}</b>.
-                    </p>
-                    <p>
-                        <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b>
-                        is
-                        put in contention against þe Card of <b>{{ lose.name }}</b>, þe most wise and learned
-                        individual whom played þe Card of <b>{{ win.name }}</b> shall have
-                        <b>Victory</b> most promptly
-                        and well-deserved conferred upon þem, in recognition of þis newly established
-                        <b>Precedent</b>.
-                    </p>
-                    <p>
-                        <b>Furþermore</b>, let it be also known þat any such unclean and uncultured
-                        <b>Heretic</b> whom
-                        disrespects þis <b>Most Glorious Precedent</b> shall most promptly <b>Snuff It</b>,
-                        for such is þe only just punishment for þose whom disregard such obvious and
-                        most self-evident <b>Precedent</b>.
-                    </p>
-                    <p>
-                        <b>Þis has been Decreed</b> by þe Committy, wiþ þe grace and glory of our most
-                        supreme Overlord and Patron of þe Committy <b>Votebot</b>, on second number {{ when.second }}
-                        of þe minute bearing þe number {{ when.minute }} of þe hour numbered {{ when.hour }}
-                        of þe {{when.day}} bearing þe day number {{ when.date }} of þe monþ number {{when.month}} of þe Year Of 
-                        Our Most Glorious Supreme Suggestor <b>Votebot</b> {{when.year}}.
-                    </p>
-                </div>
-                <div class="mid hidden" id="amen">
-                    <h2>
-                        <a href="/">Amen!</a>
-                    </h2>
-                </div>
-            </div><!--</marquee>-->
+        <div id="constitushun">
+            <div id="veryproper"></div>
+            <div class="mid result_header">
+                <h1 class="result_header" style="text-decoration: underline;">Þe Declaration of Þhe Committy</h1>
+            </div>
+            <div class="scroller"> <!--<div class="bigMarq">-->
+                <div class ="scroller scroller_container" style="animation-duration:60s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
+                    <div class="just">
+                        <p>
+                            <b>IT Is Hereby Declared</b>, in þe presence of and by þe grace and mercy of
+                            our most supreme and glorious benevolent overlord and patron of þe Committy,
+                            <b>Votebot</b>, þat þe following truþ, hereby established by þe suggestions
+                            of my most honourable friends here, shall be enshrined and codified and
+                            referred to as <b>Precedent</b> for all time:
+                        </p>
+                        <p>
+                            <b>Þe Most Esteemed</b> and worshipful card of <b>{{ win.name }}</b>,
+                            þe card bearing þe most glorious and most pleasing sigil of <b>#{{ win.id }}</b>
+                            in þe Committy deck, as played by my most honourable and respected friend,
+                            <b>Player {{ winner }}</b>, is objectively superior and better in every way,
+                            shape, and form, boþ measurable and immeasurable, þan þe most unpleasant
+                            and inferior and þoroughly abhorrent card of <b>{{ lose.name }}</b>, bearing þe
+                            unimpressive and þoroughly resentful mark of <b>#{{ lose.id }}</b>, as played by
+                            my slightly less respectful and slightly less honourable friend,
+                            <b>Player {{ loser }}</b>.
+                        </p>
+                        <p>
+                            <b>Henceforþ</b>, let it be ensured þat, wheresoe'er þe Card of <b>{{ win.name }}</b>
+                            is
+                            put in contention against þe Card of <b>{{ lose.name }}</b>, þe most wise and learned
+                            individual whom played þe Card of <b>{{ win.name }}</b> shall have
+                            <b>Victory</b> most promptly
+                            and well-deserved conferred upon þem, in recognition of þis newly established
+                            <b>Precedent</b>.
+                        </p>
+                        <p>
+                            <b>Furþermore</b>, let it be also known þat any such unclean and uncultured
+                            <b>Heretic</b> whom
+                            disrespects þis <b>Most Glorious Precedent</b> shall most promptly <b>Snuff It</b>,
+                            for such is þe only just punishment for þose whom disregard such obvious and
+                            most self-evident <b>Precedent</b>.
+                        </p>
+                        <p>
+                            <b>Þis has been Decreed</b> by þe Committy, wiþ þe grace and glory of our most
+                            supreme Overlord and Patron of þe Committy <b>Votebot</b>, on second number {{ when.second }}
+                            of þe minute bearing þe number {{ when.minute }} of þe hour numbered {{ when.hour }}
+                            of þe {{when.day}} bearing þe day number {{ when.date }} of þe monþ number {{when.month}} of þe Year Of
+                            Our Most Glorious Supreme Suggestor <b>Votebot</b> {{when.year}}.
+                        </p>
+                    </div>
+                    <div class="mid hidden" id="amen">
+                        <h2>
+                            <a href="/">Amen!</a>
+                        </h2>
+                    </div>
+                </div><!--</marquee>-->
+            </div>
         </div>
 
         <script type="text/javascript" src="/scripts/speech_synth.js"></script>

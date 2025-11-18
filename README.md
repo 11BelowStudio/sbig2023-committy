@@ -139,9 +139,9 @@ _Last updated: 10 July 2023_
 
 ← `README.md`: That’s this file, where you can tell people what your cool website does and how you built it.
 
-← `server.js`: The Node.js server defines the endpoints in the site API, processing requests, connecting to the database using the `sqlite.js` script, and sending info back to the client.
+← `server.ts`: The Node.js server defines the endpoints in the site API, processing requests, connecting to the database using the `sqlite.js` script, and sending info back to the client.
 
-← `sqlite.js`: The database script handles setting up and connecting to the SQLite database. The `server.js` API endpoints call the functions in the database script to manage the data.
+← `sqlite.js`: The database script handles setting up and connecting to the SQLite database. The `server.ts` API endpoints call the functions in the database script to manage the data.
 
 When the app runs, the scripts build the database:
 
