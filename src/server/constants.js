@@ -3,17 +3,7 @@
  * This is a file containing a bunch of constants
  */
 
-/*
-const {
-    preprocessWordLists,
-    textToLatin,
-    doesContainBadWords,
-    findBadWordLocations,
-    replaceBadWords
-} = require('deep-profanity-filter');
-const leofilter = require('leo-profanity');
-const { verifyImageURL } = require("verify-image-url");
-*/
+
 
 import {
     preprocessWordLists,
@@ -65,6 +55,42 @@ const card_consts = {
     }
 };
 
+// Write a function which returns four random integers, following these constraints:
+// 1. The integers must each be between 1 and card_consts.card_stat_max (inclusive). [this upper bound is currently 10]
+// 2. The sum of the four integers must not exceed card_consts.card_stat_total_max. [this upper bound is currently 21]
+//
+// The RNG call does not need to be seeded.
+// You can use Math.random(), crypto.getRandomValues(), or any other RNG - but don't reinvent the wheel.
+
+/**
+ * Randomly generates four valid stats for a card.
+ * Each stat will be between card_consts.card_stat_min and card_consts.card_stat_max (inclusive),
+ * and the sum of the stats will not exceed card_consts.card_stat_total_max.
+ *
+ * I think.
+ *
+ * Probably.
+ * @returns {number[]} four random integers for four random stats.
+ */
+const generate_random_card_stats = function () {
+  const stats = [0, 0, 0, 0]
+  let remainingPoints = card_consts.card_stat_total_max
+
+  for (let i = 0; i < 4; i++) {
+    const maxPossible = Math.min(card_consts.card_stat_max, remainingPoints - (3 - i))
+    stats[i] = Math.floor(Math.random() * (maxPossible - card_consts.card_stat_min + 1)) + card_consts.card_stat_min
+    remainingPoints -= stats[i]
+  }
+
+  // Shuffle the stats array for extra randomness
+  // (this might be redundant, but I suppose it prevents all the unconstrainted stats all being in the first few positions)
+  for (let i = stats.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [stats[i], stats[j]] = [stats[j], stats[i]]
+  }
+
+  return stats
+}
 /**
  * Probably redundant.
  *
@@ -178,7 +204,8 @@ const filtering = {
 }
 
 export {
-    card_consts,
-    glitchcom_consts,
-    filtering
+  card_consts,
+  generate_random_card_stats,
+  glitchcom_consts,
+  filtering
 }

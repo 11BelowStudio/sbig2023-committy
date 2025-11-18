@@ -4,7 +4,8 @@
  * @constant
  * @property {string} title - game name (Committy!)
  * @property {string} description - short description of Committy
- * @property {string} url - the URL of where we're hosting Committy. DEFINED BY process.env.WEBSITE
+ * @property {string} website - the name of the website hosting Committy (the same as process.env.WEBSITE)
+ * @property {string} url - the URL of where we're hosting Committy. (https://{process.env.WEBSITE})
  * @property {string} image - the URL of the image to use for SEO purposes.
  * Currently, serves the icon image (subdirectoried from process.env.WEBSITE),
  * but probably could be moved to a cdn image in the future
@@ -14,6 +15,7 @@
 const index_seo = {
   title: "Committy",
   description: "The collaborative card game that you may or may not regret unwillingly contributing to",
+  website: process.env.WEBSITE,
   url: `https://${process.env.WEBSITE}`,
   image: `https://${process.env.WEBSITE}/assets/icons/committy.svg`,
   db: "SQLite"
@@ -23,6 +25,7 @@ const index_seo = {
  * @typedef {Object} page_seo - subpage SEO parameters
  * @property {string} title - title of the page
  * @property {string} description - short description of the page
+ * @property {string} website - the base URL of the website hosting Committy (the same as index_seo.website)
  * @property {string} url - the URL of the page
  * @property {string} image - the URL of the image to use for SEO purposes
  */
@@ -39,6 +42,7 @@ function view_card_seo(id){
     return {
       title: "Committy - View a random card!",
       description: "Ever wanted to see a random card from Committy? Well, now's your chance!",
+      website: index_seo.website,
       url: `${index_seo.url}/view_card`,
       image: index_seo.image
     }
@@ -46,6 +50,7 @@ function view_card_seo(id){
   return {
     title: `Committy - Viewing card #${id}`,
     description: "I wonder what this card is!",
+    website: process.env.WEBSITE,
     url: `${index_seo.url}//view_card/${id}`,
     image: index_seo.image
   }
@@ -67,6 +72,7 @@ function mvp_game_seo(hand_size, seed) {
   return {
     title: "Committy (the game itself)",
     description: "Simply pick whichever card you think is objectively superior to whatever card you think your opponent will choose.",
+    website: process.env.WEBSITE,
     url: `${index_seo.url}/game/${hand_size}/${seed}`,
     image: index_seo.image
   }
@@ -81,6 +87,7 @@ function mvp_judgement_seo(c1, c2) {
   return {
     title: "Committy - Judgement time!",
     description: "Which of these two cards is objectively superior?",
+    website: process.env.WEBSITE,
     url: `${index_seo.url}/game/chosen/${c1}/${c2}`,
     image: index_seo.image
   }
@@ -93,6 +100,7 @@ function mvp_judgement_seo(c1, c2) {
 const submit_card_seo = {
   title: "Committy - Card Creator",
   description: "Do you think all of the existing cards in Committy are bad? Yes? Well, here's your chance to add something better",
+  website: process.env.WEBSITE,
   url: `${index_seo.url}/submit_card`,
   image: index_seo.image
 }
@@ -104,6 +112,7 @@ const submit_card_seo = {
 const mvp_verdict_seo = {
   title: "Committy - Judgement time!",
   description: "Let's see which card is the best card!",
+  website: process.env.WEBSITE,
   url: `${index_seo.url}/game/verdict`,
   image: index_seo.image
 }

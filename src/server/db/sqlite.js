@@ -50,29 +50,34 @@ db.pragma('journal_mode = WAL');
 // And now we populate db if it didn't already exist.
 if (!exists){
 
-  const cardsTableStmt = db.prepare(
-    `CREATE TABLE IF NOT EXISTS cards (
-        id INTEGER NOT NULL PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE,
-        desc TEXT NOT NULL,
-        img TEXT NOT NULL,
-        stat1 INTEGER NOT NULL DEFAULT 1,
-        stat2 INTEGER NOT NULL DEFAULT 1,
-        stat3 INTEGER NOT NULL DEFAULT 1,
-        stat4 INTEGER NOT NULL DEFAULT 1,
-      CHECK (
-        length(name) > 0
-        AND
-        (stat1 >= 1 AND stat1 <= 10)
-        AND
-        (stat2 >= 1 AND stat2 <= 10)
-        AND
-        (stat3 >= 1 AND stat3 <= 10)
-        AND
-        (stat4 >= 1 AND stat4 <= 10)
-      )
-    )
-    `
+  const cardsTableStmt = db.prepare($`
+    CREATE TABLE IF NOT EXISTS cards (
+     id INTEGER NOT NULL PRIMARY KEY,
+     name TEXT NOT NULL UNIQUE,
+     desc TEXT NOT NULL,
+     img TEXT NOT NULL,
+     stat1 INTEGER NOT NULL DEFAULT 1,
+     stat2 INTEGER NOT NULL DEFAULT 1,
+     stat3 INTEGER NOT NULL DEFAULT 1,
+     stat4 INTEGER NOT NULL DEFAULT 1,
+     CHECK (
+       ( length(name) > 0 and length(name) <= ${card_consts.card_name_length})
+         AND
+       (length(desc) <= ${card_consts.card_desc_length} )
+         AND
+       (length(img) <= ${card_consts.card_img_url_length})
+         AND
+       (stat1 >= ${card_consts.card_stat_min} AND stat1 <= ${card_consts.card_stat_max})
+         AND
+       (stat2 >= ${card_consts.card_stat_min}  AND stat2 <= ${card_consts.card_stat_max})
+         AND
+       (stat3 >= ${card_consts.card_stat_min}  AND stat3 <= ${card_consts.card_stat_max})
+         AND
+       (stat4 >= ${card_consts.card_stat_min}  AND stat4 <= ${card_consts.card_stat_max})
+         AND
+       (stat1 + stat2 + stat3 + stat4 <= ${card_consts.card_stat_total_max})
+     )
+   )`
   );
 
   cardsTableStmt.run();
@@ -84,8 +89,8 @@ if (!exists){
       img: "https://i.postimg.cc/nL5pD7K1/kevin.png",
       s1: 10,
       s2: 3,
-      s3: 4,
-      s4: 2
+      s3: 3,
+      s4: 5
     },
     {
       name:"Ke'in",
@@ -115,11 +120,16 @@ if (!exists){
     `
   );
 
+  /*
   const defaultCardsTransaction = db.transaction((allCards) =>{
     for (const card of allCards) insertCardStmt.run(card);
   });
 
   defaultCardsTransaction(defaultCards);
+  */
+  for (const card of allCards) {
+    insertCardStmt.run(card);
+  }
 
 
   const winsTableStmt = db.prepare(
@@ -304,7 +314,7 @@ function getCards(...args) {
 function getCardIDs() {
   let result = {success: false, entries: []};
   try{
-    const stmt = db.prepare("SELECT id FROM cards");
+    const stmt = db.prepare("SELECT id FROM cards ORDER BY id ASC");
     result.entries = stmt.all();
     //console.log(`${result.entries}, ${result.entries != false}`);
     //result.entries = await db.all("SELECT id FROM cards");
@@ -802,6 +812,15 @@ async function addCard(cardName, cardDesc, cardImg, s1, s2, s3, s4) {
 
   try {
 
+    if(
+      db.prepare("SELECT id FROM cards WHERE name = ?")
+        .get(cardName) !== undefined
+    ) {
+      result.message = `Card with name ${cardName} already exists in the database!`;
+      result.success = false;
+      return result;
+    }
+
 
     const stmt = db.prepare(
       "INSERT INTO cards(name, desc, img, stat1, stat2, stat3, stat4) "
@@ -871,7 +890,7 @@ async function addCardForm(
   if (cardItBeats == null || cardItLosesTo == null) {
     result.message = "you forgot to declare the IDs of the two cards which this new card beats/loses to";
     return result;
-  } else if (cardItBeats == cardItLosesTo){
+  } else if (cardItBeats === cardItLosesTo){
     result.message = `cardItBeats and cardItLoses to need to be different values. They can't both have the value of ${cardItBeats}`;
   } else {
     const othersExistResult = checkIfCardsExist(cardItBeats, cardItLosesTo);
@@ -1120,6 +1139,9 @@ async function deleteCard(id) {
     //success = await db.run("DELETE FROM cards WHERE id = ?", id);
     const result = stmt.run(id);
     success = (result.changes > 0);
+    if (success){
+      ensure_consecutive_ids();
+    }
     //console.log(result);
   } catch (dbError) {
     console.error(dbError);
@@ -1335,8 +1357,44 @@ function runBackup(){
 
 }
 
+/**
+ * Attempts to ensure all ids in the database are consecutive integers
+ */
+function ensure_consecutive_ids() {
 
+  try{
+    const ids_query = getCardIDs();
+    if (ids_query.success !== true){
+      return;
+    }
+    const ids = ids_query.entries;
+    for(let i = 1; i <= ids.length; i++){
+      if (ids[i-1].id !== i){
+        console.log(ids[i-1]);
+        db.prepare("UPDATE cards SET id = @new WHERE id = @old").run(
+          {
+            new: i,
+            old: ids[i-1].id
+          }
+        );
+      }
+    }
+  } catch (dbError){
+    console.error(dbError);
+  }
 
+  /*
+  const ids_query_2 = getCardIDs();
+  if (ids_query_2.success !== true){
+    return;
+  }
+  const ids2 = ids_query_2.entries;
+  for(let id in ids2){
+    console.log(`${id} ${ids2[id].id}`);
+  }
+  */
+
+}
 
 
 export {
@@ -1367,7 +1425,8 @@ export {
   getRandomCards,
   checkIfCardsExist,
 
-  
+
+  ensure_consecutive_ids,
 }
 
 

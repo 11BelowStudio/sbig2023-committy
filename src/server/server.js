@@ -79,7 +79,7 @@ fastify.register(
 
 import * as db from "./db/sqlite.js";
 
-import { card_consts } from "./constants.js";
+import { card_consts, generate_random_card_stats } from "./constants.js";
 
 import _fs_static from "@fastify/static";
 
@@ -228,7 +228,10 @@ fastify.get('/submit_card',
     ) => {
 
   if (req.query.raw){
-    return req.reply({seo: submit_card_seo});
+    return req.reply(
+      {
+        seo: submit_card_seo
+      });
   }
 
   let otherCards = [];
@@ -246,6 +249,7 @@ fastify.get('/submit_card',
   otherCards = otherResult.entries;
 
   let params = {
+    init_stats: generate_random_card_stats(),
     seo: submit_card_seo,
     card1: otherCards[0],
     card2: otherCards[1]
@@ -320,12 +324,15 @@ fastify.get('/view_card/:id',
 
   let params = {
     seo: view_card_seo(cardID),
+    card_id: cardID,
+    prev_id: cardID - 1,
+    next_id: cardID + 1,
     card: {
       id: `${cardID}???`,
       name : "A card that doesn't exist yet",
       colour: "card_error",
       desc: `hmm, the card with ID ${cardID} doesn't exist yet. Perhaps you can fix this problem by creating it.`,
-      img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Icon-round-Question_mark.svg",
+      img: "/assets/icons/question-mark.svg", //"https://i.postimg.cc/dtLFPt5d/question-mark.png",
       stat1: 0,
       stat2: 0,
       stat3: 0,
@@ -1033,7 +1040,11 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 });
 
 
-fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
+fastify.get("/game/chosen/:c1/:c2",
+  (
+    req,
+    reply
+  ) => {
 
   console.log(req.params);
   const _id1 = parseInt(req.params.c1);
@@ -1125,7 +1136,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     const winner_id = theWinData.winner_id;
     const loser_id = theWinData.loser_id;
     const when = theWinData.time;
-    const p1_won = (winner_id == _id1);
+    const p1_won = (winner_id === _id1);
 
     const win_card  = (p1_won)? c1 : c2;
     const lose_card = (p1_won)? c2 : c1;
@@ -1204,7 +1215,11 @@ function intToWeekday(weekdayNum){
  * @param {bool} new_outcome if true, there wasn't a precedent
  * @param {int} when_precedent when was the verdict 
  */
-function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent){
+function show_results(
+  req,
+  reply,
+  winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent
+){
 
 
   if (overruled){
@@ -1331,12 +1346,13 @@ fastify.post("/game/verdict", (req, reply) => {
     if (!win_added_outcome.success){
       reply.status(httpStatus.INTERNAL_SERVER_ERROR).reply(
         {
+          status: 500,
           winner: _winner,
           loser: _loser,
           p1_won: p1_won,
           error: `Error adding data for ${_winner} beating ${_loser} to the database!`
         }
-      );
+      ).statusCode();
       return;
     }
     else {
@@ -1350,13 +1366,25 @@ fastify.post("/game/verdict", (req, reply) => {
   //reply.status(501).send(precedent);
 });
 
+
+fastify.get("/api/silly", async(
+  req,
+  rep
+) => {
+  //db.ensure_consecutive_ids();
+  rep.send({message:"yes, this is silly!"});
+})
+
+
 // for emergency use only.
-fastify.get("/api/admin/delete/:id", async(request, reply) => {
+fastify.get("/api/admin/delete/:id", async(
+  request,
+  reply
+) => {
   
-  reply.status(httpStatus.UNAUTHORIZED).send({message:"no."});
+  reply.send({status:httpStatus.UNAUTHORIZED, message:"no."});
   return false;
   //reply.status(httpStatus.OK).send(db.deleteCard(request.params.id));
-  
 });
 
 // and now some stuff that allows the database to be obtained for archiving purposes
