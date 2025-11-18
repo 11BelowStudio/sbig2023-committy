@@ -117,6 +117,7 @@ export{
 
 import {ShortURL} from "./utils/ShortURL.js";
 import httpStatus from "http-status";
+import fs from 'node:fs'
 
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
@@ -1394,7 +1395,13 @@ fastify.get("/api/admin/delete/:id", async(
  * @param {import("fastify/types/request.js").FastifyRequest} req 
  * @param {import("fastify/types/reply.js").FastifyReply} reply
  */
-function _archive_redirect(req, reply){
+function _archive_redirect(
+  req,
+  reply
+){
+
+
+
   reply.redirect(`/api/archive/cards ${new Date(Date.now()).toISOString().replaceAll(":","-")}.db`);
 }
 
@@ -1444,8 +1451,14 @@ fastify.get("/api/archive/:fname", (req, reply) => {
     _archive_redirect(req, reply);
     return;
   }
-  reply.type("application/vnd.sqlite3");
-  reply.sendFile("cards.db",path.join(".data"),{serveDotFiles: true, extensions:"db"});
+  try {
+    // doesn't seem to be working...
+    reply.type("application/vnd.sqlite3");
+    reply.sendFile("cards.db", path.join(".data"), { serveDotFiles: true, extensions: "db" });
+
+  } catch (e) {
+    console.error(e);
+  }
 })
 
 

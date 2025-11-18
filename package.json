@@ -43,8 +43,5 @@
     "glitch",
     "sqlite",
     "committy"
-  ],
-  "devDependencies": {
-    "nodemon": "^3.1.11"
-  }
+  ]
 }
