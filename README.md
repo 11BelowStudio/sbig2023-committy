@@ -149,6 +149,8 @@ Anyway, here's some info about how this dumpster fire is deployed.
   * sqlite3 (that's what glitch.me (RIP) used)
   * It's stored in the `.data` folder, but the database itself is hidden from git (so it doesn't get overwritten when pulling from git).
   * I do have a backup of the database from the glitch.me instance (RIP), please let me know how to send it to you.
+    * I've had an idea. I'm now storing a (sometimes updated) backup of the github version of the database as `.data/archived_db/cards.db`. Please copy it to `.data/cards.db` if you wish to host Committy (it will be gitignored there).
+    * (updating it to have parity with your changes when the time arises is a problem for future me).
   * After all, the burden of the ever-increasing series of bewildering judicial decisions is, again, part of the whole point of the thing. Throwing away years of established precedent and starting again just wouldn't sit right.
     * If you find yourself ceasing to host the Committy, please send me a copy of the database. Makes sure the history of it can be preserved or something.
 * Undocumented API
