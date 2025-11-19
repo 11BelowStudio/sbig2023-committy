@@ -890,7 +890,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   if (!req.params || !req.params.handSize){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
-        error: `Please declare a hand size and go to http://${req.hostname}/drawHands/HAND_SIZE`
+        error: `Please declare a hand size and go to http://${req.host}/drawHands/HAND_SIZE`
       }
     );
     return;
@@ -933,7 +933,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "that's not a valid seed 🗞️",
-        go_to: `http://${req.hostname}/draw_hands/${handSize}`
+        go_to: `http://${req.host}/draw_hands/${handSize}`
       }
     );
     return;
@@ -959,7 +959,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Cannot support a game with a hand size of ${handSize} - ${totalNeeded} total cards required (two hands), database only has ${cardCountResult.cards}! Consider contributing some more cards yourself.`,
-        go_to: `http://${req.hostname}/submit_card`
+        go_to: `http://${req.host}/submit_card`
       }
     );
     return;
@@ -984,7 +984,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   const params = {
     hand_1: [],
     hand_2: [],
-    url: `http://${req.hostname}/game/${handSize}/${seed}`,
+    url: `http://${req.host}/game/${handSize}/${seed}`,
     seo: mvp_game_seo(handSize, seed)
   };
 

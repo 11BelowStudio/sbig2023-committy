@@ -342,7 +342,7 @@ function getRandomCardIDs(cardsToGet, seedToUse = undefined) {
     return result;
   }
 
-  const givenSeed = (seedToUse === undefined || seedToUse == null || Number.isNaN(seedToUse));
+  const givenSeed = !(seedToUse === undefined || seedToUse == null || Number.isNaN(seedToUse));
 
   //console.log(`${givenSeed}, ${seedToUse}`);
 
