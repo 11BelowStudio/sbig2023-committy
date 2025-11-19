@@ -421,7 +421,7 @@ fastify.get("/api/cards",
   
   let data = {};
   data.result = db.getAllCards();
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success){ data.error = errorMessage;}
   const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
@@ -435,11 +435,11 @@ fastify.get("/api/card/:id",
     ) => {
   const _id = parseInt(request.params.id);
   let data = {id: _id };
-  console.log(request.params);
+  //console.log(request.params);
   let status = httpStatus.BAD_REQUEST;
 
   data.result = db.getCard(_id);
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success) {
     data.error = errorMessage;
     status = httpStatus.INTERNAL_SERVER_ERROR;
@@ -462,7 +462,7 @@ fastify.get("/api/card_ids",
     ) => {
   let data = {};
   data.result = db.getCardIDs();
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success){
      data.error = errorMessage;
   }
@@ -502,7 +502,7 @@ fastify.get("/api/n_card_ids/:n",
 
   data.result = db.getRandomCardIDs(request.params.n);
 
-  console.log(data.result);
+  //console.log(data.result);
 
   if (!data.result || !data.result.success){
     data.error = errorMessage;
@@ -553,7 +553,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
       except = parseInt(request.params.except);
       //console.log(except);
     } catch (error){
-      console.log(error);
+      //console.log(error);
       data.error = `hey it looks like ${request.params.except} wasn't a number smh my head`;
       reply.status(httpStatus.BAD_REQUEST).send(data);
       return;
@@ -561,13 +561,13 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
   }
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
   let allIDs = db.getCardIDsExcept(except);
-  console.log(allIDs);
+  //console.log(allIDs);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
     
     let sampledIDs = sample(allIDs.entries, request.params.n);
-    console.log(sampledIDs);
+    //console.log(sampledIDs);
     for(const itm of sampledIDs){
       itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
@@ -676,7 +676,7 @@ fastify.post("/api/submit_card_form",
 
     const body = request.body;
 
-    console.log(body);
+    //console.log(body);
     if (
       !request.body.name || request.body.name.trim() == false
     ){
@@ -808,7 +808,7 @@ fastify.get("/temp_game",function(req, reply) {
 */
 
 fastify.get("/i",function(req, reply) {
-  return req.redirect("/");
+  return reply.redirect("/");
 })
 
 
@@ -824,7 +824,7 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
   }
   
   const handSize = parseInt(req.params.handSize);
-  if (handSize === NaN){
+  if (isNaN(handSize)){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `given hand size ${req.params.handSize} isn't a number smh my head`
@@ -842,7 +842,7 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
 
   const rawSeed = rngSeedSource();
 
-  console.log(`${rawSeed}, ${ShortURL.encode(rawSeed)}`)
+  //console.log(`${rawSeed}, ${ShortURL.encode(rawSeed)}`)
 
   reply.redirect(
     `/game/${handSize}/${ShortURL.encode(rawSeed)}`
@@ -939,7 +939,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     return;
   }
 
-  console.log(rawSeed);
+  //console.log(rawSeed);
 
   data.rawSeed = rawSeed;
 
@@ -965,7 +965,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     return;
   }
 
-  console.log()
+  //console.log()
   const randomCards = db.getRandomCards(totalNeeded, rawSeed);
 
   
@@ -1047,7 +1047,7 @@ fastify.get("/game/chosen/:c1/:c2",
     reply
   ) => {
 
-  console.log(req.params);
+  //console.log(req.params);
   const _id1 = parseInt(req.params.c1);
   const _id2 = parseInt(req.params.c2);
 
@@ -1275,11 +1275,11 @@ function show_results(
 
 fastify.post("/game/verdict", (req, reply) => {
 
-  console.log(req.body);
+  //console.log(req.body);
 
   const bodyData = JSON.parse(req.body.data);
 
-  console.log(bodyData);
+  //console.log(bodyData);
 
   const _c1 = parseInt(bodyData.c1);
 

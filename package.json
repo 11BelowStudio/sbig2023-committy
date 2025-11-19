@@ -4,8 +4,8 @@
   "description": "A Node app with SQLite database - and it's a card game which is the end result of the combination of everyone's suggestions.",
   "exports": "./src/server/server.js",
   "scripts": {
-    "start": "node ./src/server/server.js --env-file=.env",
-    "nodemon": "node --watch --env-file=.env ./src/server/server.js",
+    "start": "node --env-file=.env ./src/server/server.js",
+    "start-watch": "node --watch --env-file=.env ./src/server/server.js",
     "dev": "node --watch --env-file=.env ./src/server/server.js"
   },
   "type": "module",
