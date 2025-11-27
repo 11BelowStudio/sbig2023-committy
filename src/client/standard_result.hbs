@@ -144,6 +144,7 @@
             const loser = "{{ loser }}";
 
             let bgAudio;
+            let legalese_playing = false;
 
             function showAmen(){
                 bgAudio.volume(1.0);
@@ -219,7 +220,7 @@
                     constitushun.classList.remove("hidden");
 
                 
-                    var intro = new Howl({
+                    const intro = new Howl({
                         src: ["/assets/audio/legalese_intro.ogg"],
                         html5: true,
                         onend: () => proclaim(),
@@ -246,6 +247,11 @@
             });
 
             async function startLegalese(){
+                if (legalese_playing){
+                    return;
+                }
+                legalese_playing = true;
+
                 const scrollParent = document.getElementById("scrollparent")
                 scrollParent.classList.remove("hidden");
 

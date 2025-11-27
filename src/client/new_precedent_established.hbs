@@ -90,13 +90,15 @@
 
             let bgAudio;
 
+            let legalese_playing = false;
+
             window.addEventListener("tts_done", e=>{
-                startLegalese();
+              startLegalese();
             });
 
             function showAmen(){
-                bgAudio.volume(1.0);
-                document.getElementById("amen").classList.remove("hidden");
+              bgAudio.volume(1.0);
+              document.getElementById("amen").classList.remove("hidden");
             }
 
             function play_bg(){
@@ -105,63 +107,60 @@
 
             async function startLegalese(){
 
-                bgAudio = new Howl({
-                    src: ["/assets/audio/legalese_theme.ogg"],
-                    html5: true,
-                    loop: true,
-                    volume: 1.0
-                });
-                bgAudio.play();
+              if (legalese_playing){
+                return;
+              }
+              legalese_playing = true;
 
-                //TODO: start audio
+              bgAudio = new Howl({
+                src: ["/assets/audio/legalese_theme.ogg"],
+                html5: true,
+                loop: true,
+                volume: 1.0
+              });
+              bgAudio.play();
 
-                await sleep(1_000);
+              //TODO: start audio
 
-                // TODO: start speech
+              await sleep(1_000);
 
-                //var audio = new Audio("../public/assets/audio/new_precedent.ogg");
-                
-                var speech = new Howl({
-                    src: ["/assets/audio/new_precedent.ogg"],
-                    html5: true,
-                    onend: () => showAmen(),
-                    volume: 1.0
-                });
-                bgAudio.volume(0.5);
-                speech.play();
-                
+              // TODO: start speech
+
+              //var audio = new Audio("../public/assets/audio/new_precedent.ogg");
+
+              const speech = new Howl({
+                src: ["/assets/audio/new_precedent.ogg"],
+                html5: true,
+                onend: () => showAmen(),
+                volume: 1.0
+              });
+              bgAudio.volume(0.5);
+              speech.play();
+
                 //audio.play();
             }
 
 
             async function start_things_off(){
-                await sleep(1_000);
-                var intro = new Howl({
-                    src: ["/assets/audio/legalese_intro.ogg"],
-                    html5: true,
-                    onend: () => declaration_time(),
-                    onerror: () => declaration_time(),
-                    volume: 1.0
-                });
-                intro.play();
+              await sleep(1_000);
+              const intro = new Howl({
+                src: ["/assets/audio/legalese_intro.ogg"],
+                html5: true,
+                onend: () => declaration_time(),
+                onerror: () => declaration_time(),
+                volume: 1.0
+              });
+              intro.play();
             }
 
 
             async function declaration_time(){
-             
-
-
-
-
-                speak_this("The Declaration of the Committy");
-           }
+              speak_this("The Declaration of the Committy");
+            }
 
 
             window.onload = function() {
-               //window.onload = null;
-               return new Promise( resolve => start_things_off() );
-
-                
+              return new Promise( resolve => start_things_off() );
             }
 
 
