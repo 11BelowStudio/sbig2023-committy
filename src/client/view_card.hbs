@@ -26,23 +26,32 @@
         <div class="wrap">
 
             <div class="sidebar">
-                <div>
+                <div class="sidebarItem">
                     <h1>the <br><img src="/assets/icons/committy.svg" alt="Committy!"/><br>card viewer</h1>
                 </div>
-                <div>
+                <div class="sidebarItem">
                     <p>
                         Currently viewing<br>
-                        <a href="/view_card/{{card.id}}"><code>/view_card/{{card.id}}</code></a>
+                        <a href="/view_card/{{card_id}}"><code>/view_card/{{card_id}}</code></a>
                     </p>
                 </div>
 
-                <div>
+                <div class="sidebarItem">
+                    <h2><a href="/view_card/{{prev_id}}"><nobr>⮜ Previous</nobr></a> <a href="/view_card/{{next_id}}"><nobr>Next ⮞</nobr></a></h2>
+                </div>
+
+                <div class="sidebarItem">
                     <h2><a href="/">back</a></h2>
                 </div>
-                <div>
+                <div class="sidebarItem">
                     <h2>
                         <a href="/submit_card"><b>Create a better card!!!</b></a>
                     </h2>
+                </div>
+                <div class="sidebarItem">
+                    <iframe width="180" height="180" style="border:none" src="https://tabbygarf.neocities.org/tabbyads/embed.html" name="TabbyAds"></iframe>
+                    <iframe width="180" height="180" style="border:none" src="https://blahajcool.neocities.org/blahads/embed" name="blahads"></iframe>
+                    <iframe width="180" height="180" style="border:none" src="https://dimden.neocities.org/navlink/" name="neolink"></iframe>
                 </div>
             </div>
 
@@ -90,13 +99,13 @@
                 </div>
 
                 <form action="/api/report" method="post" target="_self">
-                    <input type="radio" name="id" value="{{card.id}}" checked style="visibility: hidden;" />
+                    <input type="radio" name="id" value="{{card_id}}" checked style="visibility: hidden;" />
                     <button type="submit">REPORT CARD</button>
                 </form> 
 
 
                 <!-- and now, a word from our sponsor -->
-                <iframe src="https://john.citrons.xyz/embed?ref=committy.glitch.me" style="margin-left:auto;display:block;margin-right:auto;max-width:732px;width:100%;height:94px;border:none;"></iframe>
+                <iframe src="https://john.citrons.xyz/embed?ref={{seo.website}}" style="margin-left:auto;display:block;margin-right:auto;max-width:732px;width:100%;height:94px;border:none;"></iframe>
 
             </div>
 

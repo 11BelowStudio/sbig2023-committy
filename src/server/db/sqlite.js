@@ -17,8 +17,9 @@ import {
 
 
 import {
+  isNumber,
   sample
-} from "underscore";
+} from 'underscore'
 
 import random from "random";
 
@@ -49,29 +50,34 @@ db.pragma('journal_mode = WAL');
 // And now we populate db if it didn't already exist.
 if (!exists){
 
-  const cardsTableStmt = db.prepare(
-    `CREATE TABLE cards (
-        id INTEGER NOT NULL PRIMARY KEY,
-        name TEXT NOT NULL,
-        desc TEXT NOT NULL,
-        img TEXT NOT NULL,
-        stat1 INTEGER NOT NULL DEFAULT 1,
-        stat2 INTEGER NOT NULL DEFAULT 1,
-        stat3 INTEGER NOT NULL DEFAULT 1,
-        stat4 INTEGER NOT NULL DEFAULT 1,
-      CHECK (
-        length(name) > 0
-        AND
-        (stat1 >= 1 AND stat1 <= 10)
-        AND
-        (stat2 >= 1 AND stat2 <= 10)
-        AND
-        (stat3 >= 1 AND stat3 <= 10)
-        AND
-        (stat4 >= 1 AND stat4 <= 10)
-      )
-    )
-    `
+  const cardsTableStmt = db.prepare($`
+    CREATE TABLE IF NOT EXISTS cards (
+     id INTEGER NOT NULL PRIMARY KEY,
+     name TEXT NOT NULL UNIQUE,
+     desc TEXT NOT NULL,
+     img TEXT NOT NULL,
+     stat1 INTEGER NOT NULL DEFAULT 1,
+     stat2 INTEGER NOT NULL DEFAULT 1,
+     stat3 INTEGER NOT NULL DEFAULT 1,
+     stat4 INTEGER NOT NULL DEFAULT 1,
+     CHECK (
+       ( length(name) > 0 and length(name) <= ${card_consts.card_name_length})
+         AND
+       (length(desc) <= ${card_consts.card_desc_length} )
+         AND
+       (length(img) <= ${card_consts.card_img_url_length})
+         AND
+       (stat1 >= ${card_consts.card_stat_min} AND stat1 <= ${card_consts.card_stat_max})
+         AND
+       (stat2 >= ${card_consts.card_stat_min}  AND stat2 <= ${card_consts.card_stat_max})
+         AND
+       (stat3 >= ${card_consts.card_stat_min}  AND stat3 <= ${card_consts.card_stat_max})
+         AND
+       (stat4 >= ${card_consts.card_stat_min}  AND stat4 <= ${card_consts.card_stat_max})
+         AND
+       (stat1 + stat2 + stat3 + stat4 <= ${card_consts.card_stat_total_max})
+     )
+   )`
   );
 
   cardsTableStmt.run();
@@ -80,16 +86,16 @@ if (!exists){
     {
       name:"Kevin",
       desc:"Holy shit it's Kevin!!!",
-      img: "https://i.imgur.com/rf0hpyh.png",
+      img: "https://i.postimg.cc/nL5pD7K1/kevin.png",
       s1: 10,
       s2: 3,
-      s3: 4,
-      s4: 2
+      s3: 3,
+      s4: 5
     },
     {
       name:"Ke'in",
       desc:"Kevin's evil bri'ish counterpart. He's rather rude.",
-      img: "https://i.imgur.com/hIHI4M5.png",
+      img: "https://i.postimg.cc/zDT8yyyK/ke-in.png",
       s1: 2,
       s2: 5,
       s3: 4,
@@ -98,7 +104,7 @@ if (!exists){
     {
       name:"An open Nokia E72",
       desc:"as photographed by highwycombe on wikipedia.",
-      img: "https://upload.wikimedia.org/wikipedia/commons/6/65/NokiaE72Open.JPG",
+      img: "https://i.postimg.cc/hGMKP6v2/Nokia-E72Open.jpg",
       s1: 7,
       s2: 2,
       s3: 7,
@@ -114,15 +120,20 @@ if (!exists){
     `
   );
 
+  /*
   const defaultCardsTransaction = db.transaction((allCards) =>{
     for (const card of allCards) insertCardStmt.run(card);
   });
 
   defaultCardsTransaction(defaultCards);
+  */
+  for (const card of allCards) {
+    insertCardStmt.run(card);
+  }
 
 
   const winsTableStmt = db.prepare(
-    `CREATE TABLE wins (
+    `CREATE TABLE IF NOT EXISTS wins (
         winner_id INTEGER NOT NULL,
         loser_id INTEGER NOT NULL,
         time INTEGER NOT NULL,
@@ -140,7 +151,7 @@ if (!exists){
 
 
   const reportTableStmt = db.prepare(
-    `CREATE TABLE reports(
+    `CREATE TABLE  IF NOT EXISTS reports(
         id INTEGER NOT NULL PRIMARY KEY,
         card_id INTEGER NOT NULL,
         time INTEGER NOT NULL,
@@ -303,7 +314,7 @@ function getCards(...args) {
 function getCardIDs() {
   let result = {success: false, entries: []};
   try{
-    const stmt = db.prepare("SELECT id FROM cards");
+    const stmt = db.prepare("SELECT id FROM cards ORDER BY id ASC");
     result.entries = stmt.all();
     //console.log(`${result.entries}, ${result.entries != false}`);
     //result.entries = await db.all("SELECT id FROM cards");
@@ -317,10 +328,10 @@ function getCardIDs() {
 /**
  * gets the IDs of n random cards, chosen randomly
  * @param {int} cardsToGet how many cards we want
- * @param {*} seed we're using for the RNG
+ * @param {*} seedToUse the seed we're using for the RNG (optional)
  * @returns object of { success: bool, entries: [{id: int}], ids: []}
  */
-function getRandomCardIDs(cardsToGet, seedToUse) {
+function getRandomCardIDs(cardsToGet, seedToUse = undefined) {
 
   let result = {success: false, entries: []};//, ids: []};
 
@@ -331,25 +342,24 @@ function getRandomCardIDs(cardsToGet, seedToUse) {
     return result;
   }
 
-  const givenSeed = (seedToUse !== undefined && seedToUse != null && seedToUse != NaN);
+  const givenSeed = !(seedToUse === undefined || seedToUse == null || Number.isNaN(seedToUse));
 
-  console.log(`${givenSeed}, ${seedToUse}`);
+  //console.log(`${givenSeed}, ${seedToUse}`);
 
   result = getCardIDs();
 
   //console.log(result);
 
-  if (result.success == false){
+  if (result.success === false){
     return result;
   }
 
   let allEntries = result.entries;
-
-  
-
+  /*
   for(let ient = 0; ient < allEntries.length; ient++){
     console.log(allEntries[ient]);
   }
+ */
 
 
   if (givenSeed){
@@ -357,10 +367,10 @@ function getRandomCardIDs(cardsToGet, seedToUse) {
     
     cardsToGet = Math.max(Math.min(cardsToGet, allEntries.length), 0);
 
-    var last = allEntries.length - 1;
-    for (var index = 0; index < cardsToGet; index++){
-      var rand = rng.integer(index, last);
-      var temp = allEntries[index];
+    const last = allEntries.length - 1
+    for (let index = 0; index < cardsToGet; index++){
+      const rand = rng.integer(index, last)
+      const temp = allEntries[index]
       allEntries[index] = allEntries[rand];
       allEntries[rand] = temp;
     }
@@ -400,7 +410,7 @@ function checkIfCardsExist(...ids){
 
   let result = {success: false, exists: [], all_exist: false, message: ""};
 
-  if (ids.length == 0){
+  if (ids.length === 0){
     // technically the truth.
     result.message = "all 0 of these IDs exist, but why would you want to check that?";
     result.success = true;
@@ -460,7 +470,7 @@ function getCardCount(){
 
   try {
     result.cards = db.prepare("SELECT count(id) FROM cards").pluck().get();
-    result.success = (result.cards != NaN);
+    result.success = (!isNaN(result.cards));
   } catch (dbError){
     console.error(dbError);
   }
@@ -802,6 +812,15 @@ async function addCard(cardName, cardDesc, cardImg, s1, s2, s3, s4) {
 
   try {
 
+    if(
+      db.prepare("SELECT id FROM cards WHERE name = ?")
+        .get(cardName) !== undefined
+    ) {
+      result.message = `Card with name ${cardName} already exists in the database!`;
+      result.success = false;
+      return result;
+    }
+
 
     const stmt = db.prepare(
       "INSERT INTO cards(name, desc, img, stat1, stat2, stat3, stat4) "
@@ -871,7 +890,7 @@ async function addCardForm(
   if (cardItBeats == null || cardItLosesTo == null) {
     result.message = "you forgot to declare the IDs of the two cards which this new card beats/loses to";
     return result;
-  } else if (cardItBeats == cardItLosesTo){
+  } else if (cardItBeats === cardItLosesTo){
     result.message = `cardItBeats and cardItLoses to need to be different values. They can't both have the value of ${cardItBeats}`;
   } else {
     const othersExistResult = checkIfCardsExist(cardItBeats, cardItLosesTo);
@@ -1120,6 +1139,9 @@ async function deleteCard(id) {
     //success = await db.run("DELETE FROM cards WHERE id = ?", id);
     const result = stmt.run(id);
     success = (result.changes > 0);
+    if (success){
+      ensure_consecutive_ids();
+    }
     //console.log(result);
   } catch (dbError) {
     console.error(dbError);
@@ -1183,7 +1205,7 @@ function getReport(reportID) {
     const stmt = db.prepare("SELECT * FROM reports WHERE id = ?");
     //success = await db.run("SELECT * FROM reports WHERE id = ?"", reportID);
     result.entries = stmt.all(reportID);
-    success = (result.entries != false || result.entries.length > 0);
+    const success = (result.entries != false || result.entries.length > 0);
     //console.log(result);
 
     //result.data = await db.all("SELECT * FROM reports WHERE id = ?",reportID);
@@ -1253,13 +1275,13 @@ function deleteReportsForCard(cardId) {
    *     entries:[{id: int, name: str, desc: str, img: str, stat1: int, stat2: int, stat3: int, stat4: int}]
    *   }
    */
-function getRandomCards(cardsToGet, seedToUse) {
+function getRandomCards(cardsToGet, seedToUse = undefined) {
 
   let result = {success: false, entries: []};
 
-  if (cardsToGet < 0){
+  if (!isNumber(cardsToGet) || Number.isNaN(cardsToGet) || !Number.isFinite(cardsToGet) || cardsToGet < 0){
     return result;
-  } else if (cardsToGet == 0){
+  } else if (cardsToGet === 0){
     result.success = true;
     return result;
   }
@@ -1335,8 +1357,44 @@ function runBackup(){
 
 }
 
+/**
+ * Attempts to ensure all ids in the database are consecutive integers
+ */
+function ensure_consecutive_ids() {
 
+  try{
+    const ids_query = getCardIDs();
+    if (ids_query.success !== true){
+      return;
+    }
+    const ids = ids_query.entries;
+    for(let i = 1; i <= ids.length; i++){
+      if (ids[i-1].id !== i){
+        console.log(ids[i-1]);
+        db.prepare("UPDATE cards SET id = @new WHERE id = @old").run(
+          {
+            new: i,
+            old: ids[i-1].id
+          }
+        );
+      }
+    }
+  } catch (dbError){
+    console.error(dbError);
+  }
 
+  /*
+  const ids_query_2 = getCardIDs();
+  if (ids_query_2.success !== true){
+    return;
+  }
+  const ids2 = ids_query_2.entries;
+  for(let id in ids2){
+    console.log(`${id} ${ids2[id].id}`);
+  }
+  */
+
+}
 
 
 export {
@@ -1367,7 +1425,8 @@ export {
   getRandomCards,
   checkIfCardsExist,
 
-  
+
+  ensure_consecutive_ids,
 }
 
 

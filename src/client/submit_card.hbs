@@ -26,7 +26,7 @@
         <style>
             
             body {
-                font-family: 'Comic Neue' Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                font-family: 'Comic Neue', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
             }
             
 
@@ -200,9 +200,15 @@
 
                 <div>
                     <h2>
-                        Your epic card!!!
+                        Make your epic card!!!
                     </h2>
                     
+                </div>
+                <div class="sidebarItem">
+
+                    <iframe width="180" height="180" style="border:none" src="https://blahajcool.neocities.org/blahads/embed" name="blahads"></iframe>
+                    <iframe width="180" height="180" style="border:none" src="https://dimden.neocities.org/navlink/" name="neolink"></iframe>
+                    <iframe width="180" height="180" style="border:none" src="https://tabbygarf.neocities.org/tabbyads/embed.html" name="TabbyAds"></iframe>
                 </div>
             </aside>
 
@@ -221,9 +227,19 @@
                         </h1>
                         
                         
-                        <form action="/api/submit_card_form" method="post" target="_self">
+                        <form
+                                onsubmit="return confirm(
+                                  'Are you sure you wish to submit this card?\n' +
+                                   'This action, as with all others by the Committy, is final and irreversible.\n'+
+                                   'And all shall bear witness to and judge this precedent thou art establishing.\n\n'+
+                                   'Doth thou truly wish to proceed?'
+                                )"
+                                action="/api/submit_card_form"
+                                method="post"
+                                target="_self"
+                        >
                         
-                            <table style="width:80%;" id="sliders">
+                            <table style="width:100%;" id="sliders">
                             <tr>
                             <th colspan="2">write stuff about your card!</th>
                             </tr>
@@ -252,20 +268,20 @@
                             </tr>
                             <tr>
                             <td style="width:25%;">
-                                URL of an image for it (upload it to imgur or something)
+                                URL of an image for it (go upload it to postimg.cc or somewhere)
                             </td>
                             <td style="width:75%;">
-                                <input type="url" name="img" value="https://i.imgur.com/HM824r1.png" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
+                                <input type="url" name="img" value="" style="width:100%;"onchange="onImgChanged(this.value)" maxlength="125"/>
                             </td>
                             </tr>
                             <tr>
-                            <th colspan="2">stats moment!!!!!</th>
+                            <th colspan="2">very important stats!!!</th>
                             </tr>
                             <tr>
                             <td class="icon icon_a"></td>
                             <td>
                                 <span class="slideBG"><div class="slider stat_slider"></div>
-                                <input type="number" class="value" name="s1" value="2" min="1" max="10" onchange="onS1Changed(this.value)" /><span>/10</span>
+                                <input id="s1_input"  type="number" class="value" name="s1" value="1" min="1" max="10" onchange="onS1Changed(this.value)" /><span>/10</span>
                                 </span>
                             </td>
                             </tr>
@@ -273,7 +289,7 @@
                             <td class="icon icon_b"></td>
                             <td>
                                 <span class="slideBG"><div class="slider stat_slider"></div>
-                                <input type="number" class="value" name="s2" value="2" min="1" max="10" onchange="onS2Changed(this.value)"/><span>/10</span>
+                                <input id="s2_input"  type="number" class="value" name="s2" value="1" min="1" max="10" onchange="onS2Changed(this.value)"/><span>/10</span>
                                 </span>
                             </td>
                             </tr>
@@ -281,7 +297,7 @@
                             <td class="icon icon_c"></td>
                             <td>
                                 <span class="slideBG"><div class="slider stat_slider"></div>
-                                <input type="number" class="value" name="s3" value="2" min="1" max="10" onchange="onS3Changed(this.value)" /><span>/10</span>
+                                <input id="s3_input" type="number" class="value" name="s3" value="1" min="1" max="10" onchange="onS3Changed(this.value)" /><span>/10</span>
                                 </span>
                             </td>
                             </tr>
@@ -289,7 +305,7 @@
                             <td class="icon icon_d"></td>
                             <td>
                                 <span class="slideBG"><div class="slider stat_slider"></div>
-                                <input type="number" class="value" name="s4" value="2" min="1" max="10" onchange="onS4Changed(this.value)" /><span>/10</span>
+                                <input id="s4_input"  type="number" class="value" name="s4" value="1" min="1" max="10" onchange="onS4Changed(this.value)" /><span>/10</span>
                                 </span>
                             </td>
                             </tr>
@@ -304,7 +320,7 @@
                             <h2>
                                 which card does <span class="your_title_holder_class">your card</span> beat???
                             </h2>
-                            <div class="col_container col_vert_750" style="width=500px;">
+                            <div class="col_container col_vert_750">
                                 <div class="col">
                                     <h3 style="margin-top:0px;margin-bottom:0px;">this one <input type="radio" name="beats_loses_choice" value="{{card1.id}},{{card2.id}}" checked /></h3>
                                     <div class="card {{ card1.colour }}" style="width:250px; height: 350px;">
@@ -386,24 +402,24 @@
                             <div class="card_title"id="your_title">Your title here!</div>
                             <div class="card_inner"></div>
                             <div class="card_icon_holder">
-                            <img src="https://i.imgur.com/HM824r1.png" id="your_img"/>
+                            <img src="" id="your_img"/>
                             </div>
                             <div class="card_stats_parent">
                                 <div class="card_stats_cell card_stat_1">
                                     <div class="card_stat_icon"></div>
-                                    <div class="card_stat_number" id="your_s1">2</div>
+                                    <div class="card_stat_number" id="your_s1">{{ init_stats.[0] }}</div>
                                 </div>
                                 <div class="card_stats_cell card_stat_2">
                                     <div class="card_stat_icon"></div>
-                                    <div class="card_stat_number"id="your_s2">2</div>
+                                    <div class="card_stat_number"id="your_s2">{{ init_stats.[1] }}</div>
                                 </div>
                                 <div class="card_stats_cell card_stat_3">
                                     <div class="card_stat_icon"></div>
-                                    <div class="card_stat_number"id="your_s3">2</div>
+                                    <div class="card_stat_number"id="your_s3">{{ init_stats.[2] }}</div>
                                 </div>
                                 <div class="card_stats_cell card_stat_4">
                                     <div class="card_stat_icon"></div>
-                                    <div class="card_stat_number"id="your_s4">2</div>
+                                    <div class="card_stat_number"id="your_s4">{{ init_stats.[3] }}</div>
                                 </div>
                             </div>
                             <div class="card_description" id="your_desc">
@@ -421,7 +437,7 @@
 
     </body>
 
-    
+
 
     <script>
         // https://stackoverflow.com/a/9372222
@@ -526,6 +542,16 @@
             });
             $('#sliderTotal').attr("value", total);
         });
+
+    </script>
+
+    <script>
+        window.onload = function() {
+            $('#s1_input').val({{init_stats.[0]}}).change();
+            $('#s2_input').val({{init_stats.[1]}}).change();
+            $('#s3_input').val({{init_stats.[2]}}).change();
+            $('#s4_input').val({{init_stats.[3]}}).change();
+        }
     </script>
 
 </html>

@@ -1,4 +1,4 @@
-# ![Committy](./src/public/assets/icons/committy.svg)!
+# ![Committy](/src/public/assets/icons/committy.svg)
 
 [https://committy.glitch.me](https://committy.glitch.me)
 
@@ -19,6 +19,8 @@ would be the sum of the suggestions of the users.
 In essence, it's a card game where every single card is a user suggestion,
 and the interactions between the cards are also user suggestions (but,
 once an interaction has been established, that precedent applies forever).
+
+![committy badge](/src/public/assets/img/committy_button.jpg) wow cool 88x31
 
 ## Technical stuff
 
@@ -120,6 +122,46 @@ players) with room codes, for ease of use when playing online. Gameplay would wo
 
 see [credits.md](./credits.md)
 
+
+---
+
+# Deployment
+
+So, you want to be a custodian of the Committy? That is... concerning.
+Anyway, here's some info about how this dumpster fire is deployed.
+
+* Node.js setup
+  * Current version: 24.11.1 LTS
+  * dependencies are managed via `npm`
+  * probably safe to run?
+* Frameworks - it's all vanilla node.js (with some fastify and handlebars and a database).
+  * There is no `build` step, because I have no idea how to make one 
+  (and I didn't learn any frameworks which had one when I made this)
+* Environment variables - see [env.example](./env.example) 
+  * the `.env` file is ignored by git, so you can safely(?) put your own keys in there.
+  * the `ADMIN_KEY` is intended to be used for authentication stuff, but I am yet to implement the things that would be used for it (namely updating the database via the website).
+  * you can probably figure out how to set up the other `.env` keys, and you probably know what you're doing with ports and domains and that junk (it is beyond my paygrade)
+* code
+  * it's all js instead of typescript. I would like to migrate it to typescript - but that would require a `build` step, and I'd probably have to configure that manually (no frameworks), and my brain is too smoof for that.
+  * I *think* the `src` folder is the only one that matters in terms of code and assets...
+  * yes, the code is a mess. honestly it's probably worth throwing it all out and starting from scratch, but then again, consequences of the past generation's actions are part of the whole point with *Committy*
+* Database!
+  * sqlite3 (that's what glitch.me (RIP) used)
+  * It's stored in the `.data` folder, but the database itself is hidden from git (so it doesn't get overwritten when pulling from git).
+  * I do have a backup of the database from the glitch.me instance (RIP), please let me know how to send it to you.
+    * I've had an idea. I'm now storing a (sometimes updated) backup of the github version of the database as `.data/archived_db/cards.db`. Please copy it to `.data/cards.db` if you wish to host Committy (it will be gitignored there).
+    * (updating it to have parity with your changes when the time arises is a problem for future me).
+  * After all, the burden of the ever-increasing series of bewildering judicial decisions is, again, part of the whole point of the thing. Throwing away years of established precedent and starting again just wouldn't sit right.
+    * If you find yourself ceasing to host the Committy, please send me a copy of the database. Makes sure the history of it can be preserved or something.
+* Undocumented API
+  * There are some `/api/` endpoints.
+  * They are undocumented because I didn't get around to documenting them and I probably never will and I doubt anyone would be brave enough to write a client for Committy.
+  * anyway if you want to use them, you can.
+  * I'm still trying to get the `/api/archive` (`/api/xcvg`) endpoint working, to make it possible to archive the database.
+* johnvertisements/navlink/tabbyads
+  * it is known.
+  * (they do not appear in the game itself)
+
 ---
 
 and now time for the leftover README from the template project that I
@@ -141,7 +183,7 @@ _Last updated: 10 July 2023_
 
 ← `server.js`: The Node.js server defines the endpoints in the site API, processing requests, connecting to the database using the `sqlite.js` script, and sending info back to the client.
 
-← `sqlite.js`: The database script handles setting up and connecting to the SQLite database. The `server.js` API endpoints call the functions in the database script to manage the data.
+← `sqlite.js`: The database script handles setting up and connecting to the SQLite database. The `server.ts` API endpoints call the functions in the database script to manage the data.
 
 When the app runs, the scripts build the database:
 

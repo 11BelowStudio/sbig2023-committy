@@ -35,7 +35,7 @@ const rngSeedSource = () => webcrypto.getRandomValues(new Uint32Array(1))[0];
 
 
 import _fs_formbody from "@fastify/formbody";
-import io from "fastify-socket.io";
+//import io from "fastify-socket.io";
 
 fastify.register(_fs_formbody);
 
@@ -52,11 +52,8 @@ if (index_seo.url === "glitch-default") {
   index_seo.url = `https://committy.glitch.me`;
 }
 
-//fastify.register(require("@fastify/formbody"));
 
-//const io = require("fastify-socket.io");
-
-fastify.register(io);
+//fastify.register(io);
 
 import { Random } from 'random';
 import seedrandom from 'seedrandom';
@@ -64,7 +61,6 @@ import seedrandom from 'seedrandom';
 
 import { InMemorySessionStore } from "./SessionStore.js";
 
-//const { InMemorySessionStore } = require("./SessionStore");
 const sessionStore = new InMemorySessionStore();
 
 import _fs_view from "@fastify/view";
@@ -81,19 +77,9 @@ fastify.register(
 );
 
 
-/*
-fastify.register(require("@fastify/view"), {
-  engine: {
-    handlebars: require("handlebars"),
-  },
-});
-*/
-
 import * as db from "./db/sqlite.js";
 
-//const db = require("./db/sqlite.js");
-import { card_consts } from "./constants.js";
-//const { card_consts } = require("./constants.js");
+import { card_consts, generate_random_card_stats } from "./constants.js";
 
 import _fs_static from "@fastify/static";
 
@@ -107,12 +93,6 @@ fastify.register(_fs_static, {
 });
 
 
-/*
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname,'../','public'),
-  prefix: "/", // optional: default '/'
-});
-*/
 
 // Helper function to authenticate the user key
 const authorized = key => {
@@ -137,9 +117,7 @@ export{
 
 import {ShortURL} from "./utils/ShortURL.js";
 import httpStatus from "http-status";
-
-
-//const ShortURL = require("./utils/ShortURL");
+import fs from 'node:fs'
 
 const errorMessage =
   "Whoops! Error connecting to the database–please try again!";
@@ -158,7 +136,12 @@ fastify.addHook("onRoute", routeOptions => {
  * @param {import("fastify/types/reply.js").FastifyReply} reply 
  * @returns reply.view stuff.
  */
-function _index(req, reply){
+function _index(
+  req,
+  reply
+){
+
+  //console.log(req);
 
   if (req.query.raw){
     reply.send({seo:index_seo});
@@ -207,18 +190,30 @@ function _index(req, reply){
   return reply.view("/src/client/index.hbs", params);
 }
 
-fastify.get('/index', function (req, reply) {
+
+fastify.get('/index', function (
+    req,
+    reply
+) {
   reply.redirect("/");
 })
 
-fastify.get('/', function (req, reply) {
+fastify.get('/',
+  function (
+    req,
+    reply
+) {
   _index(req, reply)
 })
 
 
 
 // Just send some info at the home route
-fastify.get("/api", (request, reply) => {
+fastify.get("/api",
+    (
+        request,
+        reply
+    ) => {
   const data = {
     title: "Committy API",
     intro: "This is a database-backed API with the following endpoints",
@@ -227,10 +222,17 @@ fastify.get("/api", (request, reply) => {
   reply.status(httpStatus.OK).send(data);
 });
 
-fastify.get('/submit_card', async(req, reply) => {
+fastify.get('/submit_card',
+    async(
+        req,
+        reply
+    ) => {
 
   if (req.query.raw){
-    return req.reply({seo: submit_card_seo});
+    return req.reply(
+      {
+        seo: submit_card_seo
+      });
   }
 
   let otherCards = [];
@@ -248,6 +250,7 @@ fastify.get('/submit_card', async(req, reply) => {
   otherCards = otherResult.entries;
 
   let params = {
+    init_stats: generate_random_card_stats(),
     seo: submit_card_seo,
     card1: otherCards[0],
     card2: otherCards[1]
@@ -262,14 +265,22 @@ fastify.get('/submit_card', async(req, reply) => {
   return reply.view("/src/client/submit_card.hbs", params);
 })
 
-fastify.get('/view_card', async(req, reply) => {
+fastify.get('/view_card',
+    async(
+        req,
+        reply
+    ) => {
   if (req.query.raw){
     return req.reply({seo:view_card_seo("random")});
   }
   reply.redirect("/view_card/random");
 })
 
-fastify.get('/view_card/:id', async(req, reply) => {
+fastify.get('/view_card/:id',
+    async(
+        req,
+        reply
+    ) => {
   let cardID = -1;
 
   if (req.query.raw){
@@ -314,12 +325,15 @@ fastify.get('/view_card/:id', async(req, reply) => {
 
   let params = {
     seo: view_card_seo(cardID),
+    card_id: cardID,
+    prev_id: cardID - 1,
+    next_id: cardID + 1,
     card: {
       id: `${cardID}???`,
       name : "A card that doesn't exist yet",
       colour: "card_error",
       desc: `hmm, the card with ID ${cardID} doesn't exist yet. Perhaps you can fix this problem by creating it.`,
-      img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Icon-round-Question_mark.svg",
+      img: "/assets/icons/question-mark.svg", //"https://i.postimg.cc/dtLFPt5d/question-mark.png",
       stat1: 0,
       stat2: 0,
       stat3: 0,
@@ -399,25 +413,33 @@ fastify.delete("/message", async (request, reply) => {
 });
 */
 
-fastify.get("/api/cards", async(request, reply) => {
+fastify.get("/api/cards",
+    async(
+        request,
+        reply
+    ) => {
   
   let data = {};
   data.result = db.getAllCards();
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success){ data.error = errorMessage;}
   const status = data.error ? httpStatus.BAD_REQUEST : httpStatus.OK;
   reply.status(status).send(data);
   
 });
 
-fastify.get("/api/card/:id", async(request, reply) => {
+fastify.get("/api/card/:id",
+    async(
+        request,
+        reply
+    ) => {
   const _id = parseInt(request.params.id);
   let data = {id: _id };
-  console.log(request.params);
+  //console.log(request.params);
   let status = httpStatus.BAD_REQUEST;
 
   data.result = db.getCard(_id);
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success) {
     data.error = errorMessage;
     status = httpStatus.INTERNAL_SERVER_ERROR;
@@ -433,10 +455,14 @@ fastify.get("/api/card/:id", async(request, reply) => {
 
 });
 
-fastify.get("/api/card_ids", async(request, reply) => {
+fastify.get("/api/card_ids",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
   data.result = db.getCardIDs();
-  console.log(data.result);
+  //console.log(data.result);
   if (!data.result || !data.result.success){
      data.error = errorMessage;
   }
@@ -447,7 +473,11 @@ fastify.get("/api/card_ids", async(request, reply) => {
 /**
  * obtains the cards via HATEOAS (Hypermedia As The Engine of Application State)
  */
-fastify.get("/api/card_links", async(request, reply) => {
+fastify.get("/api/card_links",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
   data.result = db.getCardIDs();
   if (!data.result || !data.result.success){
@@ -463,12 +493,16 @@ fastify.get("/api/card_links", async(request, reply) => {
 });
 
 
-fastify.get("/api/n_card_ids/:n", async(request, reply) => {
+fastify.get("/api/n_card_ids/:n",
+    async(
+        request,
+        reply
+    ) => {
   let data = {};
 
   data.result = db.getRandomCardIDs(request.params.n);
 
-  console.log(data.result);
+  //console.log(data.result);
 
   if (!data.result || !data.result.success){
     data.error = errorMessage;
@@ -485,7 +519,10 @@ fastify.get("/api/n_card_ids/:n", async(request, reply) => {
 
 })
 
-fastify.get("/api/n_cards/:n", async(request, reply) => {
+fastify.get("/api/n_cards/:n", async(
+    request,
+    reply
+) => {
   let data = {};
 
   data.result = db.getRandomCards(request.params.n);
@@ -516,7 +553,7 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
       except = parseInt(request.params.except);
       //console.log(except);
     } catch (error){
-      console.log(error);
+      //console.log(error);
       data.error = `hey it looks like ${request.params.except} wasn't a number smh my head`;
       reply.status(httpStatus.BAD_REQUEST).send(data);
       return;
@@ -524,13 +561,13 @@ fastify.get("/api/n_cards_except/:n/:except", async(request, reply) => {
   }
   data.exceptCard = `http://${request.hostname}/api/card/${request.params.except}`;
   let allIDs = db.getCardIDsExcept(except);
-  console.log(allIDs);
+  //console.log(allIDs);
   if (!allIDs || !allIDs.success){
     data.error = errorMessage;
   } else {
     
     let sampledIDs = sample(allIDs.entries, request.params.n);
-    console.log(sampledIDs);
+    //console.log(sampledIDs);
     for(const itm of sampledIDs){
       itm.url = `http://${request.hostname}/api/card/${itm.id}`;
     }
@@ -553,7 +590,10 @@ fastify.get("/api/wins/:c1/:c2", async(request, reply) => {
 
 
 
-fastify.post("/api/declare_winner", async(request, reply) => {
+fastify.post("/api/declare_winner", async(
+    request,
+    reply
+) => {
 
   let data = {};
 
@@ -597,7 +637,11 @@ fastify.post("/api/declare_winner", async(request, reply) => {
 
 
 
-fastify.post("/api/report", async (request, reply) => {
+fastify.post("/api/report",
+    async (
+        request,
+        reply
+    ) => {
   let data = {
     success: false,
     message: ""
@@ -615,7 +659,11 @@ fastify.post("/api/report", async (request, reply) => {
 });
 
 
-fastify.post("/api/submit_card_form", async(request, reply) => {
+fastify.post("/api/submit_card_form",
+    async(
+        request,
+        reply
+    ) => {
 
   let data = {success: false};
   let response = 0;
@@ -628,7 +676,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
 
     const body = request.body;
 
-    console.log(body);
+    //console.log(body);
     if (
       !request.body.name || request.body.name.trim() == false
     ){
@@ -684,7 +732,7 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
 
     }
 
-    if (response == 0){
+    if (response === 0){
       response = (data.success ? httpStatus.CREATED : httpStatus.BAD_REQUEST);
     }
     reply.status(response).send(data);
@@ -695,7 +743,11 @@ fastify.post("/api/submit_card_form", async(request, reply) => {
 
 });
 
-fastify.post("/api/add_card", async(request, reply) => {
+fastify.post("/api/add_card",
+    async(
+        request,
+        reply
+    ) => {
 
   let data = {};
   if(!request.body || !request.body.name){
@@ -756,7 +808,7 @@ fastify.get("/temp_game",function(req, reply) {
 */
 
 fastify.get("/i",function(req, reply) {
-  return req.redirect("/");
+  return reply.redirect("/");
 })
 
 
@@ -772,7 +824,7 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
   }
   
   const handSize = parseInt(req.params.handSize);
-  if (handSize === NaN){
+  if (isNaN(handSize)){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `given hand size ${req.params.handSize} isn't a number smh my head`
@@ -790,7 +842,7 @@ fastify.get("/draw_hands/:handSize", function(req, reply){
 
   const rawSeed = rngSeedSource();
 
-  console.log(`${rawSeed}, ${ShortURL.encode(rawSeed)}`)
+  //console.log(`${rawSeed}, ${ShortURL.encode(rawSeed)}`)
 
   reply.redirect(
     `/game/${handSize}/${ShortURL.encode(rawSeed)}`
@@ -838,7 +890,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   if (!req.params || !req.params.handSize){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
-        error: `Please declare a hand size and go to http://${req.hostname}/drawHands/HAND_SIZE`
+        error: `Please declare a hand size and go to http://${req.host}/drawHands/HAND_SIZE`
       }
     );
     return;
@@ -881,13 +933,13 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: "that's not a valid seed 🗞️",
-        go_to: `http://${req.hostname}/draw_hands/${handSize}`
+        go_to: `http://${req.host}/draw_hands/${handSize}`
       }
     );
     return;
   }
 
-  console.log(rawSeed);
+  //console.log(rawSeed);
 
   data.rawSeed = rawSeed;
 
@@ -907,13 +959,13 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
     reply.status(httpStatus.BAD_REQUEST).send(
       {
         error: `Cannot support a game with a hand size of ${handSize} - ${totalNeeded} total cards required (two hands), database only has ${cardCountResult.cards}! Consider contributing some more cards yourself.`,
-        go_to: `http://${req.hostname}/submit_card`
+        go_to: `http://${req.host}/submit_card`
       }
     );
     return;
   }
 
-  console.log()
+  //console.log()
   const randomCards = db.getRandomCards(totalNeeded, rawSeed);
 
   
@@ -932,7 +984,7 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
   const params = {
     hand_1: [],
     hand_2: [],
-    url: `http://${req.hostname}/game/${handSize}/${seed}`,
+    url: `http://${req.host}/game/${handSize}/${seed}`,
     seo: mvp_game_seo(handSize, seed)
   };
 
@@ -989,9 +1041,13 @@ fastify.get("/game/:handSize/:seed", function(req, reply){
 });
 
 
-fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
+fastify.get("/game/chosen/:c1/:c2",
+  (
+    req,
+    reply
+  ) => {
 
-  console.log(req.params);
+  //console.log(req.params);
   const _id1 = parseInt(req.params.c1);
   const _id2 = parseInt(req.params.c2);
 
@@ -1081,7 +1137,7 @@ fastify.get("/game/chosen/:c1/:c2", (req, reply) => {
     const winner_id = theWinData.winner_id;
     const loser_id = theWinData.loser_id;
     const when = theWinData.time;
-    const p1_won = (winner_id == _id1);
+    const p1_won = (winner_id === _id1);
 
     const win_card  = (p1_won)? c1 : c2;
     const lose_card = (p1_won)? c2 : c1;
@@ -1160,7 +1216,11 @@ function intToWeekday(weekdayNum){
  * @param {bool} new_outcome if true, there wasn't a precedent
  * @param {int} when_precedent when was the verdict 
  */
-function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent){
+function show_results(
+  req,
+  reply,
+  winner_id, loser_id, p1_won, overruled, new_outcome, when_precedent
+){
 
 
   if (overruled){
@@ -1201,8 +1261,7 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
   reply.header('content-type', 'text/html; charset=utf-8');
   return reply.view("/src/client/new_precedent_established.hbs", params);
 
-
-  return;
+  /*
   reply.status(httpStatus.NOT_IMPLEMENTED).send({
     error: "not yet implemented",
     winner_id: winner_id,
@@ -1210,17 +1269,17 @@ function show_results(req, reply, winner_id, loser_id, p1_won, overruled, new_ou
     p1_won: p1_won,
     overruled, new_outcome,
     when_precedent, when_precedent
-  });
+  });*/
 }
 
 
 fastify.post("/game/verdict", (req, reply) => {
 
-  console.log(req.body);
+  //console.log(req.body);
 
   const bodyData = JSON.parse(req.body.data);
 
-  console.log(bodyData);
+  //console.log(bodyData);
 
   const _c1 = parseInt(bodyData.c1);
 
@@ -1288,12 +1347,13 @@ fastify.post("/game/verdict", (req, reply) => {
     if (!win_added_outcome.success){
       reply.status(httpStatus.INTERNAL_SERVER_ERROR).reply(
         {
+          status: 500,
           winner: _winner,
           loser: _loser,
           p1_won: p1_won,
           error: `Error adding data for ${_winner} beating ${_loser} to the database!`
         }
-      );
+      ).statusCode();
       return;
     }
     else {
@@ -1307,13 +1367,25 @@ fastify.post("/game/verdict", (req, reply) => {
   //reply.status(501).send(precedent);
 });
 
+
+fastify.get("/api/silly", async(
+  req,
+  rep
+) => {
+  //db.ensure_consecutive_ids();
+  rep.send({message:"yes, this is silly!"});
+})
+
+
 // for emergency use only.
-fastify.get("/api/admin/delete/:id", async(request, reply) => {
+fastify.get("/api/admin/delete/:id", async(
+  request,
+  reply
+) => {
   
-  reply.status(httpStatus.UNAUTHORIZED).send({message:"no."});
+  reply.send({status:httpStatus.UNAUTHORIZED, message:"no."});
   return false;
   //reply.status(httpStatus.OK).send(db.deleteCard(request.params.id));
-  
 });
 
 // and now some stuff that allows the database to be obtained for archiving purposes
@@ -1323,7 +1395,13 @@ fastify.get("/api/admin/delete/:id", async(request, reply) => {
  * @param {import("fastify/types/request.js").FastifyRequest} req 
  * @param {import("fastify/types/reply.js").FastifyReply} reply
  */
-function _archive_redirect(req, reply){
+function _archive_redirect(
+  req,
+  reply
+){
+
+
+
   reply.redirect(`/api/archive/cards ${new Date(Date.now()).toISOString().replaceAll(":","-")}.db`);
 }
 
@@ -1373,8 +1451,14 @@ fastify.get("/api/archive/:fname", (req, reply) => {
     _archive_redirect(req, reply);
     return;
   }
-  reply.type("application/vnd.sqlite3");
-  reply.sendFile("cards.db",path.join(".data"),{serveDotFiles: true, extensions:"db"});
+  try {
+    // doesn't seem to be working...
+    reply.type("application/vnd.sqlite3");
+    reply.sendFile("cards.db", path.join(".data"), { serveDotFiles: true, extensions: "db" });
+
+  } catch (e) {
+    console.error(e);
+  }
 })
 
 
@@ -1384,7 +1468,7 @@ fastify.ready(err => {
   
   return; 
   // ignore this, we aren't actually using sockets
-
+  /*
   fastify.io.use((socket, next) => {
   
     const sessionID = socket.handshake.auth.sessionID;
@@ -1408,15 +1492,14 @@ fastify.ready(err => {
     next();
   });
 
-  fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id))
+  fastify.io.on('connection', (socket) => console.info('Socket connected!', socket.id));
+  */
 })
 
 
 // Run the server and report out to the logs
 fastify.listen({
   port:process.env.PORT,
-  //host:'0.0.0.0'
-  host: 'localhost'
 }, function(err, address) {
   if (err) {
     console.error(err);

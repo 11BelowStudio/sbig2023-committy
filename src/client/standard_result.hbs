@@ -86,11 +86,11 @@
         <!-- fade in the constitutionality -->
         <div id="constitushun" style="z-index: 1000;" class="hidden">
             <div id="veryproper"></div>
+            <div class="mid result_header">
+                <h1 class="result_header" style="text-decoration: underline;">A Proclamation From Þe Committy</h1>
+            </div>
             <div id="scrollparent" class="scroller hidden" > <!--<div class="bigMarq">-->
-                <div class ="scroller scroller_container" style="animation-duration:90s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
-                    <div class="mid">
-                        <h1 style="text-decoration: underline;">A Proclamation From Þe Committy</h1>
-                    </div>
+                <div class ="scroller scroller_container" style="animation-duration:45s;" ><!--<marquee class="bigMarq" behavior="slide" direction="up">-->
                     <div class="just">
                         <p>
                             <b>AS Was Previously Established</b> in þe presence of and by þe grace and mercy
@@ -144,6 +144,7 @@
             const loser = "{{ loser }}";
 
             let bgAudio;
+            let legalese_playing = false;
 
             function showAmen(){
                 bgAudio.volume(1.0);
@@ -201,7 +202,7 @@
                 }
                 // step 3: play a celebration noise
                 {
-                    var victory = new Howl({
+                    const victory = new Howl({
                         src: ["/assets/audio/victory_theme.ogg"],
                         html5: true,
                         volume: 1.0
@@ -219,7 +220,7 @@
                     constitushun.classList.remove("hidden");
 
                 
-                    var intro = new Howl({
+                    const intro = new Howl({
                         src: ["/assets/audio/legalese_intro.ogg"],
                         html5: true,
                         onend: () => proclaim(),
@@ -246,6 +247,11 @@
             });
 
             async function startLegalese(){
+                if (legalese_playing){
+                    return;
+                }
+                legalese_playing = true;
+
                 const scrollParent = document.getElementById("scrollparent")
                 scrollParent.classList.remove("hidden");
 
@@ -263,7 +269,7 @@
 
                 await sleep(1_000);
 
-                var speech = new Howl({
+                const speech = new Howl({
                     src: ["/assets/audio/precedent_exists_theme.ogg"],
                     html5: true,
                     onend: () => showAmen(),
